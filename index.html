@@ -1,14 +1,203 @@
-<p>Visualización territorial de la incidencia delictiva.</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Centro de Inteligencia ORSEC</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Montserrat,sans-serif;
+background:#06152f;
+color:white;
+}
+
+.hero{
+
+height:100vh;
+
+background:
+linear-gradient(rgba(5,25,55,.72),rgba(3,18,45,.88)),
+url('https://images.unsplash.com/photo-1578922746465-3a80a228f223?auto=format&fit=crop&w=1800&q=80');
+
+background-size:cover;
+background-position:center;
+
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:30px;
+}
+
+.contenido{
+max-width:900px;
+}
+
+.badge{
+
+display:inline-block;
+background:#1e88e5;
+padding:10px 20px;
+border-radius:30px;
+margin-bottom:25px;
+font-size:.9rem;
+font-weight:700;
+}
+
+h1{
+font-size:3.8rem;
+line-height:1.1;
+margin-bottom:20px;
+}
+
+p{
+font-size:1.2rem;
+line-height:1.8;
+opacity:.95;
+margin-bottom:35px;
+}
+
+.boton{
+
+display:inline-block;
+padding:18px 36px;
+background:#ffb300;
+color:#081a38;
+text-decoration:none;
+font-weight:800;
+border-radius:50px;
+transition:.3s;
+}
+
+.boton:hover{
+transform:translateY(-3px);
+}
+
+.panel{
+
+background:#071a3d;
+padding:70px 8%;
+}
+
+.titulo{
+text-align:center;
+font-size:2rem;
+margin-bottom:50px;
+}
+
+.cards{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:25px;
+}
+
+.card{
+
+background:#0d2a57;
+padding:30px;
+border-radius:18px;
+text-align:center;
+box-shadow:0 12px 35px rgba(0,0,0,.25);
+}
+
+.numero{
+font-size:2.8rem;
+font-weight:800;
+color:#4fc3f7;
+margin-bottom:10px;
+}
+
+footer{
+
+padding:30px;
+text-align:center;
+background:#03122b;
+font-size:.9rem;
+opacity:.8;
+}
+
+@media(max-width:768px){
+
+h1{
+font-size:2.4rem;
+}
+
+p{
+font-size:1rem;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+
+<div class="contenido">
+
+<div class="badge">
+CENTRO DE INTELIGENCIA ORSEC
+</div>
+
+<h1>
+Observatorio Regional de Seguridad Ciudadana
+</h1>
+
+<p>
+Gobierno Regional La Libertad · Inteligencia Estratégica · Monitoreo Territorial · Sala de Situación
+</p>
+
+<a class="boton" href="#panel">
+Ingresar al Observatorio
+</a>
+
+</div>
+
+</section>
+
+<section class="panel" id="panel">
+
+<h2 class="titulo">
+Panel Ejecutivo
+</h2>
+
+<div class="cards">
+
+<div class="card">
+<div class="numero">147</div>
+Homicidios
 </div>
 
 <div class="card">
-<h3>Boletines</h3>
-<p>Informes ejecutivos e inteligencia estratégica.</p>
+<div class="numero">312</div>
+Extorsiones
 </div>
 
 <div class="card">
-<h3>Alertas</h3>
-<p>Monitoreo de tendencias y riesgos emergentes.</p>
+<div class="numero">46</div>
+Detonaciones
+</div>
+
+<div class="card">
+<div class="numero">89</div>
+Robo de Vehículos
+</div>
+
 </div>
 
 </section>
