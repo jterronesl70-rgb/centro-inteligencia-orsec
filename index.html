@@ -1,2370 +1,371 @@
-# ORSEC V3.2 — index.html
-
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ORSEC | Centro de Inteligencia Regional</title>
+<title>ORSEC | Centro de Inteligencia</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-
-/* =========================================================
-   ORSEC V3.2
-   CENTRO DE INTELIGENCIA REGIONAL
-   Gobierno Regional La Libertad
-   ========================================================= */
-
 :root{
-    --bg:#03111f;
-    --bg2:#061c2d;
-    --panel:#09253a;
-    --panel2:#0d3049;
-    --line:#176083;
-    --cyan:#55d8ff;
-    --cyan2:#9ceaff;
-    --white:#f2fbff;
-    --muted:#8eafbf;
-    --green:#35e48d;
-    --yellow:#ffd45a;
-    --red:#ff5d68;
+ --azul:#081a33;
+ --azul2:#0f2b55;
+ --celeste:#27b8ff;
+ --oro:#d8b24a;
+ --gris:#94a3b8;
 }
 
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-html{
-    scroll-behavior:smooth;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-    font-family:"Segoe UI",Arial,sans-serif;
-    background:var(--bg);
-    color:var(--white);
-    min-height:100vh;
+ font-family:Inter,sans-serif;
+ background:linear-gradient(180deg,#03101f,#071b37,#0a2346);
+ color:white;
+ overflow-x:hidden;
 }
 
-/* =========================================================
-   SPLASH
-   ========================================================= */
-
-.splash{
-    position:fixed;
-    inset:0;
-    z-index:9999;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-
-    background:
-        radial-gradient(circle at center,#0a4164 0%,#031522 55%,#01070d 100%);
-
-    transition:opacity .8s ease;
+#splash{
+ position:fixed;
+ inset:0;
+ background:#010915;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ z-index:9999;
+ animation:salir 2.8s forwards;
 }
 
-.splash.hide{
-    opacity:0;
-    pointer-events:none;
+#splash h1{
+ font-family:Orbitron;
+ letter-spacing:6px;
+ margin-top:20px;
+ font-size:36px;
+ color:var(--oro);
 }
 
-.splash-logo{
-    width:125px;
-    height:125px;
-
-    margin:auto;
-
-    display:grid;
-    place-items:center;
-
-    border:2px solid var(--cyan);
-    border-radius:50%;
-
-    font-size:48px;
-
-    box-shadow:
-        0 0 25px rgba(85,216,255,.6),
-        inset 0 0 25px rgba(85,216,255,.15);
+#splash p{
+ color:#89d8ff;
+ margin-top:10px;
 }
 
-.splash h1{
-    margin-top:22px;
-    font-size:44px;
-    letter-spacing:8px;
+@keyframes salir{
+ 0%,80%{opacity:1;}
+ 100%{opacity:0;visibility:hidden;}
 }
 
-.splash p{
-    margin-top:8px;
-    color:var(--cyan2);
-    letter-spacing:3px;
+.shield{
+ width:150px;
+ height:180px;
+ animation:brillo 1.8s infinite;
 }
 
-.splash small{
-    display:block;
-    margin-top:15px;
-    color:var(--muted);
+@keyframes brillo{
+ 0%{filter:drop-shadow(0 0 10px #006eff);}
+ 50%{filter:drop-shadow(0 0 35px #28c8ff);}
+ 100%{filter:drop-shadow(0 0 10px #006eff);}
 }
-
-/* =========================================================
-   APP
-   ========================================================= */
-
-.app{
-    min-height:100vh;
-
-    background:
-        linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
-
-    background-size:40px 40px;
-}
-
-/* =========================================================
-   HEADER
-   ========================================================= */
 
 header{
-    height:74px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    padding:0 25px;
-
-    background:rgba(3,25,43,.95);
-
-    border-bottom:1px solid var(--line);
-
-    position:sticky;
-    top:0;
-    z-index:100;
-
-    backdrop-filter:blur(12px);
+ padding:22px 35px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ border-bottom:1px solid rgba(255,255,255,.1);
+ backdrop-filter:blur(8px);
 }
 
-.brand{
-    display:flex;
-    align-items:center;
-    gap:13px;
+.logo{
+ font-family:Orbitron;
+ font-size:28px;
+ color:var(--oro);
 }
 
-.brand-mark{
-    width:43px;
-    height:43px;
-
-    display:grid;
-    place-items:center;
-
-    border:1px solid var(--cyan);
-    border-radius:50%;
-
-    color:var(--cyan);
-    font-weight:800;
+.logo span{
+ color:var(--celeste);
 }
 
-.brand h1{
-    font-size:17px;
+.estado{
+ color:#4cff91;
+ font-weight:bold;
 }
-
-.brand small{
-    color:var(--muted);
-}
-
-.status{
-    display:flex;
-    align-items:center;
-    gap:18px;
-
-    color:var(--muted);
-
-    font-size:13px;
-}
-
-.live{
-    color:var(--green);
-}
-
-.dot{
-    display:inline-block;
-
-    width:8px;
-    height:8px;
-
-    margin-right:6px;
-
-    border-radius:50%;
-
-    background:var(--green);
-
-    box-shadow:0 0 10px var(--green);
-}
-
-/* =========================================================
-   NAVIGATION
-   ========================================================= */
-
-nav{
-    display:flex;
-    gap:7px;
-
-    padding:13px 24px;
-
-    background:#041a2b;
-
-    border-bottom:1px solid #0d405d;
-
-    position:sticky;
-    top:74px;
-
-    z-index:90;
-
-    overflow-x:auto;
-}
-
-nav button{
-    white-space:nowrap;
-
-    padding:10px 15px;
-
-    border-radius:9px;
-
-    border:1px solid transparent;
-
-    background:transparent;
-
-    color:var(--muted);
-
-    cursor:pointer;
-
-    transition:.25s;
-}
-
-nav button:hover,
-nav button.active{
-    color:white;
-
-    background:#0a3049;
-
-    border-color:#176b94;
-
-    box-shadow:0 0 15px rgba(46,190,255,.15);
-}
-
-/* =========================================================
-   MAIN
-   ========================================================= */
-
-main{
-    width:100%;
-    max-width:1450px;
-
-    margin:auto;
-
-    padding:25px;
-}
-
-.view{
-    display:none;
-
-    animation:fadeIn .35s ease;
-}
-
-.view.active{
-    display:block;
-}
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(8px);
-    }
-
-    to{
-        opacity:1;
-        transform:none;
-    }
-}
-
-/* =========================================================
-   HERO
-   ========================================================= */
 
 .hero{
-    padding:30px 0 22px;
+ display:grid;
+ grid-template-columns:1.1fr .9fr;
+ padding:40px;
+ gap:35px;
 }
 
-.eyebrow{
-    color:var(--cyan);
-
-    font-size:12px;
-
-    letter-spacing:2px;
-
-    text-transform:uppercase;
-}
-
-.hero h2{
-    margin:8px 0;
-
-    font-size:38px;
-}
-
-.hero p{
-    max-width:900px;
-
-    color:var(--muted);
-
-    font-size:16px;
-
-    line-height:1.6;
-}
-
-/* =========================================================
-   CARDS
-   ========================================================= */
-
-.grid{
-    display:grid;
-
-    grid-template-columns:
-        repeat(4,1fr);
-
-    gap:16px;
+@media(max-width:900px){
+ .hero{
+  grid-template-columns:1fr;
+ }
 }
 
 .card{
-    padding:20px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(10,41,66,.96),
-            rgba(5,25,42,.96)
-        );
-
-    border:1px solid #14506f;
-
-    border-radius:14px;
-
-    box-shadow:
-        0 12px 35px rgba(0,0,0,.18);
-
-    transition:.25s;
+ background:rgba(255,255,255,.05);
+ border:1px solid rgba(255,255,255,.08);
+ border-radius:18px;
+ padding:22px;
+ backdrop-filter:blur(14px);
+ box-shadow:0 0 25px rgba(0,150,255,.15);
 }
 
-.card:hover{
-    transform:translateY(-4px);
-
-    border-color:var(--cyan);
-
-    box-shadow:
-        0 0 25px rgba(85,216,255,.12);
+.titulo{
+ font-family:Orbitron;
+ font-size:24px;
+ margin-bottom:10px;
+ color:var(--oro);
 }
 
-.card h3{
-    font-size:14px;
-
-    color:#d9f5ff;
+.sub{
+ color:#9bdcff;
+ margin-bottom:20px;
 }
 
-.value{
-    margin:12px 0 4px;
-
-    font-size:39px;
-
-    font-weight:800;
-
-    color:var(--cyan);
+.radar{
+ width:320px;
+ height:320px;
+ border-radius:50%;
+ margin:auto;
+ position:relative;
+ background:
+ radial-gradient(circle,#0a203f 5%,#08152c 60%,#050b18 100%);
+ border:2px solid rgba(39,184,255,.35);
+ overflow:hidden;
 }
 
-.muted{
-    color:var(--muted);
-
-    font-size:12px;
+.radar::before{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:
+ repeating-radial-gradient(circle,
+ transparent 0,
+ transparent 28px,
+ rgba(39,184,255,.12) 29px,
+ transparent 31px);
 }
 
-.trend{
-    margin-top:9px;
-
-    font-size:12px;
+.radar::after{
+ content:"";
+ position:absolute;
+ width:50%;
+ height:3px;
+ background:linear-gradient(90deg,transparent,#4af4ff);
+ top:50%;
+ left:50%;
+ transform-origin:left center;
+ animation:girar 3s linear infinite;
 }
 
-.up{
-    color:var(--red);
+@keyframes girar{
+ 100%{transform:rotate(360deg);}
 }
 
-.down{
-    color:var(--green);
+.mapa svg{
+ width:100%;
+ max-width:300px;
+ display:block;
+ margin:auto;
 }
 
-/* =========================================================
-   LAYOUT
-   ========================================================= */
-
-.layout{
-    display:grid;
-
-    grid-template-columns:
-        1.7fr 1fr;
-
-    gap:18px;
-
-    margin-top:18px;
+.provincia{
+ fill:#12345f;
+ stroke:#5dcfff;
+ stroke-width:2;
+ animation:encender 4s infinite alternate;
 }
 
-.panel{
-    padding:20px;
-
-    background:rgba(5,24,41,.93);
-
-    border:1px solid #124a69;
-
-    border-radius:15px;
+@keyframes encender{
+ 0%{fill:#16325f;}
+ 100%{
+  fill:#2fb7ff;
+  filter:drop-shadow(0 0 10px #2fb7ff);
+ }
 }
 
-.panel h3{
-    margin-bottom:15px;
-
-    font-size:18px;
+.reloj{
+ font-family:Orbitron;
+ font-size:44px;
+ color:#69e3ff;
+ text-align:center;
+ margin-top:20px;
 }
 
-/* =========================================================
-   MAPA
-   ========================================================= */
-
-.map{
-    min-height:430px;
-
-    display:grid;
-
-    place-items:center;
-
-    position:relative;
-
-    overflow:hidden;
-
-    background:
-        radial-gradient(
-            circle,
-            #0b3856 0,
-            #061a2d 55%,
-            #03101d 100%
-        );
+.fecha{
+ text-align:center;
+ color:#b9dfff;
 }
 
-.map-label{
-    position:absolute;
-
-    top:18px;
-    left:18px;
-
-    color:var(--cyan2);
-
-    font-size:12px;
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:22px;
+ padding:0 40px 40px;
 }
 
-.map-shape{
-    width:68%;
-    height:68%;
-
-    position:relative;
-
-    border:2px solid var(--cyan);
-
-    clip-path:
-        polygon(
-            18% 4%,
-            55% 0,
-            78% 12%,
-            91% 35%,
-            82% 61%,
-            66% 55%,
-            58% 88%,
-            35% 98%,
-            25% 77%,
-            7% 65%,
-            13% 40%,
-            4% 24%
-        );
-
-    background:rgba(26,130,171,.12);
-
-    box-shadow:
-        0 0 45px rgba(85,216,255,.28);
+.kpi{
+ padding:20px;
+ border-radius:18px;
+ background:rgba(255,255,255,.05);
+ border:1px solid rgba(255,255,255,.08);
+ transition:.3s;
 }
 
-.province{
-    position:absolute;
-
-    width:14px;
-    height:14px;
-
-    border-radius:50%;
-
-    background:var(--cyan);
-
-    box-shadow:
-        0 0 15px var(--cyan);
-
-    cursor:pointer;
-
-    transition:.2s;
+.kpi:hover{
+ transform:translateY(-6px);
+ box-shadow:0 0 25px rgba(40,200,255,.3);
 }
 
-.province:hover{
-    transform:scale(1.7);
+.numero{
+ font-size:34px;
+ font-family:Orbitron;
+ color:var(--oro);
+ margin:12px 0;
 }
-
-.p1{left:28%;top:24%}
-.p2{left:43%;top:18%}
-.p3{left:57%;top:27%}
-.p4{left:68%;top:39%}
-.p5{left:47%;top:43%}
-.p6{left:34%;top:51%}
-.p7{left:61%;top:57%}
-.p8{left:29%;top:68%}
-.p9{left:51%;top:72%}
-.p10{left:72%;top:68%}
-.p11{left:42%;top:82%}
-.p12{left:63%;top:84%}
-
-/* =========================================================
-   ALERTAS
-   ========================================================= */
-
-.alert{
-    padding:14px;
-
-    margin:10px 0;
-
-    border-left:4px solid var(--yellow);
-
-    background:#0a2135;
-
-    border-radius:8px;
-
-    line-height:1.5;
-}
-
-.alert.red{
-    border-color:var(--red);
-}
-
-.alert.green{
-    border-color:var(--green);
-}
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-
-.action{
-    padding:10px 14px;
-
-    border-radius:8px;
-
-    border:1px solid #176084;
-
-    background:#082943;
-
-    color:#dff7ff;
-
-    cursor:pointer;
-
-    transition:.2s;
-}
-
-.action:hover{
-    background:#0d3b59;
-    border-color:var(--cyan);
-}
-
-/* =========================================================
-   FILTERS
-   ========================================================= */
-
-.filters{
-    display:flex;
-
-    flex-wrap:wrap;
-
-    gap:10px;
-
-    margin-bottom:18px;
-}
-
-.filters select{
-    padding:10px;
-
-    border-radius:8px;
-
-    border:1px solid #176084;
-
-    background:#061c2e;
-
-    color:#dff7ff;
-}
-
-/* =========================================================
-   CHART
-   ========================================================= */
-
-.chart{
-    height:260px;
-
-    display:flex;
-
-    align-items:flex-end;
-
-    gap:13px;
-
-    padding:20px 8px 8px;
-
-    border-top:1px solid #123e57;
-}
-
-.bar{
-    flex:1;
-
-    min-height:10px;
-
-    position:relative;
-
-    border-radius:5px 5px 0 0;
-
-    background:
-        linear-gradient(
-            to top,
-            #0c719d,
-            #55d8ff
-        );
-}
-
-.bar b{
-    position:absolute;
-
-    top:-19px;
-    left:50%;
-
-    transform:translateX(-50%);
-
-    font-size:11px;
-}
-
-.bar span{
-    position:absolute;
-
-    bottom:-24px;
-    left:50%;
-
-    transform:translateX(-50%);
-
-    font-size:11px;
-
-    color:var(--muted);
-}
-
-/* =========================================================
-   TABLE
-   ========================================================= */
-
-table{
-    width:100%;
-
-    border-collapse:collapse;
-}
-
-th,
-td{
-    padding:12px 10px;
-
-    border-bottom:1px solid #12384f;
-
-    text-align:left;
-
-    font-size:13px;
-}
-
-th{
-    color:var(--cyan2);
-}
-
-td{
-    color:#d8edf5;
-}
-
-/* =========================================================
-   BADGES
-   ========================================================= */
-
-.badge{
-    display:inline-block;
-
-    padding:5px 9px;
-
-    border-radius:20px;
-
-    font-size:11px;
-}
-
-.b-red{
-    color:#ff8e96;
-    background:rgba(255,93,104,.13);
-}
-
-.b-yellow{
-    color:#ffe18a;
-    background:rgba(255,211,90,.12);
-}
-
-.b-green{
-    color:#6ef0aa;
-    background:rgba(50,227,138,.12);
-}
-
-/* =========================================================
-   BOLETINES
-   ========================================================= */
-
-.news{
-    display:grid;
-
-    gap:12px;
-}
-
-.news-item{
-    padding:18px;
-
-    background:#081e31;
-
-    border:1px solid #123f58;
-
-    border-radius:10px;
-
-    transition:.2s;
-}
-
-.news-item:hover{
-    border-color:var(--cyan);
-    transform:translateX(4px);
-}
-
-.news-item strong{
-    display:block;
-
-    margin-bottom:6px;
-}
-
-.news-item small{
-    color:var(--muted);
-}
-
-/* =========================================================
-   CORESEC
-   ========================================================= */
-
-.presentation{
-    display:none;
-
-    position:fixed;
-
-    inset:0;
-
-    z-index:500;
-
-    padding:25px;
-
-    background:#020c16;
-}
-
-.presentation.on{
-    display:block;
-}
-
-.presentation-grid{
-    display:grid;
-
-    grid-template-columns:
-        2fr 1fr;
-
-    gap:20px;
-
-    height:
-        calc(100vh - 100px);
-}
-
-.presentation .panel{
-    height:100%;
-}
-
-.big{
-    margin-top:15px;
-
-    font-size:65px;
-
-    font-weight:800;
-
-    color:var(--cyan);
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
 
 footer{
-    padding:35px 10px;
-
-    text-align:center;
-
-    color:#668fa3;
-
-    font-size:12px;
+ text-align:center;
+ padding:30px;
+ color:#9db7d9;
+ border-top:1px solid rgba(255,255,255,.08);
+ margin-top:30px;
 }
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media(max-width:950px){
-
-    .grid{
-        grid-template-columns:
-            repeat(2,1fr);
-    }
-
-    .layout{
-        grid-template-columns:1fr;
-    }
-
-    .presentation-grid{
-        grid-template-columns:1fr;
-    }
-
-}
-
-@media(max-width:600px){
-
-    header{
-        height:auto;
-
-        padding:12px;
-    }
-
-    .status{
-        display:none;
-    }
-
-    nav{
-        top:66px;
-    }
-
-    main{
-        padding:16px;
-    }
-
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-    .hero h2{
-        font-size:29px;
-    }
-
-    .map{
-        min-height:330px;
-    }
-
-}
-
 </style>
-</head>
 
+</head>
 
 <body>
 
+<div id="splash">
 
-<!-- ======================================================
-     SPLASH
-     ====================================================== -->
+<svg class="shield" viewBox="0 0 200 240">
+<path d="M100 10 L180 40 L170 135 C165 180 135 210 100 230 C65 210 35 180 30 135 L20 40 Z"
+fill="#0a2748" stroke="#d8b24a" stroke-width="5"/>
 
-<div class="splash" id="splash">
+<circle cx="100" cy="90" r="38" fill="#112f5b" stroke="#27b8ff" stroke-width="4"/>
 
-    <div>
+<path d="M100 58 L108 82 L134 82 L113 97 L120 122 L100 108 L80 122 L87 97 L66 82 L92 82 Z"
+fill="#d8b24a"/>
+</svg>
 
-        <div class="splash-logo">
-            🛰️
-        </div>
-
-        <h1>ORSEC</h1>
-
-        <p>
-            CENTRO DE INTELIGENCIA REGIONAL
-        </p>
-
-        <small>
-            Gobierno Regional La Libertad
-        </small>
-
-    </div>
+<h1>ORSEC</h1>
+<p>Centro de Inteligencia · La Libertad</p>
 
 </div>
-
-
-<div class="app">
-
-
-<!-- ======================================================
-     HEADER
-     ====================================================== -->
 
 <header>
 
-    <div class="brand">
+<div class="logo">
+ORSEC <span>1.0</span>
+</div>
 
-        <div class="brand-mark">
-            O
-        </div>
-
-        <div>
-
-            <h1>
-                ORSEC · Centro de Inteligencia
-            </h1>
-
-            <small>
-                Observatorio Regional de Seguridad Ciudadana · La Libertad
-            </small>
-
-        </div>
-
-    </div>
-
-
-    <div class="status">
-
-        <span class="live">
-            <span class="dot"></span>
-            SISTEMA OPERATIVO
-        </span>
-
-        <span id="clock">
-            --
-        </span>
-
-    </div>
+<div class="estado">
+● OPERATIVO
+</div>
 
 </header>
 
+<section class="hero">
 
-<!-- ======================================================
-     NAVEGACIÓN
-     ====================================================== -->
+<div class="card">
 
-<nav id="nav">
+<div class="titulo">
+Centro de Inteligencia
+</div>
 
-    <button
-        class="active"
-        data-view="dashboard">
+<div class="sub">
+Gobierno Regional La Libertad · Plataforma Estratégica
+</div>
 
-        Panel Ejecutivo
+<div class="mapa">
 
-    </button>
+<svg viewBox="0 0 220 420">
 
+<path class="provincia"
+d="M120 10 L150 45 L140 90 L170 120 L155 175 L180 220 L150 290 L120 360 L90 405 L70 350 L55 270 L40 210 L60 145 L70 70 Z"/>
 
-    <button
-        data-view="incidencia">
+</svg>
 
-        Incidencia Delictiva
+</div>
 
-    </button>
+</div>
 
+<div class="card">
 
-    <button
-        data-view="mapa">
+<div class="radar"></div>
 
-        Mapa Territorial
+<div class="reloj" id="hora">
+00:00:00
+</div>
 
-    </button>
+<div class="fecha" id="fecha"></div>
 
-
-    <button
-        data-view="alertas">
-
-        Alertas
-
-    </button>
-
-
-    <button
-        data-view="boletines">
-
-        Boletines
-
-    </button>
-
-
-    <button
-        id="presentationBtn">
-
-        Modo CORESEC
-
-    </button>
-
-</nav>
-
-
-<main>
-
-
-<!-- ======================================================
-     PANEL EJECUTIVO
-     ====================================================== -->
-
-<section
-    id="dashboard"
-    class="view active">
-
-
-    <div class="hero">
-
-        <div class="eyebrow">
-            Situación regional · 2026
-        </div>
-
-        <h2>
-            Centro de Inteligencia ORSEC
-        </h2>
-
-        <p>
-            Plataforma para visualizar, comparar y monitorear
-            la incidencia delictiva de la Región La Libertad.
-        </p>
-
-    </div>
-
-
-    <div class="grid">
-
-
-        <div class="card">
-
-            <h3>
-                Homicidios
-            </h3>
-
-            <div
-                class="value"
-                id="kpiHomicidios">
-
-                151
-
-            </div>
-
-            <div class="muted">
-                Acumulado 2026
-            </div>
-
-            <div class="trend up">
-                ▲ 2.7% vs. referencia 2025
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>
-                Extorsiones
-            </h3>
-
-            <div class="value">
-                —
-            </div>
-
-            <div class="muted">
-                Pendiente de carga
-            </div>
-
-            <div class="trend">
-                Motor de datos preparado
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>
-                Detonaciones
-            </h3>
-
-            <div class="value">
-                —
-            </div>
-
-            <div class="muted">
-                Pendiente de carga
-            </div>
-
-            <div class="trend down">
-                Tendencia favorable
-            </div>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>
-                Alertas activas
-            </h3>
-
-            <div class="value">
-                3
-            </div>
-
-            <div class="muted">
-                Seguimiento estratégico
-            </div>
-
-            <div class="trend">
-                Monitoreo operativo
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="layout">
-
-
-        <div class="panel map">
-
-            <div class="map-label">
-                MAPA DE INTELIGENCIA · SELECCIONE UNA PROVINCIA
-            </div>
-
-
-            <div class="map-shape">
-
-
-                <i
-                    class="province p1"
-                    title="Trujillo"
-                    data-province="Trujillo">
-                </i>
-
-
-                <i
-                    class="province p2"
-                    title="Ascope"
-                    data-province="Ascope">
-                </i>
-
-
-                <i
-                    class="province p3"
-                    title="Pacasmayo"
-                    data-province="Pacasmayo">
-                </i>
-
-
-                <i
-                    class="province p4"
-                    title="Chepén"
-                    data-province="Chepén">
-                </i>
-
-
-                <i
-                    class="province p5"
-                    title="Virú"
-                    data-province="Virú">
-                </i>
-
-
-                <i
-                    class="province p6"
-                    title="Gran Chimú"
-                    data-province="Gran Chimú">
-                </i>
-
-
-                <i
-                    class="province p7"
-                    title="Otuzco"
-                    data-province="Otuzco">
-                </i>
-
-
-                <i
-                    class="province p8"
-                    title="Julcán"
-                    data-province="Julcán">
-                </i>
-
-
-                <i
-                    class="province p9"
-                    title="Santiago de Chuco"
-                    data-province="Santiago de Chuco">
-                </i>
-
-
-                <i
-                    class="province p10"
-                    title="Sánchez Carrión"
-                    data-province="Sánchez Carrión">
-                </i>
-
-
-                <i
-                    class="province p11"
-                    title="Pataz"
-                    data-province="Pataz">
-                </i>
-
-
-                <i
-                    class="province p12"
-                    title="Bolívar"
-                    data-province="Bolívar">
-                </i>
-
-
-            </div>
-
-        </div>
-
-
-        <div class="panel">
-
-            <h3>
-                Situación estratégica
-            </h3>
-
-
-            <div class="alert red">
-
-                <strong>
-                    Homicidios
-                </strong>
-
-                <br>
-
-                <span class="muted">
-                    Monitoreo prioritario y análisis comparativo.
-                </span>
-
-            </div>
-
-
-            <div class="alert">
-
-                <strong>
-                    Extorsión
-                </strong>
-
-                <br>
-
-                <span class="muted">
-                    Seguimiento de tendencia y concentración territorial.
-                </span>
-
-            </div>
-
-
-            <div class="alert green">
-
-                <strong>
-                    Detonaciones
-                </strong>
-
-                <br>
-
-                <span class="muted">
-                    Comportamiento favorable en seguimiento.
-                </span>
-
-            </div>
-
-
-            <button
-                class="action"
-                onclick="showView('alertas')">
-
-                Abrir Sala de Situación →
-
-            </button>
-
-        </div>
-
-    </div>
+</div>
 
 </section>
 
+<section class="grid">
 
-<!-- ======================================================
-     INCIDENCIA
-     ====================================================== -->
+<div class="kpi">
+Incidencia Regional
+<div class="numero">LIVE</div>
+Monitoreo permanente
+</div>
 
-<section
-    id="incidencia"
-    class="view">
+<div class="kpi">
+Radar Estratégico
+<div class="numero">360°</div>
+Cobertura territorial
+</div>
 
+<div class="kpi">
+Alertas
+<div class="numero">ACTIVO</div>
+Seguimiento en tiempo real
+</div>
 
-    <div class="hero">
-
-        <div class="eyebrow">
-            Módulo analítico
-        </div>
-
-        <h2>
-            Incidencia Delictiva
-        </h2>
-
-        <p>
-            Comparación temporal y análisis de los
-            principales indicadores de seguridad.
-        </p>
-
-    </div>
-
-
-    <div class="filters">
-
-
-        <select id="crime">
-
-            <option>
-                Homicidios
-            </option>
-
-            <option>
-                Extorsiones
-            </option>
-
-            <option>
-                Detonaciones
-            </option>
-
-            <option>
-                Secuestros
-            </option>
-
-        </select>
-
-
-        <select>
-
-            <option>
-                2026 acumulado
-            </option>
-
-            <option>
-                Agosto 2026
-            </option>
-
-            <option>
-                2025 acumulado
-            </option>
-
-        </select>
-
-
-        <select>
-
-            <option>
-                La Libertad
-            </option>
-
-            <option>
-                Trujillo
-            </option>
-
-            <option>
-                Virú
-            </option>
-
-            <option>
-                Pataz
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div class="layout">
-
-
-        <div class="panel">
-
-            <h3>
-                Tendencia mensual
-            </h3>
-
-            <div
-                class="chart"
-                id="chart">
-            </div>
-
-        </div>
-
-
-        <div class="panel">
-
-            <h3>
-                Resumen ejecutivo
-            </h3>
-
-
-            <table>
-
-                <tr>
-                    <th>
-                        Indicador
-                    </th>
-
-                    <th>
-                        Valor
-                    </th>
-                </tr>
-
-
-                <tr>
-                    <td>
-                        Acumulado 2026
-                    </td>
-
-                    <td>
-                        151
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td>
-                        Referencia 2025
-                    </td>
-
-                    <td>
-                        147
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td>
-                        Variación
-                    </td>
-
-                    <td class="up">
-                        +2.7%
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td>
-                        Estado
-                    </td>
-
-                    <td>
-                        <span class="badge b-yellow">
-                            Seguimiento
-                        </span>
-                    </td>
-                </tr>
-
-            </table>
-
-        </div>
-
-    </div>
+<div class="kpi">
+Boletines
+<div class="numero">24/7</div>
+Inteligencia operativa
+</div>
 
 </section>
-
-
-<!-- ======================================================
-     MAPA
-     ====================================================== -->
-
-<section
-    id="mapa"
-    class="view">
-
-
-    <div class="hero">
-
-        <div class="eyebrow">
-            Inteligencia territorial
-        </div>
-
-        <h2>
-            Mapa de La Libertad
-        </h2>
-
-        <p>
-            Seleccione una provincia para consultar
-            su ficha territorial.
-        </p>
-
-    </div>
-
-
-    <div class="layout">
-
-
-        <div class="panel map">
-
-
-            <div class="map-shape">
-
-
-                <i class="province p1" data-province="Trujillo"></i>
-                <i class="province p2" data-province="Ascope"></i>
-                <i class="province p3" data-province="Pacasmayo"></i>
-                <i class="province p4" data-province="Chepén"></i>
-                <i class="province p5" data-province="Virú"></i>
-                <i class="province p6" data-province="Gran Chimú"></i>
-                <i class="province p7" data-province="Otuzco"></i>
-                <i class="province p8" data-province="Julcán"></i>
-                <i class="province p9" data-province="Santiago de Chuco"></i>
-                <i class="province p10" data-province="Sánchez Carrión"></i>
-                <i class="province p11" data-province="Pataz"></i>
-                <i class="province p12" data-province="Bolívar"></i>
-
-
-            </div>
-
-        </div>
-
-
-        <div class="panel">
-
-            <h3 id="provinceTitle">
-                Ficha territorial
-            </h3>
-
-
-            <table>
-
-                <tr>
-                    <td>
-                        Homicidios
-                    </td>
-
-                    <td id="pHomicidios">
-                        —
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td>
-                        Extorsiones
-                    </td>
-
-                    <td>
-                        —
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td>
-                        Detonaciones
-                    </td>
-
-                    <td>
-                        —
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td>
-                        Estado
-                    </td>
-
-                    <td>
-
-                        <span class="badge b-yellow">
-                            Pendiente de datos
-                        </span>
-
-                    </td>
-
-                </tr>
-
-            </table>
-
-
-            <p
-                class="muted"
-                style="margin-top:20px">
-
-                Los indicadores provinciales serán
-                alimentados posteriormente desde el
-                motor de datos institucional.
-
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ======================================================
-     ALERTAS
-     ====================================================== -->
-
-<section
-    id="alertas"
-    class="view">
-
-
-    <div class="hero">
-
-        <div class="eyebrow">
-            Monitoreo operativo
-        </div>
-
-        <h2>
-            Sala de Situación
-        </h2>
-
-        <p>
-            Alertas estratégicas y señales para
-            apoyar la toma de decisiones.
-        </p>
-
-    </div>
-
-
-    <div class="grid">
-
-
-        <div class="card">
-
-            <h3>
-                Homicidios
-            </h3>
-
-            <div class="value">
-                ALTA
-            </div>
-
-            <span class="badge b-red">
-                Prioridad
-            </span>
-
-            <p class="muted">
-                Requiere análisis permanente.
-            </p>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>
-                Extorsión
-            </h3>
-
-            <div class="value">
-                MEDIA
-            </div>
-
-            <span class="badge b-yellow">
-                Seguimiento
-            </span>
-
-            <p class="muted">
-                Revisar concentración territorial.
-            </p>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>
-                Detonaciones
-            </h3>
-
-            <div class="value">
-                BAJA
-            </div>
-
-            <span class="badge b-green">
-                Favorable
-            </span>
-
-            <p class="muted">
-                Tendencia descendente en seguimiento.
-            </p>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>
-                Estado ORSEC
-            </h3>
-
-            <div class="value">
-                ACTIVO
-            </div>
-
-            <span class="badge b-green">
-                Operativo
-            </span>
-
-            <p class="muted">
-                Monitoreo disponible.
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ======================================================
-     BOLETINES
-     ====================================================== -->
-
-<section
-    id="boletines"
-    class="view">
-
-
-    <div class="hero">
-
-        <div class="eyebrow">
-            Inteligencia estratégica
-        </div>
-
-        <h2>
-            Boletines Ejecutivos
-        </h2>
-
-        <p>
-            Espacio preparado para los productos
-            de inteligencia y reportes institucionales.
-        </p>
-
-    </div>
-
-
-    <div class="news">
-
-
-        <div class="news-item">
-
-            <strong>
-                Boletín Ejecutivo ORSEC · Situación Regional 2026
-            </strong>
-
-            <small>
-                Comparativo de incidencia delictiva.
-            </small>
-
-        </div>
-
-
-        <div class="news-item">
-
-            <strong>
-                Informe sobre detonaciones
-            </strong>
-
-            <small>
-                Análisis de comportamiento y evolución regional.
-            </small>
-
-        </div>
-
-
-        <div class="news-item">
-
-            <strong>
-                Reporte CORESEC
-            </strong>
-
-            <small>
-                Resumen ejecutivo para sesión de coordinación.
-            </small>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-</main>
-
 
 <footer>
 
-    Centro de Inteligencia ORSEC ·
-    Observatorio Regional de Seguridad Ciudadana ·
-    Gobierno Regional La Libertad ·
-    V3.2
+ORSEC · Centro de Inteligencia · Gobierno Regional La Libertad · Demo 2026
 
 </footer>
 
-
-</div>
-
-
-<!-- ======================================================
-     MODO CORESEC
-     ====================================================== -->
-
-<div
-    class="presentation"
-    id="presentation">
-
-
-    <button
-        class="action"
-        onclick="togglePresentation()">
-
-        ✕ Cerrar Modo CORESEC
-
-    </button>
-
-
-    <div class="presentation-grid">
-
-
-        <div class="panel map">
-
-            <div class="map-label">
-                MODO CORESEC · INTELIGENCIA TERRITORIAL
-            </div>
-
-
-            <div class="map-shape">
-
-                <i class="province p1"></i>
-                <i class="province p2"></i>
-                <i class="province p3"></i>
-                <i class="province p4"></i>
-                <i class="province p5"></i>
-                <i class="province p6"></i>
-                <i class="province p7"></i>
-                <i class="province p8"></i>
-                <i class="province p9"></i>
-                <i class="province p10"></i>
-                <i class="province p11"></i>
-                <i class="province p12"></i>
-
-            </div>
-
-        </div>
-
-
-        <div class="panel">
-
-            <div class="eyebrow">
-                SITUACIÓN REGIONAL
-            </div>
-
-
-            <div class="big">
-                151
-            </div>
-
-
-            <p>
-                Homicidios acumulados · 2026
-            </p>
-
-
-            <div class="alert red">
-                Prioridad: Homicidios
-            </div>
-
-
-            <div class="alert">
-                Seguimiento: Extorsión
-            </div>
-
-
-            <div class="alert green">
-                Favorable: Detonaciones
-            </div>
-
-
-            <p
-                class="muted"
-                id="coreClock">
-
-                Hora Perú · --
-
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-
 <script>
 
-/* =========================================================
-   MOTOR DE DATOS ORSEC
-   ========================================================= */
+function actualizar(){
 
-const datosORSEC = {
+const ahora=new Date();
 
-    acumulado: {
+document.getElementById("hora").innerHTML=
+ahora.toLocaleTimeString("es-PE");
 
-        homicidios:151,
-
-        homicidios2025:147,
-
-        extorsiones:null,
-
-        detonaciones:null,
-
-        alertas:3
-
-    },
-
-    provincias: {
-
-        "Trujillo":{
-            homicidios:151
-        },
-
-        "Ascope":{},
-
-        "Pacasmayo":{},
-
-        "Chepén":{},
-
-        "Virú":{},
-
-        "Gran Chimú":{},
-
-        "Otuzco":{},
-
-        "Julcán":{},
-
-        "Santiago de Chuco":{},
-
-        "Sánchez Carrión":{},
-
-        "Pataz":{},
-
-        "Bolívar":{}
-
-    }
-
-};
-
-
-/* =========================================================
-   NAVEGACIÓN
-   ========================================================= */
-
-function showView(id){
-
-    document
-        .querySelectorAll(".view")
-        .forEach(view => {
-
-            view.classList.remove("active");
-
-        });
-
-
-    const target =
-        document.getElementById(id);
-
-
-    if(target){
-
-        target.classList.add("active");
-
-    }
-
-
-    document
-        .querySelectorAll(
-            "nav button[data-view]"
-        )
-        .forEach(button => {
-
-            button.classList.toggle(
-                "active",
-                button.dataset.view === id
-            );
-
-        });
-
-
-    window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
-    });
+document.getElementById("fecha").innerHTML=
+ahora.toLocaleDateString("es-PE",{
+weekday:"long",
+day:"numeric",
+month:"long",
+year:"numeric"
+});
 
 }
 
-
-/* =========================================================
-   BOTONES DEL MENÚ
-   ========================================================= */
-
-document
-    .querySelectorAll(
-        "nav button[data-view]"
-    )
-    .forEach(button => {
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                showView(
-                    button.dataset.view
-                );
-
-            }
-        );
-
-    });
-
-
-/* =========================================================
-   RELOJ OPERATIVO
-   ========================================================= */
-
-function actualizarReloj(){
-
-    const ahora = new Date();
-
-
-    const fecha =
-        ahora.toLocaleDateString(
-            "es-PE",
-            {
-                day:"2-digit",
-                month:"short",
-                year:"numeric"
-            }
-        )
-        .replace(".","")
-        .toUpperCase();
-
-
-    const hora =
-        ahora.toLocaleTimeString(
-            "es-PE"
-        );
-
-
-    const texto =
-        fecha +
-        " · " +
-        hora;
-
-
-    document
-        .getElementById("clock")
-        .textContent = texto;
-
-
-    document
-        .getElementById("coreClock")
-        .textContent =
-            "Hora Perú · " +
-            hora;
-
-}
-
-
-setInterval(
-    actualizarReloj,
-    1000
-);
-
-actualizarReloj();
-
-
-/* =========================================================
-   GRÁFICO
-   ========================================================= */
-
-function generarGrafico(){
-
-    const valores = [
-        9,11,13,10,
-        15,12,17,14,
-        16,19,13,12
-    ];
-
-
-    const meses = [
-        "Ene","Feb","Mar",
-        "Abr","May","Jun",
-        "Jul","Ago","Sep",
-        "Oct","Nov","Dic"
-    ];
-
-
-    const chart =
-        document.getElementById(
-            "chart"
-        );
-
-
-    chart.innerHTML = "";
-
-
-    valores.forEach(
-        (valor,index) => {
-
-            const barra =
-                document.createElement(
-                    "div"
-                );
-
-
-            barra.className =
-                "bar";
-
-
-            barra.style.height =
-                (valor * 7) +
-                "px";
-
-
-            barra.innerHTML =
-
-                "<b>" +
-                valor +
-                "</b>" +
-
-                "<span>" +
-                meses[index] +
-                "</span>";
-
-
-            chart.appendChild(
-                barra
-            );
-
-        }
-    );
-
-}
-
-
-generarGrafico();
-
-
-/* =========================================================
-   MAPA / PROVINCIAS
-   ========================================================= */
-
-function abrirProvincia(nombre){
-
-    const datos =
-        datosORSEC
-            .provincias[nombre] ||
-        {};
-
-
-    document
-        .getElementById(
-            "provinceTitle"
-        )
-        .textContent =
-            "Ficha · " +
-            nombre;
-
-
-    document
-        .getElementById(
-            "pHomicidios"
-        )
-        .textContent =
-            datos.homicidios ??
-            "—";
-
-
-    showView("mapa");
-
-}
-
-
-document.addEventListener(
-    "click",
-    function(event){
-
-        const provincia =
-            event.target.closest(
-                ".province"
-            );
-
-
-        if(!provincia){
-            return;
-        }
-
-
-        const nombre =
-            provincia.dataset.province;
-
-
-        if(nombre){
-
-            abrirProvincia(
-                nombre
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   MODO CORESEC
-   ========================================================= */
-
-function togglePresentation(){
-
-    const pantalla =
-        document.getElementById(
-            "presentation"
-        );
-
-
-    pantalla.classList.toggle(
-        "on"
-    );
-
-}
-
-
-document
-    .getElementById(
-        "presentationBtn"
-    )
-    .addEventListener(
-        "click",
-        togglePresentation
-    );
-
-
-/* =========================================================
-   TECLA F = MODO CORESEC
-   ========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(event){
-
-        if(
-            event.key.toLowerCase()
-            === "f"
-        ){
-
-            togglePresentation();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   PANTALLA DE INICIO
-   ========================================================= */
-
-setTimeout(
-
-    () => {
-
-        const splash =
-            document.getElementById(
-                "splash"
-            );
-
-
-        splash.classList.add(
-            "hide"
-        );
-
-
-        setTimeout(
-            () => {
-
-                splash.remove();
-
-            },
-            900
-        );
-
-    },
-
-    1800
-
-);
+setInterval(actualizar,1000);
+actualizar();
 
 </script>
 
 </body>
 </html>
-```
-
-### Cómo instalarlo
-
-1. Abre tu repositorio de **GitHub**.
-2. Entra a `index.html`.
-3. Pulsa **Edit**.
-4. Borra el contenido anterior.
-5. Pega **todo** el código de arriba.
-6. Pulsa **Commit changes**.
-7. Espera unos segundos a que Vercel actualice la página.
-
-### Y ahora sí podremos probar la navegación
-
-Cuando abras ORSEC:
-
-**Panel Ejecutivo → Incidencia Delictiva → Mapa Territorial → Alertas → Boletines**
-
-son ventanas internas enlazadas.
-
-Además, si pulsas una provincia del mapa, se abre su **ficha territorial** automáticamente.
-
-Y si pulsas **Modo CORESEC**, entramos en la pantalla de presentación.
-
-**Importante:** los números que aparecen ahora siguen siendo datos de demostración. No voy a inventar los valores provinciales que todavía no tenemos. El siguiente paso será conectar el **Excel real** al motor de datos y hacer que los indicadores se alimenten automáticamente.
-
-Ese es el momento en que ORSEC pasará de demo navegable a **plataforma de inteligencia con información real**.
