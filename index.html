@@ -36,6 +36,15 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;bor
 .map-note{font-size:12px;color:#64748b;line-height:1.5;margin-top:10px}
 @media(max-width:900px){.mapa-layout{grid-template-columns:1fr}.mapa-panel{min-height:auto}}
 
+
+/* ===== ORSEC 1.4.1 · MAPA REAL ===== */
+.real-map-wrap{position:relative;z-index:2;width:100%;max-width:760px;margin:6px auto 0;aspect-ratio:661/481}
+.real-map-img{width:100%;height:100%;display:block;object-fit:contain;filter:drop-shadow(0 0 14px rgba(64,177,238,.28))}
+.map-marker{position:absolute;transform:translate(-50%,-50%);border:1px solid rgba(255,217,102,.9);background:rgba(7,26,51,.82);color:#fff;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35);white-space:nowrap;transition:.2s}
+.map-marker:hover,.map-marker.sel{background:#ffd966;color:#071a33;box-shadow:0 0 13px rgba(255,217,102,.9);transform:translate(-50%,-50%) scale(1.08)}
+.map-source{position:relative;z-index:2;text-align:center;font-size:10px;color:#b9cee2;margin-top:8px}
+@media(max-width:650px){.map-marker{font-size:7px;padding:3px 5px}}
+
 </style>
 </head>
 <body>
@@ -64,37 +73,25 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;bor
  <div class="seccion-head"><h2>Inteligencia Territorial</h2><span class="badge">MAPA VIVO · 12 provincias</span></div>
  <div class="mapa-layout">
   <div class="mapa-panel">
-   <div class="mapa-titulo"><b>REGIÓN LA LIBERTAD</b><br><small>Selecciona una provincia para activar el análisis territorial</small></div>
-   <svg id="mapaLibertad" viewBox="0 0 520 720" role="img" aria-label="Mapa interactivo de las provincias de La Libertad">
-    <defs>
-      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f5b9e"/><stop offset="1" stop-color="#123f62"/></linearGradient>
-      <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#126db8"/><stop offset="1" stop-color="#0b3d6d"/></linearGradient>
-    </defs>
-    <path id="map-BOLIVAR" class="prov-shape" data-prov="BOLIVAR" fill="url(#g2)" d="M350 50 L432 76 L456 145 L414 188 L344 168 L326 104 Z"/>
-    <path id="map-PATAZ" class="prov-shape" data-prov="PATAZ" fill="url(#g1)" d="M305 160 L414 188 L442 282 L398 360 L314 333 L282 245 Z"/>
-    <path id="map-SANCHEZ-CARRION" class="prov-shape" data-prov="SANCHEZ CARRION" fill="url(#g2)" d="M220 202 L305 160 L282 245 L314 333 L248 363 L196 302 Z"/>
-    <path id="map-SANTIAGO-DE-CHUCO" class="prov-shape" data-prov="SANTIAGO DE CHUCO" fill="url(#g1)" d="M248 363 L314 333 L398 360 L381 446 L300 474 L224 430 Z"/>
-    <path id="map-JULCAN" class="prov-shape" data-prov="JULCAN" fill="url(#g2)" d="M179 350 L248 363 L224 430 L160 442 L134 392 Z"/>
-    <path id="map-OTUZCO" class="prov-shape" data-prov="OTUZCO" fill="url(#g1)" d="M137 250 L220 202 L196 302 L248 363 L179 350 L116 318 Z"/>
-    <path id="map-GRAN-CHIMU" class="prov-shape" data-prov="GRAN CHIMU" fill="url(#g2)" d="M77 208 L137 250 L116 318 L65 300 L44 252 Z"/>
-    <path id="map-ASCOPE" class="prov-shape" data-prov="ASCOPE" fill="url(#g1)" d="M42 305 L116 318 L134 392 L72 412 L35 370 Z"/>
-    <path id="map-PACASMAYO" class="prov-shape" data-prov="PACASMAYO" fill="url(#g2)" d="M35 370 L72 412 L67 476 L24 466 L13 411 Z"/>
-    <path id="map-CHEPEN" class="prov-shape" data-prov="CHEPEN" fill="url(#g1)" d="M24 466 L67 476 L82 524 L39 544 L12 516 Z"/>
-    <path id="map-TRUJILLO" class="prov-shape" data-prov="TRUJILLO" fill="url(#g2)" d="M72 412 L134 392 L160 442 L142 518 L82 524 L67 476 Z"/>
-    <path id="map-VIRU" class="prov-shape" data-prov="VIRU" fill="url(#g1)" d="M82 524 L142 518 L180 590 L151 665 L90 642 L56 574 Z"/>
-    <text class="map-label" x="392" y="119">BOLÍVAR</text>
-    <text class="map-label" x="366" y="260">PATAZ</text>
-    <text class="map-label" x="247" y="275">SÁNCHEZ</text><text class="map-label" x="247" y="289">CARRIÓN</text>
-    <text class="map-label" x="311" y="405">SANTIAGO</text><text class="map-label" x="311" y="419">DE CHUCO</text>
-    <text class="map-label" x="182" y="400">JULCÁN</text>
-    <text class="map-label" x="158" y="294">OTUZCO</text>
-    <text class="map-label" x="86" y="266">GRAN</text><text class="map-label" x="86" y="280">CHIMÚ</text>
-    <text class="map-label" x="75" y="358">ASCOPE</text>
-    <text class="map-label" x="42" y="438">PACASMAYO</text>
-    <text class="map-label" x="44" y="505">CHEPÉN</text>
-    <text class="map-label" x="111" y="465">TRUJILLO</text>
-    <text class="map-label" x="117" y="588">VIRÚ</text>
-   </svg>
+   <div class="mapa-titulo"><b>REGIÓN LA LIBERTAD</b><br><small>Mapa cartográfico real · selecciona una provincia para activar el análisis territorial</small></div>
+   <div class="real-map-wrap" id="mapaLibertad">
+  <img class="real-map-img"
+       src="https://upload.wikimedia.org/wikipedia/commons/9/98/Provinces_of_La_Libertad.svg"
+       alt="Mapa real de las provincias del departamento de La Libertad, Perú">
+  <button class="map-marker" style="left:18%;top:14%" data-prov="CHEPEN">CHEPÉN</button>
+  <button class="map-marker" style="left:20%;top:29%" data-prov="PACASMAYO">PACASMAYO</button>
+  <button class="map-marker" style="left:29%;top:43%" data-prov="ASCOPE">ASCOPE</button>
+  <button class="map-marker" style="left:49%;top:37%" data-prov="GRAN CHIMU">GRAN CHIMÚ</button>
+  <button class="map-marker" style="left:55%;top:51%" data-prov="OTUZCO">OTUZCO</button>
+  <button class="map-marker" style="left:39%;top:59%" data-prov="TRUJILLO">TRUJILLO</button>
+  <button class="map-marker" style="left:62%;top:61%" data-prov="JULCAN">JULCÁN</button>
+  <button class="map-marker" style="left:47%;top:79%" data-prov="VIRU">VIRÚ</button>
+  <button class="map-marker" style="left:72%;top:44%" data-prov="SANCHEZ CARRION">SÁNCHEZ CARRIÓN</button>
+  <button class="map-marker" style="left:75%;top:62%" data-prov="SANTIAGO DE CHUCO">SANTIAGO DE CHUCO</button>
+  <button class="map-marker" style="left:91%;top:20%" data-prov="BOLIVAR">BOLÍVAR</button>
+  <button class="map-marker" style="left:90%;top:56%" data-prov="PATAZ">PATAZ</button>
+</div>
+<div class="map-source">Cartografía provincial: Wikimedia Commons, “Provinces of La Libertad.svg”, CC BY-SA 4.0.</div>
   </div>
   <aside class="map-side">
    <h3 id="mapProvinciaTitulo">Panorama territorial regional</h3>
@@ -144,8 +141,8 @@ function renderTerritorio(){
  actualizarMapaProvincia(target);
 }
 function actualizarMapaProvincia(p){
- document.querySelectorAll('.prov-shape').forEach(x=>x.classList.remove('sel'));
- const el=document.getElementById(mapId(p));if(el)el.classList.add('sel');
+ document.querySelectorAll('.map-marker').forEach(x=>x.classList.remove('sel'));
+ const el=[...document.querySelectorAll('.map-marker')].find(x=>normProv(x.dataset.prov)===normProv(p));if(el)el.classList.add('sel');
  const f=current();
  const base={anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:p};
  let rows=registros(base);if(f.delito!=='TODOS')rows=rows.filter(r=>r.Delito===f.delito);
@@ -171,7 +168,7 @@ function seleccionarProvincia(p,saltar=true){
  if(saltar)abrir('incidencia',document.querySelector('[data-mod="incidencia"]'));
 }
 function renderAll(){renderIncidencia();renderBoletin();renderAlertas();renderTerritorio()}
-async function init(){try{const r=await fetch('datos.json',{cache:'no-store'});if(!r.ok)throw new Error('datos.json no encontrado');META=await r.json();DB=META.registros||[];$('fuente').textContent=`Fuente activa: ${META.fuente} · Corte ${META.actualizado}`;$('kpiRegistros').textContent=fmt(DB.length);option($('anio'),[2026,2025]);option($('tipoPeriodo'),['ACUMULADO','MENSUAL']);option($('provincia'),['TOTAL REGION','TODAS',...META.provincias]);option($('delito'),['TODOS',...META.delitos]);$('anio').value='2026';$('tipoPeriodo').value='ACUMULADO';updatePeriods();$('provincia').value='TOTAL REGION';$('delito').value='TODOS';['anio','tipoPeriodo','periodo','provincia','delito'].forEach(id=>$(id).addEventListener('change',()=>{if(id==='anio'||id==='tipoPeriodo')updatePeriods();else renderAll()}));document.querySelectorAll('.prov-shape').forEach(el=>el.addEventListener('click',()=>seleccionarProvincia(el.dataset.prov,false)));renderAll()}catch(e){$('fuente').textContent='ERROR DE CONEXIÓN CON datos.json';$('tablaWrap').innerHTML=`<div class="error"><b>No se pudo cargar la base de datos.</b><br>Asegúrate de subir <code>index.html</code> y <code>datos.json</code> juntos en la raíz de GitHub.</div>`;console.error(e)}}
+async function init(){try{const r=await fetch('datos.json',{cache:'no-store'});if(!r.ok)throw new Error('datos.json no encontrado');META=await r.json();DB=META.registros||[];$('fuente').textContent=`Fuente activa: ${META.fuente} · Corte ${META.actualizado}`;$('kpiRegistros').textContent=fmt(DB.length);option($('anio'),[2026,2025]);option($('tipoPeriodo'),['ACUMULADO','MENSUAL']);option($('provincia'),['TOTAL REGION','TODAS',...META.provincias]);option($('delito'),['TODOS',...META.delitos]);$('anio').value='2026';$('tipoPeriodo').value='ACUMULADO';updatePeriods();$('provincia').value='TOTAL REGION';$('delito').value='TODOS';['anio','tipoPeriodo','periodo','provincia','delito'].forEach(id=>$(id).addEventListener('change',()=>{if(id==='anio'||id==='tipoPeriodo')updatePeriods();else renderAll()}));document.querySelectorAll('.map-marker').forEach(el=>el.addEventListener('click',()=>seleccionarProvincia(el.dataset.prov,false)));renderAll()}catch(e){$('fuente').textContent='ERROR DE CONEXIÓN CON datos.json';$('tablaWrap').innerHTML=`<div class="error"><b>No se pudo cargar la base de datos.</b><br>Asegúrate de subir <code>index.html</code> y <code>datos.json</code> juntos en la raíz de GitHub.</div>`;console.error(e)}}
 init();
 </script>
 </body></html>

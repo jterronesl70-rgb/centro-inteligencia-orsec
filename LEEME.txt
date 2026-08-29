@@ -1,14 +1,20 @@
-ORSEC 1.4 – MAPA VIVO
+ORSEC 1.4.1 – MAPA REAL DE LA LIBERTAD
 
-1. NO borres los demás archivos de tu repositorio.
-2. Reemplaza solamente index.html por el incluido aquí.
-3. Mantén datos.json en la raíz, al lado de index.html.
-4. Haz Commit changes.
-5. Espera el despliegue de Vercel y pulsa Ctrl + F5.
+QUÉ CAMBIA
+- Se reemplaza el esquema dibujado por un mapa cartográfico real de las provincias de La Libertad.
+- Se conserva el motor de datos, ranking, indicadores y comparativos.
+- Las 12 provincias tienen marcadores interactivos sobre el mapa real.
+- La provincia seleccionada se ilumina en dorado y actualiza el panel.
 
-NOVEDADES:
-- Mapa Vivo de La Libertad visible dentro de Inteligencia Territorial.
-- 12 provincias interactivas.
-- Clic provincial actualiza incidencias, delito principal, participación regional y variación.
-- Ranking provincial conectado con el mapa.
-- Mantiene el cerebro de datos que ya está funcionando.
+INSTALACIÓN SEGURA
+1. No borres los demás archivos del repositorio.
+2. Reemplaza SOLO index.html con el nuevo.
+3. Mantén datos.json en la raíz.
+4. Commit changes.
+5. Espera el despliegue de Vercel.
+6. Abre la plataforma y pulsa Ctrl + F5.
+
+FUENTE CARTOGRÁFICA
+Wikimedia Commons: “Provinces of La Libertad.svg”
+Autor: Erinthecute (2026)
+Licencia: CC BY-SA 4.0
