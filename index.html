@@ -1,322 +1,373 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ORSEC | Centro de Inteligencia</title>
+<title>ORSEC V3 | Centro de Inteligencia</title>
 
 <style>
-:root{
---azul:#071A33;
---azul2:#0B3D6D;
---oro:#D8AA32;
---fondo:#EEF3F8;
---blanco:#ffffff;
-}
 
 *{margin:0;padding:0;box-sizing:border-box;}
 
 body{
 font-family:Segoe UI,Arial,sans-serif;
-background:var(--fondo);
-color:#142238;
+background:#041426;
+color:white;
+overflow-x:hidden;
 }
+
+/* Splash */
+
+#splash{
+position:fixed;
+inset:0;
+background:linear-gradient(135deg,#02101f,#06345c);
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:999;
+transition:opacity 1s;
+}
+
+#splash h1{
+font-size:38px;
+letter-spacing:3px;
+}
+
+#splash p{
+margin-top:15px;
+color:#7fd7ff;
+}
+
+.logo{
+width:120px;
+height:120px;
+border:2px solid #3ec7ff;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:40px;
+margin-bottom:20px;
+box-shadow:0 0 30px #1dafff;
+}
+
+/* Header */
 
 header{
-background:linear-gradient(135deg,#06172D,#0B3D6D);
-color:white;
-padding:20px;
+background:#05284a;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
 position:sticky;
 top:0;
-z-index:999;
-box-shadow:0 4px 18px rgba(0,0,0,.25);
+z-index:50;
+box-shadow:0 3px 10px rgba(0,0,0,.4);
 }
 
-.encabezado{
-display:flex;
-align-items:center;
-gap:18px;
-}
-
-.escudo{
-width:64px;
-height:74px;
-border:3px solid var(--oro);
-border-radius:16px 16px 24px 24px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
-font-size:34px;
-color:var(--oro);
-}
-
-.titulo h1{
-font-size:30px;
-}
-
-.titulo p{
-opacity:.8;
-}
-
-.lema{
-margin-top:15px;
-font-style:italic;
-color:#F4D77B;
+header h2{
+font-size:22px;
 }
 
 #reloj{
-margin-top:15px;
-font-size:20px;
-font-weight:bold;
+font-size:18px;
+color:#84dfff;
 }
+
+/* Hero */
 
 .hero{
-background:linear-gradient(135deg,#0B3E70,#123F62);
-color:white;
-padding:45px;
+padding:60px 30px;
 text-align:center;
+background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),
+url('https://images.unsplash.com/photo-1526778548025-fa2f459cd5ce?auto=format&fit=crop&w=1400&q=80');
+background-size:cover;
+background-position:center;
 }
 
-.hero h2{
-font-size:36px;
-margin-bottom:12px;
+.hero h1{
+font-size:48px;
+margin-bottom:15px;
 }
+
+.hero p{
+font-size:20px;
+color:#d7f3ff;
+max-width:900px;
+margin:auto;
+}
+
+/* Cards */
 
 .grid{
-max-width:1200px;
-margin:auto;
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-gap:20px;
-padding:30px;
+gap:25px;
+padding:35px;
 }
 
-.tarjeta{
-background:white;
+.card{
+background:#0a2036;
+padding:28px;
 border-radius:16px;
-padding:22px;
-cursor:pointer;
+border:1px solid #14547a;
 transition:.3s;
-box-shadow:0 5px 18px rgba(0,0,0,.08);
 }
 
-.tarjeta:hover{
+.card:hover{
 transform:translateY(-6px);
-}
-
-.icono{
-font-size:34px;
-margin-bottom:10px;
+box-shadow:0 0 20px rgba(0,170,255,.35);
 }
 
 .numero{
-font-size:36px;
+font-size:42px;
 font-weight:bold;
-color:var(--azul2);
+color:#43d3ff;
+margin:15px 0;
 }
 
-.seccion{
-display:none;
-max-width:1200px;
-margin:30px auto;
-background:white;
+/* Secciones */
+
+section{
+padding:40px 35px;
+}
+
+h3{
+font-size:28px;
+margin-bottom:20px;
+color:#6bd9ff;
+}
+
+.panel{
+background:#08192d;
 padding:25px;
 border-radius:16px;
-box-shadow:0 5px 18px rgba(0,0,0,.08);
-}
-
-.seccion.activa{
-display:block;
-}
-
-.filtros{
-display:flex;
-flex-wrap:wrap;
-gap:12px;
-margin:20px 0;
-}
-
-select{
-padding:10px;
-border-radius:8px;
-border:1px solid #CBD5E1;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:15px;
-}
-
-th,td{
-padding:10px;
-border-bottom:1px solid #E5E7EB;
-text-align:left;
-}
-
-th{
-background:#F8FAFC;
+border:1px solid #13496c;
 }
 
 .alerta{
-padding:16px;
-border-left:5px solid #D62828;
-background:#FFF1F1;
-margin:12px 0;
+padding:15px;
+margin-bottom:12px;
+border-left:5px solid;
+background:#0d2239;
 border-radius:8px;
 }
 
-.territorio{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-gap:12px;
-}
-
-.provincia{
-background:#F8FAFC;
-padding:16px;
-border-radius:10px;
-text-align:center;
-cursor:pointer;
-transition:.25s;
-}
-
-.provincia:hover{
-background:#E8EEF6;
-}
+.rojo{border-color:#ff4a4a;}
+.amarillo{border-color:#ffd54a;}
+.verde{border-color:#2cff8d;}
 
 footer{
-text-align:center;
+background:#02111f;
 padding:30px;
-color:#6B7280;
+text-align:center;
+color:#8ecfe6;
+margin-top:40px;
 }
+
+.badge{
+display:inline-block;
+padding:6px 12px;
+background:#0c385a;
+border-radius:20px;
+margin:4px;
+color:#8ddcff;
+font-size:14px;
+}
+
 </style>
 </head>
 
 <body>
 
+<div id="splash">
+
+<div class="logo">🛰️</div>
+
+<h1>ORSEC</h1>
+
+<p>Centro de Inteligencia Regional</p>
+
+</div>
+
 <header>
 
-<div class="encabezado">
-
-<div class="escudo">O</div>
-
-<div class="titulo">
-<h1>ORSEC</h1>
-<p>Centro de Inteligencia · Región La Libertad</p>
-</div>
-
-</div>
+<h2>Gobierno Regional La Libertad | ORSEC V3</h2>
 
 <div id="reloj"></div>
-
-<div class="lema">
-“Cada dato tiene una ubicación. Cada ubicación tiene un riesgo. Cada riesgo debe convertirse en una decisión.”
-</div>
 
 </header>
 
 <section class="hero">
 
-<h2>Centro de Inteligencia ORSEC</h2>
+<h1>Centro de Inteligencia ORSEC</h1>
 
-<p>Información, análisis y estadísticas para una toma de decisiones basada en evidencia.</p>
+<p>
+Observatorio Regional de Seguridad Ciudadana para el análisis territorial,
+inteligencia estratégica y monitoreo de la incidencia delictiva.
+</p>
 
 </section>
 
-<section class="grid">
+<div class="grid">
 
-<div class="tarjeta" onclick="abrir('incidencia')">
-<div class="icono">📊</div>
+<div class="card">
+
+<h4>Homicidios</h4>
+
+<div class="numero" id="homicidios">151</div>
+
+<small>Acumulado 2026</small>
+
+</div>
+
+<div class="card">
+
+<h4>Extorsiones</h4>
+
+<div class="numero" id="extorsiones">--</div>
+
+<small>Motor de datos preparado</small>
+
+</div>
+
+<div class="card">
+
+<h4>Alertas</h4>
+
+<div class="numero">3</div>
+
+<small>Seguimiento estratégico</small>
+
+</div>
+
+<div class="card">
+
+<h4>Boletines</h4>
+
+<div class="numero">12</div>
+
+<small>Documentos ejecutivos</small>
+
+</div>
+
+</div>
+
+<section>
+
 <h3>Incidencia Delictiva</h3>
-<div class="numero" id="kpiRegistros">--</div>
-<p>Consulta dinámica del Excel.</p>
-</div>
 
-<div class="tarjeta" onclick="abrir('boletines')">
-<div class="icono">📑</div>
-<h3>Boletines</h3>
-<div class="numero" id="kpiBoletin">--</div>
-<p>Indicadores automáticos.</p>
-</div>
+<div class="panel">
 
-<div class="tarjeta" onclick="abrir('alertas')">
-<div class="icono">🚨</div>
-<h3>Alertas</h3>
-<div class="numero" id="kpiAlertas">--</div>
-<p>Motor de alertas.</p>
-</div>
+<p>
+Este módulo recibirá automáticamente la información proveniente del Excel
+institucional mediante el Motor de Datos ORSEC.
+</p>
 
-<div class="tarjeta" onclick="abrir('territorio')">
-<div class="icono">🗺️</div>
-<h3>Inteligencia Territorial</h3>
-<div class="numero" id="kpiProvincias">12</div>
-<p>Provincia y distrito.</p>
+<br>
+
+<div class="badge">Provincia</div>
+
+<div class="badge">Distrito</div>
+
+<div class="badge">Delito</div>
+
+<div class="badge">Período</div>
+
 </div>
 
 </section>
 
-<div id="incidencia" class="seccion">
+<section>
 
-<h2>Incidencia Delictiva</h2>
+<h3>Sala de Situación</h3>
 
-<div class="filtros">
-<select id="anio"></select>
-<select id="mes"></select>
-<select id="provincia"></select>
-</div>
+<div class="panel">
 
-<table>
-<thead>
-<tr>
-<th>Delito</th>
-<th>Casos</th>
-</tr>
-</thead>
+<div class="alerta rojo">
 
-<tbody id="tablaDelitos">
-</tbody>
-</table>
+**Extorsión:** seguimiento prioritario.
 
 </div>
 
-<div id="boletines" class="seccion">
+<div class="alerta amarillo">
 
-<h2>Boletines Automáticos</h2>
+**Homicidios:** monitoreo permanente.
 
-<div id="boletinContenido">
-Los boletines se generarán automáticamente utilizando el Excel institucional.
+</div>
+
+<div class="alerta verde">
+
+**Detonaciones:** comportamiento favorable respecto a períodos anteriores.
+
 </div>
 
 </div>
 
-<div id="alertas" class="seccion">
+</section>
 
-<h2>Alertas Inteligentes</h2>
+<section>
 
-<div id="alertasBox"></div>
+<h3>Mapa de Inteligencia Territorial</h3>
+
+<div class="panel">
+
+<p>
+Aquí aparecerá el mapa interactivo de la Región La Libertad con navegación por
+provincias, distritos y delitos.
+</p>
 
 </div>
 
-<div id="territorio" class="seccion">
+</section>
 
-<h2>Inteligencia Territorial</h2>
+<section>
 
-<div class="territorio" id="territorioBox"></div>
+<h3>Boletines Ejecutivos</h3>
+
+<div class="panel">
+
+<ul>
+
+<li>Boletín Ejecutivo ORSEC</li>
+
+<li>Comparativo 2025–2026</li>
+
+<li>Alertas Estratégicas</li>
+
+<li>Informes CORESEC</li>
+
+</ul>
 
 </div>
+
+</section>
 
 <footer>
 
-Centro de Inteligencia ORSEC · Gobierno Regional La Libertad · 2026
+Centro de Inteligencia ORSEC · Gobierno Regional La Libertad · Versión Fundacional V3
 
 </footer>
 
 <script>
 
-let datos=[];
+// Splash
+
+setTimeout(()=>{
+
+document.getElementById("splash").style.opacity="0";
+
+setTimeout(()=>{
+
+document.getElementById("splash").style.display="none";
+
+},1000);
+
+},2000);
+
+// Reloj
 
 function reloj(){
 
@@ -332,84 +383,24 @@ setInterval(reloj,1000);
 
 reloj();
 
-function abrir(id){
+// Motor de Datos ORSEC (Base)
 
-document.querySelectorAll(".seccion").forEach(s=>s.classList.remove("activa"));
+const datosORSEC={
 
-document.getElementById(id).classList.add("activa");
+acumulado:{
 
-}
+homicidios:151,
 
-async function cargarDatos(){
-
-try{
-
-const r=await fetch("datos.json");
-
-const json=await r.json();
-
-datos=json.registros||[];
-
-document.getElementById("kpiRegistros").innerHTML=datos.length;
-
-document.getElementById("kpiBoletin").innerHTML="AUTO";
-
-document.getElementById("kpiAlertas").innerHTML="ON";
-
-const provincias=[...new Set(datos.map(x=>x.Provincia).filter(Boolean))];
-
-const territorio=document.getElementById("territorioBox");
-
-provincias.forEach(p=>{
-
-territorio.innerHTML+=`<div class="provincia">${p}</div>`;
-
-});
-
-const delitos={};
-
-datos.forEach(d=>{
-
-const nombre=d.Delito||"Sin dato";
-
-delitos[nombre]=(delitos[nombre]||0)+1;
-
-});
-
-const tabla=document.getElementById("tablaDelitos");
-
-Object.entries(delitos)
-.sort((a,b)=>b[1]-a[1])
-.forEach(([d,c])=>{
-
-tabla.innerHTML+=`<tr><td>${d}</td><td>${c}</td></tr>`;
-
-});
-
-const alertas=document.getElementById("alertasBox");
-
-Object.entries(delitos)
-.sort((a,b)=>b[1]-a[1])
-.slice(0,5)
-.forEach(([d,c])=>{
-
-alertas.innerHTML+=`
-<div class="alerta">
-<strong>${d}</strong><br>
-Alta concentración detectada (${c} registros).
-</div>`;
-
-});
-
-}catch(e){
-
-console.log(e);
+extorsiones:null
 
 }
 
-}
+};
 
-cargarDatos();
+document.getElementById("homicidios").innerText=datosORSEC.acumulado.homicidios;
+
+document.getElementById("extorsiones").innerText=
+datosORSEC.acumulado.extorsiones ?? "--";
 
 </script>
 
