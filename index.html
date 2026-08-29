@@ -1,1 +1,417 @@
-<!DOCTYPE html> <html lang="es"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Centro de Inteligencia ORSEC | La Libertad</title> <style> *{ box-sizing:border-box; margin:0; padding:0; } body{ font-family:Arial,Helvetica,sans-serif; background:#06111d; color:#fff; min-height:100vh; overflow-x:hidden; } /* ========================= PANTALLA DE ARRANQUE ========================= */ #splash{ position:fixed; inset:0; z-index:9999; background: radial-gradient(circle at center,#123653 0%,#071522 48%,#02070c 100%); display:flex; align-items:center; justify-content:center; text-align:center; transition:opacity 1s ease; } .splash-content{ animation:entrada 1.8s ease; } .splash-shield{ width:150px; height:150px; margin:auto; border:2px solid #b9d8ec; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:55px; box-shadow:0 0 35px rgba(91,181,255,.45); } .splash-content h1{ margin-top:25px; font-size:30px; letter-spacing:4px; } .splash-content p{ margin-top:10px; color:#9dc7e7; letter-spacing:2px; } .loader{ width:240px; height:4px; background:#17344b; margin:30px auto 0; overflow:hidden; } .loader span{ display:block; height:100%; width:0; background:#54c7ff; animation:carga 2.5s linear forwards; } @keyframes carga{ to{width:100%} } @keyframes entrada{ from{opacity:0;transform:scale(.8)} to{opacity:1;transform:scale(1)} } /* ========================= BARRA INSTITUCIONAL ========================= */ header{ background:linear-gradient(90deg,#07131f,#0d2639,#07131f); border-bottom:1px solid #21445d; padding:14px 25px; display:flex; justify-content:space-between; align-items:center; gap:20px; } .brand{ display:flex; align-items:center; gap:15px; } .logo{ width:58px; height:58px; border:2px solid #8bc7e9; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; color:#9ddcff; } .brand h2{ font-size:20px; letter-spacing:2px; } .brand small{ color:#87aac0; } .clock{ text-align:right; } #time{ font-size:23px; font-weight:bold; color:#72d3ff; } #date{ color:#8caabd; font-size:12px; } /* ========================= CONTENEDOR PRINCIPAL ========================= */ main{ max-width:1450px; margin:auto; padding:25px; } .hero{ text-align:center; margin-bottom:25px; } .hero h1{ font-size:34px; letter-spacing:3px; } .hero p{ margin-top:8px; color:#91afc2; } /* ========================= MAPA ========================= */ .map-panel{ position:relative; min-height:310px; border:1px solid #214a63; border-radius:16px; overflow:hidden; background: linear-gradient(rgba(4,19,31,.83),rgba(4,19,31,.91)), radial-gradient(circle at 50% 45%,#245a78,#071522 65%); margin-bottom:25px; } .map-grid{ position:absolute; inset:0; opacity:.25; background-image: linear-gradient(#58b9e8 1px,transparent 1px), linear-gradient(90deg,#58b9e8 1px,transparent 1px); background-size:40px 40px; } .region{ position:absolute; width:230px; height:250px; left:50%; top:50%; transform:translate(-50%,-50%) rotate(12deg); border:3px solid #63cfff; border-radius:48% 52% 43% 57%; box-shadow:0 0 35px rgba(65,195,255,.35); } .region:after{ content:"LA LIBERTAD"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; transform:rotate(-12deg); color:#9ddfff; font-weight:bold; letter-spacing:2px; } .map-info{ position:absolute; left:25px; top:25px; background:rgba(4,17,28,.85); padding:15px; border-radius:10px; border-left:3px solid #56caff; } .map-info strong{ color:#70d3ff; } /* ========================= 4 MÓDULOS ========================= */ .modules{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; } .module{ background:linear-gradient(145deg,#0b2031,#081622); border:1px solid #21465e; border-radius:15px; padding:22px; min-height:190px; cursor:pointer; transition:.3s; position:relative; overflow:hidden; } .module:hover{ transform:translateY(-6px); border-color:#61ceff; box-shadow:0 12px 35px rgba(45,178,235,.18); } .module .icon{ font-size:34px; margin-bottom:15px; } .module h3{ color:#8edcff; margin-bottom:8px; } .module p{ color:#8ca6b6; font-size:14px; line-height:1.5; } .module .open{ position:absolute; bottom:15px; right:18px; color:#55caff; font-size:12px; } /* ========================= PANEL DE INFORMACIÓN ========================= */ #panel{ display:none; margin-top:25px; background:#081825; border:1px solid #28617d; border-radius:15px; padding:25px; animation:aparecer .4s ease; } @keyframes aparecer{ from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} } .panel-title{ display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1d3d51; padding-bottom:15px; margin-bottom:20px; } .panel-title h2{ color:#7ed8ff; } .close{ background:#142d3d; border:1px solid #31556a; color:#fff; border-radius:8px; padding:8px 14px; cursor:pointer; } .data-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:15px; } .data-card{ background:#0c2232; padding:18px; border-radius:10px; border:1px solid #1d4257; } .data-card strong{ display:block; color:#6fd3ff; font-size:23px; margin-top:8px; } .alert{ margin-top:20px; padding:15px; background:#102b3c; border-left:4px solid #55caff; color:#b5ccda; } /* ========================= PIE ========================= */ footer{ margin-top:30px; border-top:1px solid #1b3b4f; padding:20px; text-align:center; color:#708c9d; font-size:12px; } /* ========================= RESPONSIVE ========================= */ @media(max-width:1000px){ .modules{ grid-template-columns:repeat(2,1fr); } .data-grid{ grid-template-columns:1fr; } } @media(max-width:600px){ header{ flex-direction:column; text-align:center; } .clock{ text-align:center; } .modules{ grid-template-columns:1fr; } .hero h1{ font-size:25px; } } </style> </head> <body> <!-- ========================= ARRANQUE ========================= --> <div id="splash"> <div class="splash-content"> <div class="splash-shield">◈</div> <h1>ORSEC</h1> <p>CENTRO DE INTELIGENCIA</p> <div class="loader"><span></span></div> </div> </div> <!-- ========================= CABECERA ========================= --> <header> <div class="brand"> <div class="logo">OR</div> <div> <h2>CENTRO DE INTELIGENCIA ORSEC</h2> <small>Gobierno Regional de La Libertad</small> </div> </div> <div class="clock"> <div id="time">00:00:00</div> <div id="date">Cargando...</div> </div> </header> <main> <section class="hero"> <h1>SISTEMA REGIONAL DE INTELIGENCIA</h1> <p>Monitoreo estratégico de seguridad e incidencia territorial</p> </section> <!-- MAPA --> <section class="map-panel"> <div class="map-grid"></div> <div class="map-info"> <strong>MONITOREO TERRITORIAL</strong><br> Región La Libertad<br> Estado: <span style="color:#63e1a4">OPERATIVO</span> </div> <div class="region"></div> </section> <!-- 4 VENTANAS --> <section class="modules"> <div class="module" onclick="abrirModulo('incidencia')"> <div class="icon">◉</div> <h3>Incidencia Delictiva</h3> <p>Visualización territorial de la incidencia registrada.</p> <span class="open">ABRIR →</span> </div> <div class="module" onclick="abrirModulo('boletines')"> <div class="icon">▤</div> <h3>Boletines</h3> <p>Informes ejecutivos e inteligencia estratégica.</p> <span class="open">ABRIR →</span> </div> <div class="module" onclick="abrirModulo('alertas')"> <div class="icon">⚠</div> <h3>Alertas</h3> <p>Monitoreo de tendencias y riesgos emergentes.</p> <span class="open">ABRIR →</span> </div> <div class="module" onclick="abrirModulo('territorio')"> <div class="icon">⌖</div> <h3>Inteligencia Territorial</h3> <p>Análisis estratégico por provincias y territorios.</p> <span class="open">ABRIR →</span> </div> </section> <!-- PANEL DINÁMICO --> <section id="panel"> <div class="panel-title"> <h2 id="panelTitle"></h2> <button class="close" onclick="cerrarModulo()">Cerrar</button> </div> <div id="panelContent"></div> </section> </main> <footer> Centro de Inteligencia ORSEC · Gobierno Regional La Libertad · Demo 2026 </footer> <script> /* ========================= RELOJ ========================= */ function actualizarReloj(){ const ahora = new Date(); const hora = ahora.toLocaleTimeString('es-PE',{ hour12:false }); const fecha = ahora.toLocaleDateString('es-PE',{ weekday:'long', year:'numeric', month:'long', day:'numeric' }); document.getElementById("time").textContent = hora; document.getElementById("date").textContent = fecha.charAt(0).toUpperCase()+fecha.slice(1); } setInterval(actualizarReloj,1000); actualizarReloj(); /* ========================= ARRANQUE ========================= */ window.addEventListener("load",()=>{ setTimeout(()=>{ const splash=document.getElementById("splash"); splash.style.opacity="0"; setTimeout(()=>{ splash.style.display="none"; },1000); },2800); }); /* ========================= MÓDULOS ========================= */ function abrirModulo(tipo){ const panel=document.getElementById("panel"); const title=document.getElementById("panelTitle"); const content=document.getElementById("panelContent"); panel.style.display="block"; if(tipo==="incidencia"){ title.textContent="INCIDENCIA DELICTIVA"; content.innerHTML=` <div class="data-grid"> <div class="data-card"> Homicidios <strong>147</strong> Registro acumulado </div> <div class="data-card"> Detonaciones <strong>↓</strong> Tendencia descendente </div> <div class="data-card"> Territorios monitoreados <strong>12</strong> Provincias </div> </div> <div class="alert"> <strong>LECTURA ESTRATÉGICA</strong><br> El sistema permite visualizar tendencias, concentraciones territoriales y variaciones de incidencia para apoyar la toma de decisiones. </div> `; } if(tipo==="boletines"){ title.textContent="BOLETINES DE INTELIGENCIA"; content.innerHTML=` <div class="data-grid"> <div class="data-card"> Boletín Ejecutivo <strong>01</strong> Situación regional </div> <div class="data-card"> Análisis Comparativo <strong>2026</strong> Incidencia regional </div> <div class="data-card"> Informe Estratégico <strong>ORSEC</strong> Evaluación territorial </div> </div> <div class="alert"> Espacio destinado a los productos de inteligencia, informes ejecutivos y documentos estratégicos. </div> `; } if(tipo==="alertas"){ title.textContent="SISTEMA DE ALERTAS"; content.innerHTML=` <div class="data-grid"> <div class="data-card"> Estado general <strong>ACTIVO</strong> Monitoreo permanente </div> <div class="data-card"> Tendencias <strong>03</strong> En observación </div> <div class="data-card"> Riesgos emergentes <strong>02</strong> Requieren seguimiento </div> </div> <div class="alert"> Módulo preparado para integrar alertas territoriales, tendencias emergentes y situaciones que requieran atención prioritaria. </div> `; } if(tipo==="territorio"){ title.textContent="INTELIGENCIA TERRITORIAL"; content.innerHTML=` <div class="data-grid"> <div class="data-card"> Provincias <strong>12</strong> Cobertura regional </div> <div class="data-card"> Distritos <strong>84</strong> Ámbito de análisis </div> <div class="data-card"> Monitoreo <strong>24/7</strong> Vigilancia estratégica </div> </div> <div class="alert"> Módulo destinado al análisis geográfico, comparación provincial y generación de inteligencia para la planificación operativa. </div> `; } panel.scrollIntoView({ behavior:"smooth", block:"start" }); } function cerrarModulo(){ const panel=document.getElementById("panel"); panel.style.display="none"; window.scrollTo({ top:0, behavior:"smooth" }); } </script> </body> </html>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORSEC | Centro de Inteligencia</title>
+
+<style>
+:root{
+--azul:#071A33;
+--azul2:#0B3D6D;
+--oro:#D8AA32;
+--fondo:#EEF3F8;
+--blanco:#ffffff;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:Segoe UI,Arial,sans-serif;
+background:var(--fondo);
+color:#142238;
+}
+
+header{
+background:linear-gradient(135deg,#06172D,#0B3D6D);
+color:white;
+padding:20px;
+position:sticky;
+top:0;
+z-index:999;
+box-shadow:0 4px 18px rgba(0,0,0,.25);
+}
+
+.encabezado{
+display:flex;
+align-items:center;
+gap:18px;
+}
+
+.escudo{
+width:64px;
+height:74px;
+border:3px solid var(--oro);
+border-radius:16px 16px 24px 24px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+font-size:34px;
+color:var(--oro);
+}
+
+.titulo h1{
+font-size:30px;
+}
+
+.titulo p{
+opacity:.8;
+}
+
+.lema{
+margin-top:15px;
+font-style:italic;
+color:#F4D77B;
+}
+
+#reloj{
+margin-top:15px;
+font-size:20px;
+font-weight:bold;
+}
+
+.hero{
+background:linear-gradient(135deg,#0B3E70,#123F62);
+color:white;
+padding:45px;
+text-align:center;
+}
+
+.hero h2{
+font-size:36px;
+margin-bottom:12px;
+}
+
+.grid{
+max-width:1200px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+padding:30px;
+}
+
+.tarjeta{
+background:white;
+border-radius:16px;
+padding:22px;
+cursor:pointer;
+transition:.3s;
+box-shadow:0 5px 18px rgba(0,0,0,.08);
+}
+
+.tarjeta:hover{
+transform:translateY(-6px);
+}
+
+.icono{
+font-size:34px;
+margin-bottom:10px;
+}
+
+.numero{
+font-size:36px;
+font-weight:bold;
+color:var(--azul2);
+}
+
+.seccion{
+display:none;
+max-width:1200px;
+margin:30px auto;
+background:white;
+padding:25px;
+border-radius:16px;
+box-shadow:0 5px 18px rgba(0,0,0,.08);
+}
+
+.seccion.activa{
+display:block;
+}
+
+.filtros{
+display:flex;
+flex-wrap:wrap;
+gap:12px;
+margin:20px 0;
+}
+
+select{
+padding:10px;
+border-radius:8px;
+border:1px solid #CBD5E1;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th,td{
+padding:10px;
+border-bottom:1px solid #E5E7EB;
+text-align:left;
+}
+
+th{
+background:#F8FAFC;
+}
+
+.alerta{
+padding:16px;
+border-left:5px solid #D62828;
+background:#FFF1F1;
+margin:12px 0;
+border-radius:8px;
+}
+
+.territorio{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+gap:12px;
+}
+
+.provincia{
+background:#F8FAFC;
+padding:16px;
+border-radius:10px;
+text-align:center;
+cursor:pointer;
+transition:.25s;
+}
+
+.provincia:hover{
+background:#E8EEF6;
+}
+
+footer{
+text-align:center;
+padding:30px;
+color:#6B7280;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="encabezado">
+
+<div class="escudo">O</div>
+
+<div class="titulo">
+<h1>ORSEC</h1>
+<p>Centro de Inteligencia · Región La Libertad</p>
+</div>
+
+</div>
+
+<div id="reloj"></div>
+
+<div class="lema">
+“Cada dato tiene una ubicación. Cada ubicación tiene un riesgo. Cada riesgo debe convertirse en una decisión.”
+</div>
+
+</header>
+
+<section class="hero">
+
+<h2>Centro de Inteligencia ORSEC</h2>
+
+<p>Información, análisis y estadísticas para una toma de decisiones basada en evidencia.</p>
+
+</section>
+
+<section class="grid">
+
+<div class="tarjeta" onclick="abrir('incidencia')">
+<div class="icono">📊</div>
+<h3>Incidencia Delictiva</h3>
+<div class="numero" id="kpiRegistros">--</div>
+<p>Consulta dinámica del Excel.</p>
+</div>
+
+<div class="tarjeta" onclick="abrir('boletines')">
+<div class="icono">📑</div>
+<h3>Boletines</h3>
+<div class="numero" id="kpiBoletin">--</div>
+<p>Indicadores automáticos.</p>
+</div>
+
+<div class="tarjeta" onclick="abrir('alertas')">
+<div class="icono">🚨</div>
+<h3>Alertas</h3>
+<div class="numero" id="kpiAlertas">--</div>
+<p>Motor de alertas.</p>
+</div>
+
+<div class="tarjeta" onclick="abrir('territorio')">
+<div class="icono">🗺️</div>
+<h3>Inteligencia Territorial</h3>
+<div class="numero" id="kpiProvincias">12</div>
+<p>Provincia y distrito.</p>
+</div>
+
+</section>
+
+<div id="incidencia" class="seccion">
+
+<h2>Incidencia Delictiva</h2>
+
+<div class="filtros">
+<select id="anio"></select>
+<select id="mes"></select>
+<select id="provincia"></select>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Delito</th>
+<th>Casos</th>
+</tr>
+</thead>
+
+<tbody id="tablaDelitos">
+</tbody>
+</table>
+
+</div>
+
+<div id="boletines" class="seccion">
+
+<h2>Boletines Automáticos</h2>
+
+<div id="boletinContenido">
+Los boletines se generarán automáticamente utilizando el Excel institucional.
+</div>
+
+</div>
+
+<div id="alertas" class="seccion">
+
+<h2>Alertas Inteligentes</h2>
+
+<div id="alertasBox"></div>
+
+</div>
+
+<div id="territorio" class="seccion">
+
+<h2>Inteligencia Territorial</h2>
+
+<div class="territorio" id="territorioBox"></div>
+
+</div>
+
+<footer>
+
+Centro de Inteligencia ORSEC · Gobierno Regional La Libertad · 2026
+
+</footer>
+
+<script>
+
+let datos=[];
+
+function reloj(){
+
+const ahora=new Date();
+
+document.getElementById("reloj").innerHTML=
+ahora.toLocaleDateString("es-PE")+" · "+
+ahora.toLocaleTimeString("es-PE");
+
+}
+
+setInterval(reloj,1000);
+
+reloj();
+
+function abrir(id){
+
+document.querySelectorAll(".seccion").forEach(s=>s.classList.remove("activa"));
+
+document.getElementById(id).classList.add("activa");
+
+}
+
+async function cargarDatos(){
+
+try{
+
+const r=await fetch("datos.json");
+
+const json=await r.json();
+
+datos=json.registros||[];
+
+document.getElementById("kpiRegistros").innerHTML=datos.length;
+
+document.getElementById("kpiBoletin").innerHTML="AUTO";
+
+document.getElementById("kpiAlertas").innerHTML="ON";
+
+const provincias=[...new Set(datos.map(x=>x.Provincia).filter(Boolean))];
+
+const territorio=document.getElementById("territorioBox");
+
+provincias.forEach(p=>{
+
+territorio.innerHTML+=`<div class="provincia">${p}</div>`;
+
+});
+
+const delitos={};
+
+datos.forEach(d=>{
+
+const nombre=d.Delito||"Sin dato";
+
+delitos[nombre]=(delitos[nombre]||0)+1;
+
+});
+
+const tabla=document.getElementById("tablaDelitos");
+
+Object.entries(delitos)
+.sort((a,b)=>b[1]-a[1])
+.forEach(([d,c])=>{
+
+tabla.innerHTML+=`<tr><td>${d}</td><td>${c}</td></tr>`;
+
+});
+
+const alertas=document.getElementById("alertasBox");
+
+Object.entries(delitos)
+.sort((a,b)=>b[1]-a[1])
+.slice(0,5)
+.forEach(([d,c])=>{
+
+alertas.innerHTML+=`
+<div class="alerta">
+<strong>${d}</strong><br>
+Alta concentración detectada (${c} registros).
+</div>`;
+
+});
+
+}catch(e){
+
+console.log(e);
+
+}
+
+}
+
+cargarDatos();
+
+</script>
+
+</body>
+</html>
