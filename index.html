@@ -46,18 +46,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;bor
 @media(max-width:650px){.map-marker{font-size:7px;padding:3px 5px}}
 
 
-/* ===== ORSEC 1.5.1 · MÓDULOS REALMENTE INTEGRADOS ===== */
-.grid{grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
-.chart-shell{margin-top:18px;background:#f8fbfe;border:1px solid #dce7f1;border-radius:15px;padding:16px}
-.chart-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.chart-head h3,.chart-shell h3{margin:0 0 12px;color:#123b62}
-.orsec-bars{display:grid;gap:9px}.orsec-bar-row{display:grid;grid-template-columns:minmax(140px,220px) 1fr 64px;gap:10px;align-items:center;font-size:12px}
-.orsec-bar-label{font-weight:700;color:#163d65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.orsec-bar-track{height:14px;background:#e7eef5;border-radius:999px;overflow:hidden}.orsec-bar-fill{height:100%;background:linear-gradient(90deg,#0b3d6d,#1682c4);border-radius:999px}.orsec-bar-val{text-align:right;font-weight:900;color:#0b3d6d}
-.boletin-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.btn.secundario{background:#e8f1f8;color:#0b3d6d}
-.alert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.alert-card{border-radius:12px;padding:13px;border:1px solid #e0e8ef;background:#fff}.alert-card.alta{border-left:5px solid #c62828}.alert-card.media{border-left:5px solid #e6a700}.alert-card.baja{border-left:5px solid #18864b}.alert-card .delta{font-size:21px;font-weight:900;margin-top:5px}
-.sala-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}.sala-kpi{background:linear-gradient(145deg,#071a33,#0b3d6d);color:#fff;border-radius:14px;padding:16px}.sala-kpi small{color:#b9cee2}.sala-kpi b{display:block;color:#f4d77b;font-size:22px;margin-top:8px}.sala-columns{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.sala-box{background:#f8fbfe;border:1px solid #dce7f1;border-radius:14px;padding:16px}.mini-alert{padding:10px;border-radius:9px;background:#fff;border-left:4px solid #e6a700;margin-bottom:8px;font-size:12px}
-@media(max-width:850px){.sala-grid{grid-template-columns:repeat(2,1fr)}.sala-columns{grid-template-columns:1fr}.orsec-bar-row{grid-template-columns:110px 1fr 48px}}
+.chart-shell{margin-top:16px;background:#fff;border:1px solid #e2e8f0;border-radius:15px;padding:16px}.orsec-bars{display:grid;gap:9px}.orsec-bar-row{display:grid;grid-template-columns:minmax(135px,220px) 1fr 60px;gap:10px;align-items:center;font-size:12px}.orsec-bar-label{font-weight:700;color:#163d65;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.orsec-bar-track{height:13px;background:#eaf0f6;border-radius:999px;overflow:hidden}.orsec-bar-fill{height:100%;background:linear-gradient(90deg,#0b3d6d,#1e83c5);border-radius:999px}.orsec-bar-val{text-align:right;font-weight:800;color:#0b3d6d}.orsec-btn{border:0;border-radius:9px;padding:9px 13px;background:#0b3d6d;color:#fff;font-weight:700;cursor:pointer}.orsec-btn.alt{background:#e9f2fa;color:#0b3d6d}.boletin-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.boletin-texto{line-height:1.65;color:#334155}.alert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.alert-card{border-radius:12px;padding:13px;border:1px solid #e2e8f0;background:#fff}.alert-card.alta{border-left:5px solid #c62828}.alert-card.media{border-left:5px solid #e6a700}.alert-card.baja{border-left:5px solid #18864b}.alert-card .delta{font-size:21px;font-weight:900;margin-top:5px}.sala-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}.sala-kpi{background:linear-gradient(145deg,#071a33,#0b3d6d);color:#fff;border-radius:14px;padding:16px}.sala-kpi small{color:#b9cee2}.sala-kpi b{display:block;color:#f4d77b;font-size:22px;margin-top:8px}.sala-columns{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.sala-box{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:16px}.mini-alert{padding:9px 10px;border-radius:9px;background:#f8fafc;border-left:4px solid #e6a700;font-size:12px;margin-bottom:7px}@media(max-width:850px){.sala-grid{grid-template-columns:repeat(2,1fr)}.sala-columns{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -71,8 +60,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;bor
  <div class="tarjeta" data-mod="incidencia" onclick="abrir('incidencia',this)"><div class="icono">📊</div><h3>Incidencia Delictiva</h3><div class="numero" id="kpiRegistros">--</div><p>Consulta dinámica del Excel.</p></div>
  <div class="tarjeta" data-mod="boletines" onclick="abrir('boletines',this)"><div class="icono">📑</div><h3>Boletines</h3><div class="numero" id="kpiBoletin">AUTO</div><p>Resumen ejecutivo automático.</p></div>
  <div class="tarjeta" data-mod="alertas" onclick="abrir('alertas',this)"><div class="icono">🚨</div><h3>Alertas</h3><div class="numero" id="kpiAlertas">--</div><p>Variaciones 2025–2026.</p></div>
- <div class="tarjeta" data-mod="territorio" onclick="abrir('territorio',this)"><div class="icono">🗺️</div><h3>Inteligencia Territorial</h3><div class="numero" id="kpiProvincias">12</div><p>Mapa y ranking provincial.</p></div>
- <div class="tarjeta" data-mod="sala" onclick="abrir('sala',this)"><div class="icono">🧠</div><h3>Sala CORESEC</h3><div class="numero">LIVE</div><p>Vista ejecutiva consolidada.</p></div>
+ <div class="tarjeta" data-mod="territorio" onclick="abrir('territorio',this)"><div class="icono">🗺️</div><h3>Inteligencia Territorial</h3><div class="numero" id="kpiProvincias">12</div><p>Ranking por provincia.</p></div>
 </section>
 
 <div id="incidencia" class="seccion activa">
@@ -80,11 +68,10 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;bor
  <div class="filtros"><select id="anio"></select><select id="tipoPeriodo"></select><select id="periodo"></select><select id="provincia"></select><select id="delito"></select><button class="btn" onclick="limpiarFiltros()">Restablecer</button></div>
  <div class="kpis"><div class="kpi"><small>Total seleccionado</small><b id="kTotal">--</b></div><div class="kpi"><small>Delito principal</small><b id="kDelito" style="font-size:17px">--</b></div><div class="kpi"><small>Provincia líder</small><b id="kProvincia" style="font-size:17px">--</b></div><div class="kpi"><small>Variación comparable</small><b id="kVariacion">--</b></div></div>
  <div id="tablaWrap" class="loading">Cargando información…</div>
- <div class="chart-shell"><div class="chart-head"><h3>Gráfico dinámico · principales delitos</h3><span class="badge">DATOS EXCEL</span></div><div class="orsec-bars" id="barrasDelitos"></div></div>
 </div>
 
-<div id="boletines" class="seccion"><div class="seccion-head"><h2>Boletín Automático</h2><span class="badge">Generado por ORSEC</span></div><div class="boletin-actions"><button class="btn" onclick="renderBoletin()">Actualizar análisis</button><button class="btn secundario" onclick="copiarBoletin()">Copiar texto</button></div><div class="boletin" id="boletinContenido">Cargando…</div><div class="chart-shell"><h3>Top delictivo del período</h3><div class="orsec-bars" id="barrasBoletin"></div></div><div class="nota">Texto generado automáticamente a partir de los datos seleccionados; debe ser revisado antes de su uso institucional.</div></div>
-<div id="alertas" class="seccion"><div class="seccion-head"><h2>Alertas Inteligentes</h2><span class="badge">Comparativo interanual 2025 ↔ 2026</span></div><div id="alertasBox" class="loading">Calculando variaciones…</div><div class="chart-shell"><h3>Semáforo de variaciones</h3><div class="alert-grid" id="alertasComparativas"></div></div></div>
+<div id="boletines" class="seccion"><div class="seccion-head"><h2>Boletín Automático</h2><span class="badge">Generado por ORSEC</span></div><div class="boletin" id="boletinContenido">Cargando…</div><div class="nota">Texto generado automáticamente a partir de los datos seleccionados; puede ser revisado antes de su uso institucional.</div></div>
+<div id="alertas" class="seccion"><div class="seccion-head"><h2>Alertas Inteligentes</h2><span class="badge">Comparativo interanual</span></div><div id="alertasBox" class="loading">Calculando variaciones…</div></div>
 <div id="territorio" class="seccion">
  <div class="seccion-head"><h2>Inteligencia Territorial</h2><span class="badge">MAPA VIVO · 12 provincias</span></div>
  <div class="mapa-layout">
@@ -124,26 +111,13 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;bor
   </aside>
  </div>
 </div>
-<div id="sala" class="seccion">
- <div class="seccion-head"><h2>Sala de Situación CORESEC</h2><span class="badge">MODO EJECUTIVO</span></div>
- <div class="sala-grid">
-  <div class="sala-kpi"><small>Total seleccionado</small><b id="salaTotal">--</b></div>
-  <div class="sala-kpi"><small>Provincia prioritaria</small><b id="salaProvincia">--</b></div>
-  <div class="sala-kpi"><small>Delito prioritario</small><b id="salaDelito">--</b></div>
-  <div class="sala-kpi"><small>Variación interanual</small><b id="salaVar">--</b></div>
- </div>
- <div class="sala-columns">
-  <div class="sala-box"><h3>Lectura ejecutiva</h3><div id="salaLectura" class="boletin">--</div></div>
-  <div class="sala-box"><h3>Alertas prioritarias</h3><div id="salaAlertas"></div></div>
- </div>
-</div>
 <footer>Centro de Inteligencia ORSEC · Gobierno Regional La Libertad · Fuente: Excel institucional del ORSEC</footer>
 <script>
 const MESES=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SETIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 let DB=[];let META={};
 const $=id=>document.getElementById(id);const fmt=n=>Number(n||0).toLocaleString('es-PE');
 function reloj(){const a=new Date();$('reloj').textContent=a.toLocaleDateString('es-PE')+' · '+a.toLocaleTimeString('es-PE')}setInterval(reloj,1000);reloj();
-function abrir(id,card){document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.tarjeta').forEach(t=>t.classList.remove('activa'));if(card)card.classList.add('activa');if(id==='boletines')renderBoletin();if(id==='alertas')renderAlertas();if(id==='territorio')renderTerritorio();if(id==='sala')renderSalaCORESEC();setTimeout(()=>$(id).scrollIntoView({behavior:'smooth',block:'start'}),40)}
+function abrir(id,card){document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.tarjeta').forEach(t=>t.classList.remove('activa'));if(card)card.classList.add('activa');if(id==='boletines')renderBoletin();if(id==='alertas')renderAlertas();if(id==='territorio')renderTerritorio();setTimeout(()=>$(id).scrollIntoView({behavior:'smooth',block:'start'}),40)}
 function option(sel,vals,label){sel.innerHTML='';vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=(label&&label[v])||v;sel.appendChild(o)})}
 function registros(f={}){return DB.filter(r=>(!f.anio||r.Anio==f.anio)&&(!f.tipo||r.TipoPeriodo===f.tipo)&&(!f.periodo||r.Periodo===f.periodo)&&(!f.provincia||r.Provincia===f.provincia)&&(!f.delito||r.Delito===f.delito))}
 function current(){return {anio:+$('anio').value,tipo:$('tipoPeriodo').value,periodo:$('periodo').value,provincia:$('provincia').value,delito:$('delito').value}}
@@ -199,53 +173,35 @@ function seleccionarProvincia(p,saltar=true){
 function renderAll(){renderIncidencia();renderBoletin();renderAlertas();renderTerritorio()}
 async function init(){try{const r=await fetch('datos.json',{cache:'no-store'});if(!r.ok)throw new Error('datos.json no encontrado');META=await r.json();DB=META.registros||[];$('fuente').textContent=`Fuente activa: ${META.fuente} · Corte ${META.actualizado}`;$('kpiRegistros').textContent=fmt(DB.length);option($('anio'),[2026,2025]);option($('tipoPeriodo'),['ACUMULADO','MENSUAL']);option($('provincia'),['TOTAL REGION','TODAS',...META.provincias]);option($('delito'),['TODOS',...META.delitos]);$('anio').value='2026';$('tipoPeriodo').value='ACUMULADO';updatePeriods();$('provincia').value='TOTAL REGION';$('delito').value='TODOS';['anio','tipoPeriodo','periodo','provincia','delito'].forEach(id=>$(id).addEventListener('change',()=>{if(id==='anio'||id==='tipoPeriodo')updatePeriods();else renderAll()}));document.querySelectorAll('.map-marker').forEach(el=>el.addEventListener('click',()=>seleccionarProvincia(el.dataset.prov,false)));renderAll()}catch(e){$('fuente').textContent='ERROR DE CONEXIÓN CON datos.json';$('tablaWrap').innerHTML=`<div class="error"><b>No se pudo cargar la base de datos.</b><br>Asegúrate de subir <code>index.html</code> y <code>datos.json</code> juntos en la raíz de GitHub.</div>`;console.error(e)}}
 init();
+</script>
 
-function topActual(){
- const f=current();
- let rows=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo});
+<section class="seccion" id="centroOperativo">
+ <div class="seccion-head"><h2>Módulos Operativos ORSEC</h2><span class="badge">CORESEC</span></div>
+ <div class="chart-shell"><h3>Gráfico dinámico · principales delitos</h3><div class="orsec-bars" id="barrasDelitos"></div></div>
+ <div class="chart-shell"><h3>Boletín ejecutivo automático</h3><div class="boletin-actions"><button class="orsec-btn" onclick="generarBoletinEjecutivo()">Actualizar boletín</button><button class="orsec-btn alt" onclick="copiarBoletin()">Copiar texto</button></div><div id="boletinEjecutivo" class="boletin-texto"></div></div>
+ <div class="chart-shell"><h3>Motor de alertas comparativas · 2025 ↔ 2026</h3><div class="alert-grid" id="alertasComparativas"></div></div>
+ <div class="chart-shell"><div class="seccion-head"><h2>Sala de Situación CORESEC</h2><span class="badge">MODO EJECUTIVO</span></div>
+  <div class="sala-grid"><div class="sala-kpi"><small>Total seleccionado</small><b id="salaTotal">--</b></div><div class="sala-kpi"><small>Provincia prioritaria</small><b id="salaProvincia">--</b></div><div class="sala-kpi"><small>Delito prioritario</small><b id="salaDelito">--</b></div><div class="sala-kpi"><small>Variación interanual</small><b id="salaVar">--</b></div></div>
+  <div class="sala-columns"><div class="sala-box"><h3>Lectura ejecutiva</h3><div id="salaLectura" class="boletin-texto">--</div></div><div class="sala-box"><h3>Semáforo de alertas</h3><div id="salaAlertas">--</div></div></div>
+ </div>
+</section>
+
+
+<script>
+function orsecTop(){
+ const f=current();let rows=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo});
  rows=rows.filter(r=>(f.provincia==='TODAS'||f.provincia==='TOTAL REGION')?r.Provincia==='TOTAL REGION':r.Provincia===f.provincia);
  if(f.delito!=='TODOS')rows=rows.filter(r=>r.Delito===f.delito);
- const c={};rows.forEach(r=>c[r.Delito]=(c[r.Delito]||0)+r.Casos);
- return Object.entries(c).sort((a,b)=>b[1]-a[1]);
+ const c={};rows.forEach(r=>c[r.Delito]=(c[r.Delito]||0)+r.Casos);return Object.entries(c).sort((a,b)=>b[1]-a[1]);
 }
-function barras(id,arr){
- const b=$(id);if(!b)return;const a=arr.slice(0,10),m=Math.max(1,...a.map(x=>x[1]));
- b.innerHTML=a.length?a.map(([d,v])=>`<div class="orsec-bar-row"><div class="orsec-bar-label" title="${d}">${d}</div><div class="orsec-bar-track"><div class="orsec-bar-fill" style="width:${(v/m*100).toFixed(1)}%"></div></div><div class="orsec-bar-val">${fmt(v)}</div></div>`).join(''):'<div class="nota">Sin datos.</div>';
-}
-function renderGraficoIncidencia(){barras('barrasDelitos',topActual())}
-function copiarBoletin(){const t=$('boletinContenido')?.innerText||'';navigator.clipboard?.writeText(t)}
-function renderBoletinExtra(){barras('barrasBoletin',topActual())}
-function alertasData(){
- const f=current(),pr=f.provincia==='TODAS'?'TOTAL REGION':f.provincia;
- let rows=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:pr});
- if(f.delito!=='TODOS')rows=rows.filter(r=>r.Delito===f.delito);
- const ds=[...new Set(rows.map(r=>r.Delito))];
- return ds.map(d=>({d,v:variation({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:pr,delito:d})})).filter(x=>x.v!=null).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v));
-}
-function renderAlertasExtra(){
- const b=$('alertasComparativas');if(!b)return;const a=alertasData().slice(0,8);
- b.innerHTML=a.length?a.map(x=>{const z=Math.abs(x.v),n=z>=25?'alta':z>=10?'media':'baja';return `<div class="alert-card ${n}"><b>${x.d}</b><div class="delta">${x.v>=0?'+':''}${x.v.toFixed(1)}%</div><small>${x.v>0?'Incremento':'Disminución'} interanual · prioridad ${n}</small></div>`}).join(''):'<div class="nota">No hay comparación interanual disponible.</div>';
-}
-function renderSalaCORESEC(){
- if(!$('salaTotal'))return;
- const f=current(),a=topActual(),total=a.reduce((s,x)=>s+x[1],0),d=a[0]||['N/D',0];
- let rr=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo}).filter(r=>r.Provincia!=='TOTAL REGION');
- if(f.delito!=='TODOS')rr=rr.filter(r=>r.Delito===f.delito);
- const c={};rr.forEach(r=>c[r.Provincia]=(c[r.Provincia]||0)+r.Casos);
- const p=Object.entries(c).sort((x,y)=>y[1]-x[1])[0]||['N/D',0];
- const v=variation({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:f.provincia==='TODAS'?'TOTAL REGION':f.provincia,delito:f.delito==='TODOS'?null:f.delito});
- $('salaTotal').textContent=fmt(total);$('salaProvincia').textContent=`${p[0]} · ${fmt(p[1])}`;$('salaDelito').textContent=`${d[0]} · ${fmt(d[1])}`;$('salaVar').textContent=v==null?'N/D':`${v>=0?'+':''}${v.toFixed(1)}%`;
- const texto=$('boletinContenido')?.innerText||'Selecciona un período en Incidencia Delictiva para generar la lectura.';
- $('salaLectura').textContent=texto;
- $('salaAlertas').innerHTML=alertasData().slice(0,5).map(x=>`<div class="mini-alert"><b>${x.d}</b> · ${x.v>=0?'+':''}${x.v.toFixed(1)}%</div>`).join('')||'<div class="nota">Sin alertas comparables.</div>';
-}
-function renderIntegrado(){renderGraficoIncidencia();renderBoletinExtra();renderAlertasExtra();renderSalaCORESEC()}
+function renderGraficoAvanzado(){const b=document.getElementById('barrasDelitos');if(!b)return;const a=orsecTop().slice(0,10),m=Math.max(1,...a.map(x=>x[1]));b.innerHTML=a.map(([d,v])=>`<div class="orsec-bar-row"><div class="orsec-bar-label">${d}</div><div class="orsec-bar-track"><div class="orsec-bar-fill" style="width:${(v/m*100).toFixed(1)}%"></div></div><div class="orsec-bar-val">${fmt(v)}</div></div>`).join('')}
+function generarBoletinEjecutivo(){const f=current(),a=orsecTop(),t=a.reduce((s,x)=>s+x[1],0),p=a[0]||['N/D',0],pr=f.provincia==='TODAS'?'la Región La Libertad':f.provincia;const v=variation({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:f.provincia==='TODAS'?'TOTAL REGION':f.provincia,delito:f.delito==='TODOS'?null:f.delito});const tr=v==null?'sin comparación interanual disponible':v>0?`un incremento de ${v.toFixed(1)}% respecto de 2025`:`una disminución de ${Math.abs(v).toFixed(1)}% respecto de 2025`;const tx=`Para ${f.anio}, en ${pr}, la selección registra ${fmt(t)} incidencias. El delito de mayor presencia es ${p[0]}, con ${fmt(p[1])} registros. El análisis muestra ${tr}. ORSEC recomienda priorizar el seguimiento territorial y la evolución de los delitos de mayor concentración.`;document.getElementById('boletinEjecutivo').textContent=tx;return tx}
+function copiarBoletin(){navigator.clipboard?.writeText(generarBoletinEjecutivo())}
+function alertasORSEC(){const f=current(),pr=f.provincia==='TODAS'?'TOTAL REGION':f.provincia,ds=[...new Set(registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:pr}).map(r=>r.Delito))];return ds.map(d=>({d,v:variation({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:pr,delito:d})})).filter(x=>x.v!=null).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v))}
+function renderAlertasAvanzadas(){const b=document.getElementById('alertasComparativas');if(!b)return;const a=alertasORSEC().slice(0,8);b.innerHTML=a.map(x=>{const z=Math.abs(x.v),n=z>=25?'alta':z>=10?'media':'baja';return `<div class="alert-card ${n}"><b>${x.d}</b><div class="delta">${x.v>=0?'+':''}${x.v.toFixed(1)}%</div><small>${x.v>0?'Incremento':'Disminución'} interanual · prioridad ${n}</small></div>`}).join('')||'<div class="nota">Sin comparación disponible.</div>'}
+function renderSala(){const f=current(),a=orsecTop(),t=a.reduce((s,x)=>s+x[1],0),d=a[0]||['N/D',0];let rr=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo}).filter(r=>r.Provincia!=='TOTAL REGION');if(f.delito!=='TODOS')rr=rr.filter(r=>r.Delito===f.delito);const c={};rr.forEach(r=>c[r.Provincia]=(c[r.Provincia]||0)+r.Casos);const p=Object.entries(c).sort((x,y)=>y[1]-x[1])[0]||['N/D',0];const v=variation({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:f.provincia==='TODAS'?'TOTAL REGION':f.provincia,delito:f.delito==='TODOS'?null:f.delito});document.getElementById('salaTotal').textContent=fmt(t);document.getElementById('salaProvincia').textContent=`${p[0]} · ${fmt(p[1])}`;document.getElementById('salaDelito').textContent=`${d[0]} · ${fmt(d[1])}`;document.getElementById('salaVar').textContent=v==null?'N/D':`${v>=0?'+':''}${v.toFixed(1)}%`;document.getElementById('salaLectura').textContent=generarBoletinEjecutivo();document.getElementById('salaAlertas').innerHTML=alertasORSEC().slice(0,5).map(x=>`<div class="mini-alert"><b>${x.d}</b> · ${x.v>=0?'+':''}${x.v.toFixed(1)}%</div>`).join('')}
+function renderAvanzado(){try{renderGraficoAvanzado();generarBoletinEjecutivo();renderAlertasAvanzadas();renderSala()}catch(e){console.warn('ORSEC avanzado',e)}}
+document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{renderAvanzado();['anio','tipoPeriodo','periodo','provincia','delito'].forEach(id=>document.getElementById(id)?.addEventListener('change',()=>setTimeout(renderAvanzado,30)))},900));
+</script>
 
-</script>
-<script>
-document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{
- renderIntegrado();
- ['anio','tipoPeriodo','periodo','provincia','delito'].forEach(id=>document.getElementById(id)?.addEventListener('change',()=>setTimeout(renderIntegrado,50)));
-},900));
-</script>
 </body></html>
