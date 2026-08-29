@@ -18,6 +18,24 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;bor
 .alerta{padding:14px 16px;margin:10px 0;border-radius:10px;border-left:5px solid var(--gris);background:#f8fafc}.alerta.roja{border-color:var(--rojo);background:#fff1f1}.alerta.verde{border-color:var(--verde);background:#eefaf3}.alerta .var{font-weight:800}.rojo{color:var(--rojo)}.verde{color:var(--verde)}
 .territorio{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.provincia{background:#F8FAFC;padding:15px;border-radius:11px;cursor:pointer;transition:.2s;border:1px solid #e5edf5}.provincia:hover{background:#e8f1fa;transform:translateY(-2px)}.provincia b{display:block;color:#0b3d6d;font-size:19px;margin-top:5px}.boletin{background:#f8fafc;border-left:4px solid var(--oro);padding:18px;border-radius:8px;line-height:1.65}.nota{font-size:12px;color:#65758b;margin-top:12px}.loading{color:#65758b;padding:15px 0}.error{background:#fff2f2;color:#8b1a1a;padding:15px;border-radius:9px}footer{text-align:center;padding:28px;color:#6B7280;font-size:13px}
 @media(max-width:900px){.grid,.kpis,.territorio{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.grid,.kpis,.territorio{grid-template-columns:1fr}.encabezado{align-items:flex-start}.status{display:none}.hero h2{font-size:27px}.seccion{border-radius:0;margin-bottom:16px}}
+
+/* ===== MAPA VIVO ORSEC ===== */
+.mapa-layout{display:grid;grid-template-columns:minmax(360px,1.15fr) minmax(300px,.85fr);gap:18px;align-items:stretch;margin-top:16px}
+.mapa-panel{background:linear-gradient(160deg,#071a33,#0b3d6d);border-radius:16px;padding:16px;color:#fff;min-height:560px;position:relative;overflow:hidden;box-shadow:inset 0 0 40px rgba(46,153,220,.16)}
+.mapa-panel:before{content:"";position:absolute;inset:-30%;background:radial-gradient(circle at 50% 45%,rgba(55,160,220,.22),transparent 38%);animation:pulseMap 4s ease-in-out infinite}
+@keyframes pulseMap{50%{transform:scale(1.05);opacity:.7}}
+.mapa-titulo{position:relative;z-index:2;text-align:center;margin-bottom:8px}.mapa-titulo b{color:#f4d77b}
+#mapaLibertad{position:relative;z-index:2;width:100%;height:auto;max-height:500px;display:block;margin:auto;filter:drop-shadow(0 0 12px rgba(64,177,238,.28))}
+.prov-shape{cursor:pointer;transition:.22s;stroke:#9edcff;stroke-width:2.4;vector-effect:non-scaling-stroke}
+.prov-shape:hover{filter:brightness(1.25) drop-shadow(0 0 8px rgba(255,215,96,.7));stroke:#ffd966}
+.prov-shape.sel{stroke:#ffd966;stroke-width:4;filter:brightness(1.25) drop-shadow(0 0 10px rgba(255,215,96,.9))}
+.map-label{pointer-events:none;fill:#fff;font-size:10px;font-weight:700;text-anchor:middle}
+.map-side{background:#f8fafc;border:1px solid #e4ebf3;border-radius:16px;padding:18px}
+.map-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0 16px}.map-kpi{background:#fff;border:1px solid #e4ebf3;border-radius:11px;padding:12px}.map-kpi b{display:block;color:#0b3d6d;font-size:22px}.map-kpi small{color:#64748b}
+.ranking-mini{display:grid;gap:8px;max-height:300px;overflow:auto;padding-right:4px}.rank-row{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;padding:9px 10px;background:#fff;border:1px solid #e5edf5;border-radius:10px;cursor:pointer}.rank-row:hover{background:#edf6ff}.rank-row strong{color:#0b3d6d}.rank-num{color:#64748b;font-weight:700}
+.map-note{font-size:12px;color:#64748b;line-height:1.5;margin-top:10px}
+@media(max-width:900px){.mapa-layout{grid-template-columns:1fr}.mapa-panel{min-height:auto}}
+
 </style>
 </head>
 <body>
@@ -42,7 +60,57 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;bor
 
 <div id="boletines" class="seccion"><div class="seccion-head"><h2>Boletín Automático</h2><span class="badge">Generado por ORSEC</span></div><div class="boletin" id="boletinContenido">Cargando…</div><div class="nota">Texto generado automáticamente a partir de los datos seleccionados; puede ser revisado antes de su uso institucional.</div></div>
 <div id="alertas" class="seccion"><div class="seccion-head"><h2>Alertas Inteligentes</h2><span class="badge">Comparativo interanual</span></div><div id="alertasBox" class="loading">Calculando variaciones…</div></div>
-<div id="territorio" class="seccion"><div class="seccion-head"><h2>Inteligencia Territorial</h2><span class="badge">12 provincias</span></div><p class="nota">Haz clic en una provincia para llevarla directamente al módulo de Incidencia Delictiva.</p><div class="territorio" id="territorioBox"></div></div>
+<div id="territorio" class="seccion">
+ <div class="seccion-head"><h2>Inteligencia Territorial</h2><span class="badge">MAPA VIVO · 12 provincias</span></div>
+ <div class="mapa-layout">
+  <div class="mapa-panel">
+   <div class="mapa-titulo"><b>REGIÓN LA LIBERTAD</b><br><small>Selecciona una provincia para activar el análisis territorial</small></div>
+   <svg id="mapaLibertad" viewBox="0 0 520 720" role="img" aria-label="Mapa interactivo de las provincias de La Libertad">
+    <defs>
+      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f5b9e"/><stop offset="1" stop-color="#123f62"/></linearGradient>
+      <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#126db8"/><stop offset="1" stop-color="#0b3d6d"/></linearGradient>
+    </defs>
+    <path id="map-BOLIVAR" class="prov-shape" data-prov="BOLIVAR" fill="url(#g2)" d="M350 50 L432 76 L456 145 L414 188 L344 168 L326 104 Z"/>
+    <path id="map-PATAZ" class="prov-shape" data-prov="PATAZ" fill="url(#g1)" d="M305 160 L414 188 L442 282 L398 360 L314 333 L282 245 Z"/>
+    <path id="map-SANCHEZ-CARRION" class="prov-shape" data-prov="SANCHEZ CARRION" fill="url(#g2)" d="M220 202 L305 160 L282 245 L314 333 L248 363 L196 302 Z"/>
+    <path id="map-SANTIAGO-DE-CHUCO" class="prov-shape" data-prov="SANTIAGO DE CHUCO" fill="url(#g1)" d="M248 363 L314 333 L398 360 L381 446 L300 474 L224 430 Z"/>
+    <path id="map-JULCAN" class="prov-shape" data-prov="JULCAN" fill="url(#g2)" d="M179 350 L248 363 L224 430 L160 442 L134 392 Z"/>
+    <path id="map-OTUZCO" class="prov-shape" data-prov="OTUZCO" fill="url(#g1)" d="M137 250 L220 202 L196 302 L248 363 L179 350 L116 318 Z"/>
+    <path id="map-GRAN-CHIMU" class="prov-shape" data-prov="GRAN CHIMU" fill="url(#g2)" d="M77 208 L137 250 L116 318 L65 300 L44 252 Z"/>
+    <path id="map-ASCOPE" class="prov-shape" data-prov="ASCOPE" fill="url(#g1)" d="M42 305 L116 318 L134 392 L72 412 L35 370 Z"/>
+    <path id="map-PACASMAYO" class="prov-shape" data-prov="PACASMAYO" fill="url(#g2)" d="M35 370 L72 412 L67 476 L24 466 L13 411 Z"/>
+    <path id="map-CHEPEN" class="prov-shape" data-prov="CHEPEN" fill="url(#g1)" d="M24 466 L67 476 L82 524 L39 544 L12 516 Z"/>
+    <path id="map-TRUJILLO" class="prov-shape" data-prov="TRUJILLO" fill="url(#g2)" d="M72 412 L134 392 L160 442 L142 518 L82 524 L67 476 Z"/>
+    <path id="map-VIRU" class="prov-shape" data-prov="VIRU" fill="url(#g1)" d="M82 524 L142 518 L180 590 L151 665 L90 642 L56 574 Z"/>
+    <text class="map-label" x="392" y="119">BOLÍVAR</text>
+    <text class="map-label" x="366" y="260">PATAZ</text>
+    <text class="map-label" x="247" y="275">SÁNCHEZ</text><text class="map-label" x="247" y="289">CARRIÓN</text>
+    <text class="map-label" x="311" y="405">SANTIAGO</text><text class="map-label" x="311" y="419">DE CHUCO</text>
+    <text class="map-label" x="182" y="400">JULCÁN</text>
+    <text class="map-label" x="158" y="294">OTUZCO</text>
+    <text class="map-label" x="86" y="266">GRAN</text><text class="map-label" x="86" y="280">CHIMÚ</text>
+    <text class="map-label" x="75" y="358">ASCOPE</text>
+    <text class="map-label" x="42" y="438">PACASMAYO</text>
+    <text class="map-label" x="44" y="505">CHEPÉN</text>
+    <text class="map-label" x="111" y="465">TRUJILLO</text>
+    <text class="map-label" x="117" y="588">VIRÚ</text>
+   </svg>
+  </div>
+  <aside class="map-side">
+   <h3 id="mapProvinciaTitulo">Panorama territorial regional</h3>
+   <p class="nota" id="mapPeriodo">Selecciona una provincia en el mapa.</p>
+   <div class="map-kpis">
+    <div class="map-kpi"><small>Incidencias</small><b id="mapCasos">--</b></div>
+    <div class="map-kpi"><small>Delito principal</small><b id="mapTopDelito" style="font-size:15px">--</b></div>
+    <div class="map-kpi"><small>Participación regional</small><b id="mapParticipacion">--</b></div>
+    <div class="map-kpi"><small>Variación 2025–2026</small><b id="mapVariacion">--</b></div>
+   </div>
+   <h4>Ranking provincial</h4>
+   <div class="ranking-mini" id="territorioBox"></div>
+   <div class="map-note">El mapa está conectado al mismo motor de datos del ORSEC. Un clic en una provincia actualiza los indicadores y permite saltar al módulo de Incidencia Delictiva.</div>
+  </aside>
+ </div>
+</div>
 <footer>Centro de Inteligencia ORSEC · Gobierno Regional La Libertad · Fuente: Excel institucional del ORSEC</footer>
 <script>
 const MESES=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SETIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
@@ -63,10 +131,47 @@ function renderIncidencia(){const f=current();const base={anio:f.anio,tipo:f.tip
  const arr=Object.entries(byD).sort((a,b)=>b[1]-a[1]);const max=arr[0]?.[1]||1;$('tablaWrap').innerHTML=`<table><thead><tr><th>Delito</th><th>Casos</th><th>Participación</th></tr></thead><tbody>${arr.map(([d,c])=>`<tr><td>${d}</td><td class="num">${fmt(c)}</td><td><div class="barwrap"><div class="bar" style="width:${Math.max(2,c/max*100)}%"></div></div></td></tr>`).join('')}</tbody></table>`}
 function renderBoletin(){const f=current();const use={anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:f.provincia==='TODAS'?'TOTAL REGION':f.provincia};let rows=registros(use);if(f.delito!=='TODOS')rows=rows.filter(r=>r.Delito===f.delito);const arr=rows.sort((a,b)=>b.Casos-a.Casos);const total=arr.reduce((s,r)=>s+r.Casos,0);const top=arr.slice(0,3);const v=variation({...use,delito:f.delito==='TODOS'?null:f.delito});const lugar=use.provincia==='TOTAL REGION'?'la Región La Libertad':`la provincia de ${use.provincia}`;const periodo=arr[0]?.EtiquetaPeriodo||f.periodo;let comp=v==null?'No existe un período comparable homogéneo disponible.':`En comparación con el período equivalente de 2025, la variación agregada es de <b class="${v>0?'rojo':'verde'}">${v>=0?'+':''}${v.toFixed(1)}%</b>.`;$('boletinContenido').innerHTML=`Para <b>${periodo}</b>, ${lugar} registra <b>${fmt(total)}</b> incidencias en la selección analizada. ${top.length?`Los indicadores con mayor volumen son <b>${top.map(x=>`${x.Delito} (${fmt(x.Casos)})`).join(', ')}</b>.`:''} ${comp} La información debe interpretarse junto con el contexto operativo y territorial antes de adoptar decisiones.`}
 function renderAlertas(){const f=current();if(f.anio!==2026){$('alertasBox').innerHTML='<div class="alerta">Selecciona 2026 para activar el comparativo interanual 2025–2026.</div>';return}const p=f.provincia==='TODAS'?'TOTAL REGION':f.provincia;const currentRows=registros({anio:2026,tipo:f.tipo,periodo:f.periodo,provincia:p});const alerts=[];currentRows.forEach(r=>{const prev=registros({anio:2025,tipo:f.tipo,periodo:f.periodo,provincia:p,delito:r.Delito})[0];if(prev&&prev.Casos>0){const v=(r.Casos-prev.Casos)/prev.Casos*100;alerts.push({d:r.Delito,a:r.Casos,b:prev.Casos,v})}});alerts.sort((a,b)=>Math.abs(b.v)-Math.abs(a.v));$('kpiAlertas').textContent=alerts.filter(x=>Math.abs(x.v)>=15).length;$('alertasBox').innerHTML=alerts.slice(0,8).map(x=>`<div class="alerta ${x.v>0?'roja':'verde'}"><strong>${x.d}</strong><br>2026: ${fmt(x.a)} · 2025: ${fmt(x.b)} · <span class="var ${x.v>0?'rojo':'verde'}">${x.v>=0?'+':''}${x.v.toFixed(1)}%</span></div>`).join('')||'<div class="alerta">No hay comparativos homogéneos disponibles para esta selección.</div>'}
-function renderTerritorio(){const f=current();let rows=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo}).filter(r=>r.Provincia!=='TOTAL REGION');if(f.delito!=='TODOS')rows=rows.filter(r=>r.Delito===f.delito);const c={};rows.forEach(r=>c[r.Provincia]=(c[r.Provincia]||0)+r.Casos);$('territorioBox').innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([p,v],i)=>`<div class="provincia" onclick="seleccionarProvincia('${p}')"><span>#${i+1} ${p}</span><b>${fmt(v)}</b><small>incidencias</small></div>`).join('')}
-function seleccionarProvincia(p){$('provincia').value=p;renderAll();abrir('incidencia',document.querySelector('[data-mod="incidencia"]'))}
+function normProv(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim()}
+function mapId(p){return 'map-'+normProv(p).replace(/\s+/g,'-')}
+function renderTerritorio(){
+ const f=current();
+ let rows=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo}).filter(r=>r.Provincia!=='TOTAL REGION');
+ if(f.delito!=='TODOS')rows=rows.filter(r=>r.Delito===f.delito);
+ const c={};rows.forEach(r=>c[r.Provincia]=(c[r.Provincia]||0)+r.Casos);
+ const ranking=Object.entries(c).sort((a,b)=>b[1]-a[1]);
+ $('territorioBox').innerHTML=ranking.map(([p,v],i)=>`<div class="rank-row" onclick="seleccionarProvincia('${p}',false)"><span class="rank-num">#${i+1}</span><strong>${p}</strong><span>${fmt(v)}</span></div>`).join('');
+ const target=(f.provincia!=='TODAS'&&f.provincia!=='TOTAL REGION')?f.provincia:(ranking[0]?.[0]||'TRUJILLO');
+ actualizarMapaProvincia(target);
+}
+function actualizarMapaProvincia(p){
+ document.querySelectorAll('.prov-shape').forEach(x=>x.classList.remove('sel'));
+ const el=document.getElementById(mapId(p));if(el)el.classList.add('sel');
+ const f=current();
+ const base={anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:p};
+ let rows=registros(base);if(f.delito!=='TODOS')rows=rows.filter(r=>r.Delito===f.delito);
+ const casos=rows.reduce((s,r)=>s+r.Casos,0);
+ const byD={};rows.forEach(r=>byD[r.Delito]=(byD[r.Delito]||0)+r.Casos);
+ const top=Object.entries(byD).sort((a,b)=>b[1]-a[1])[0];
+ const regRows=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:'TOTAL REGION'});
+ const regTotal=(f.delito==='TODOS'?regRows:regRows.filter(r=>r.Delito===f.delito)).reduce((s,r)=>s+r.Casos,0);
+ const part=regTotal?casos/regTotal*100:null;
+ const v=variation({...base,delito:f.delito==='TODOS'?null:f.delito});
+ $('mapProvinciaTitulo').textContent=p;
+ $('mapPeriodo').textContent=`${f.anio} · ${rows[0]?.EtiquetaPeriodo||f.periodo}`;
+ $('mapCasos').textContent=fmt(casos);
+ $('mapTopDelito').textContent=top?`${top[0]} · ${fmt(top[1])}`:'--';
+ $('mapParticipacion').textContent=part==null?'N/D':`${part.toFixed(1)}%`;
+ $('mapVariacion').textContent=v==null?'N/D':`${v>=0?'+':''}${v.toFixed(1)}%`;
+ $('mapVariacion').className=v==null?'':(v>0?'rojo':'verde');
+}
+function seleccionarProvincia(p,saltar=true){
+ $('provincia').value=p;
+ renderAll();
+ actualizarMapaProvincia(p);
+ if(saltar)abrir('incidencia',document.querySelector('[data-mod="incidencia"]'));
+}
 function renderAll(){renderIncidencia();renderBoletin();renderAlertas();renderTerritorio()}
-async function init(){try{const r=await fetch('datos.json',{cache:'no-store'});if(!r.ok)throw new Error('datos.json no encontrado');META=await r.json();DB=META.registros||[];$('fuente').textContent=`Fuente activa: ${META.fuente} · Corte ${META.actualizado}`;$('kpiRegistros').textContent=fmt(DB.length);option($('anio'),[2026,2025]);option($('tipoPeriodo'),['ACUMULADO','MENSUAL']);option($('provincia'),['TOTAL REGION','TODAS',...META.provincias]);option($('delito'),['TODOS',...META.delitos]);$('anio').value='2026';$('tipoPeriodo').value='ACUMULADO';updatePeriods();$('provincia').value='TOTAL REGION';$('delito').value='TODOS';['anio','tipoPeriodo','periodo','provincia','delito'].forEach(id=>$(id).addEventListener('change',()=>{if(id==='anio'||id==='tipoPeriodo')updatePeriods();else renderAll()}));renderAll()}catch(e){$('fuente').textContent='ERROR DE CONEXIÓN CON datos.json';$('tablaWrap').innerHTML=`<div class="error"><b>No se pudo cargar la base de datos.</b><br>Asegúrate de subir <code>index.html</code> y <code>datos.json</code> juntos en la raíz de GitHub.</div>`;console.error(e)}}
+async function init(){try{const r=await fetch('datos.json',{cache:'no-store'});if(!r.ok)throw new Error('datos.json no encontrado');META=await r.json();DB=META.registros||[];$('fuente').textContent=`Fuente activa: ${META.fuente} · Corte ${META.actualizado}`;$('kpiRegistros').textContent=fmt(DB.length);option($('anio'),[2026,2025]);option($('tipoPeriodo'),['ACUMULADO','MENSUAL']);option($('provincia'),['TOTAL REGION','TODAS',...META.provincias]);option($('delito'),['TODOS',...META.delitos]);$('anio').value='2026';$('tipoPeriodo').value='ACUMULADO';updatePeriods();$('provincia').value='TOTAL REGION';$('delito').value='TODOS';['anio','tipoPeriodo','periodo','provincia','delito'].forEach(id=>$(id).addEventListener('change',()=>{if(id==='anio'||id==='tipoPeriodo')updatePeriods();else renderAll()}));document.querySelectorAll('.prov-shape').forEach(el=>el.addEventListener('click',()=>seleccionarProvincia(el.dataset.prov,false)));renderAll()}catch(e){$('fuente').textContent='ERROR DE CONEXIÓN CON datos.json';$('tablaWrap').innerHTML=`<div class="error"><b>No se pudo cargar la base de datos.</b><br>Asegúrate de subir <code>index.html</code> y <code>datos.json</code> juntos en la raíz de GitHub.</div>`;console.error(e)}}
 init();
 </script>
 </body></html>
