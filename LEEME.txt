@@ -1,5 +1,22 @@
-ORSEC 1.5 – MÓDULOS OPERATIVOS + SALA CORESEC
+ORSEC 1.6 – IDENTIDAD INSTITUCIONAL + INTRO OPERATIVA
 
-Reemplaza SOLO index.html. Conserva datos.json. Haz Commit, espera Vercel y pulsa Ctrl+F5.
+NOVEDADES
+- Logo del Gobierno Regional La Libertad a la izquierda.
+- Logo del Observatorio Regional de Seguridad Ciudadana a la derecha.
+- Intro de aproximadamente 3 segundos.
+- Secuencia: inicialización → módulos → motor de datos → sistema operativo.
+- Mantiene ORSEC 1.5.1: mapa real, módulos, gráficos, boletines, alertas y Sala CORESEC.
 
-Incluye gráfico dinámico, boletín automático, alertas comparativas y Sala de Situación CORESEC. Mantiene el mapa real y el motor de datos.
+INSTALACIÓN
+1. Sube/reemplaza index.html.
+2. Sube la carpeta assets completa con los dos logos.
+3. Conserva datos.json en la raíz.
+4. No borres tus demás archivos.
+5. Commit changes.
+6. Espera Vercel y pulsa Ctrl + F5.
+
+Estructura mínima:
+index.html
+datos.json
+assets/logo-gore-la-libertad.png
+assets/logo-observatorio.png
