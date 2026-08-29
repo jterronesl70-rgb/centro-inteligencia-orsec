@@ -1,5 +1,19 @@
-ORSEC 1.5 – MÓDULOS OPERATIVOS + SALA CORESEC
+ORSEC 1.5.1 – MÓDULOS REALMENTE INTEGRADOS
 
-Reemplaza SOLO index.html. Conserva datos.json. Haz Commit, espera Vercel y pulsa Ctrl+F5.
+CORRECCIÓN IMPORTANTE:
+La versión 1.5 anterior sí contenía las nuevas funciones, pero habían quedado dentro de una sección oculta sin tarjeta de acceso. Por eso visualmente parecía igual.
 
-Incluye gráfico dinámico, boletín automático, alertas comparativas y Sala de Situación CORESEC. Mantiene el mapa real y el motor de datos.
+ESTA VERSIÓN:
+- Incidencia Delictiva muestra el gráfico dentro del propio módulo.
+- Boletines incluye análisis y gráfico del período.
+- Alertas incluye semáforo comparativo visible.
+- Se agrega una QUINTA tarjeta: Sala CORESEC.
+- Sala CORESEC tiene KPIs, lectura ejecutiva y alertas prioritarias.
+- Mantiene el mapa real y el motor de datos.
+
+INSTALACIÓN:
+1. Reemplaza SOLO index.html.
+2. Conserva datos.json.
+3. Commit changes.
+4. Espera Vercel.
+5. Ctrl + F5.
