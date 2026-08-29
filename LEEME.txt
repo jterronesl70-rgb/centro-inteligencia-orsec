@@ -1,20 +1,5 @@
-ORSEC 1.4.1 – MAPA REAL DE LA LIBERTAD
+ORSEC 1.5 – MÓDULOS OPERATIVOS + SALA CORESEC
 
-QUÉ CAMBIA
-- Se reemplaza el esquema dibujado por un mapa cartográfico real de las provincias de La Libertad.
-- Se conserva el motor de datos, ranking, indicadores y comparativos.
-- Las 12 provincias tienen marcadores interactivos sobre el mapa real.
-- La provincia seleccionada se ilumina en dorado y actualiza el panel.
+Reemplaza SOLO index.html. Conserva datos.json. Haz Commit, espera Vercel y pulsa Ctrl+F5.
 
-INSTALACIÓN SEGURA
-1. No borres los demás archivos del repositorio.
-2. Reemplaza SOLO index.html con el nuevo.
-3. Mantén datos.json en la raíz.
-4. Commit changes.
-5. Espera el despliegue de Vercel.
-6. Abre la plataforma y pulsa Ctrl + F5.
-
-FUENTE CARTOGRÁFICA
-Wikimedia Commons: “Provinces of La Libertad.svg”
-Autor: Erinthecute (2026)
-Licencia: CC BY-SA 4.0
+Incluye gráfico dinámico, boletín automático, alertas comparativas y Sala de Situación CORESEC. Mantiene el mapa real y el motor de datos.
