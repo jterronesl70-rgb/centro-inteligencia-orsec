@@ -1,26 +1,23 @@
-ORSEC 1.11.3 – PANORAMA REGIONAL · VISIBILIDAD CORREGIDA
+ORSEC 1.11.4 – PANORAMA DINÁMICO POR PROVINCIAS
 
-CAUSA EXACTA ENCONTRADA
-El CSS contenía:
-#panorama { display:none }
+NUEVA CAPACIDAD
+El Panorama Regional ahora responde directamente a la provincia seleccionada.
 
-Ese selector por ID tenía mayor prioridad que:
-.seccion.activa { display:block }
-
-Por eso, aunque la tarjeta Panorama Regional se abría correctamente,
-el contenido quedaba oculto.
-
-CORRECCIÓN
-- Se eliminó display:none del selector #panorama.
-- Se agregó la garantía:
-  #panorama.seccion.activa { display:block !important; }
-
-RESULTADO
-Al hacer clic en PANORAMA REGIONAL deben verse los cuatro bloques:
-1. Panorama Regional
-2. Incidencia Delictiva
-3. Inteligencia Territorial
-4. Situación Estratégica
+COMPORTAMIENTO
+- Si Provincia = TODAS, muestra la fotografía de toda La Libertad.
+- Si se selecciona TRUJILLO, ASCOPE, VIRÚ, etc., el Panorama cambia a una
+  fotografía ejecutiva de esa provincia.
+- Se recalculan:
+  * Total de incidencias
+  * Delito de mayor volumen
+  * Alto impacto estratégico
+  * Delitos que suben/bajan
+  * Alertas interanuales
+  * Lectura ejecutiva
+- Inteligencia Territorial mantiene la comparación regional y resalta la
+  provincia elegida.
+- Se muestra participación de la provincia dentro del volumen territorial
+  y su puesto regional.
 
 INSTALACIÓN
 Reemplazar solo index.html.
