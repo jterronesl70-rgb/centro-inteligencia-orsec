@@ -147,6 +147,33 @@ background-size:42px 42px;transform:perspective(700px) rotateX(62deg) translateY
 .orsec-def{padding:10px 12px;background:#fff;border-radius:11px;border:1px solid #e1eaf2}
 @media(max-width:900px){.orsec-defs-grid{grid-template-columns:1fr}}
 
+
+/* ===== ORSEC 1.9 · SALA CORESEC EJECUTIVA ===== */
+#salaCoresecEjecutiva{margin-top:18px}
+.coresec-command{background:linear-gradient(135deg,#062b52,#074a83);border:1px solid rgba(83,178,255,.35);border-radius:20px;padding:20px;color:#fff;box-shadow:0 18px 45px rgba(0,27,58,.22)}
+.coresec-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:16px}
+.coresec-head h3{margin:0;font-size:21px;letter-spacing:.3px}
+.coresec-head p{margin:5px 0 0;color:#c8def2;font-size:12px}
+.coresec-live{font-size:11px;padding:6px 10px;border:1px solid rgba(122,205,255,.4);border-radius:999px;background:rgba(9,96,158,.35);white-space:nowrap}
+.coresec-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.coresec-kpi{background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:13px;min-height:88px}
+.coresec-kpi small{display:block;color:#9fc5e5;font-size:10px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px}
+.coresec-kpi strong{display:block;font-size:18px;line-height:1.15}
+.coresec-kpi span{display:block;color:#d6e7f5;font-size:10px;margin-top:5px}
+.coresec-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-top:12px}
+.coresec-panel{background:#fff;color:#17324b;border-radius:15px;padding:15px;border:1px solid #dbe8f2}
+.coresec-panel h4{margin:0 0 10px;color:#073e6d;font-size:14px}
+.coresec-reading{font-size:13px;line-height:1.58}
+.coresec-priority{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.coresec-priority>div{background:#f5f9fc;border:1px solid #dce9f3;border-radius:12px;padding:11px}
+.coresec-priority b{display:block;color:#074a83;font-size:12px;margin-bottom:5px}
+.coresec-priority span{font-size:12px;line-height:1.35}
+.coresec-alert-row{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid #e7eef4;font-size:12px}
+.coresec-alert-row:last-child{border-bottom:0}
+.coresec-dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
+.coresec-footer{margin-top:12px;text-align:center;font-size:10px;letter-spacing:1px;color:#a9cbe5}
+@media(max-width:1000px){.coresec-kpis{grid-template-columns:repeat(2,1fr)}.coresec-grid{grid-template-columns:1fr}.coresec-priority{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -694,6 +721,143 @@ document.addEventListener('DOMContentLoaded',()=>{
       panel.appendChild(d);
     }
   },900);
+});
+</script>
+
+
+<script>
+/* ===== ORSEC 1.9 · SALA CORESEC EJECUTIVA ===== */
+function orsecCoresecNivel(v){
+  if(v==null) return {t:'SIN COMPARABLE',c:'#7b8794'};
+  if(v>=25) return {t:'CRÍTICA',c:'#d93025'};
+  if(v>=10) return {t:'ALTA',c:'#f28c28'};
+  if(v>1) return {t:'VIGILANCIA',c:'#e0b400'};
+  if(v>=-1) return {t:'ESTABLE',c:'#2684d8'};
+  return {t:'FAVORABLE',c:'#25a55b'};
+}
+function orsecCoresecBuild(){
+  const host=document.getElementById('salaCoresecEjecutiva');
+  if(!host || typeof DB==='undefined' || !DB.length) return;
+
+  const f=current();
+  const base={anio:f.anio,tipo:f.tipo,periodo:f.periodo};
+  const region='TOTAL REGION';
+
+  let rr=registros({...base,provincia:region});
+  if(f.delito!=='TODOS') rr=rr.filter(r=>r.Delito===f.delito);
+  const total=rr.reduce((s,r)=>s+(+r.Casos||0),0);
+
+  const impacto=['HOMICIDIOS','EXTORSION','DETONACIONES'];
+  const impactRows=registros({...base,provincia:region}).filter(r=>impacto.includes(r.Delito));
+  const impactTotal=impactRows.reduce((s,r)=>s+(+r.Casos||0),0);
+  const impactTop=[...impactRows].sort((a,b)=>(+b.Casos||0)-(+a.Casos||0))[0];
+
+  const allRegion=registros({...base,provincia:region});
+  const volumeTop=[...allRegion].sort((a,b)=>(+b.Casos||0)-(+a.Casos||0))[0];
+  const volumeTotal=allRegion.reduce((s,r)=>s+(+r.Casos||0),0);
+  const volumeShare=volumeTop&&volumeTotal ? (+volumeTop.Casos||0)/volumeTotal*100 : 0;
+
+  let prov=registros(base).filter(r=>r.Provincia!=='TOTAL REGION');
+  if(f.delito!=='TODOS') prov=prov.filter(r=>r.Delito===f.delito);
+  const bp={}; prov.forEach(r=>bp[r.Provincia]=(bp[r.Provincia]||0)+(+r.Casos||0));
+  const topP=Object.entries(bp).sort((a,b)=>b[1]-a[1])[0];
+
+  // Variaciones por delito para priorización de alertas.
+  const alerts=[];
+  allRegion.forEach(r=>{
+    const vv=variation({...f,provincia:region,delito:r.Delito});
+    if(vv!=null) alerts.push({delito:r.Delito,v:vv,casos:+r.Casos||0,n:orsecCoresecNivel(vv)});
+  });
+  alerts.sort((a,b)=>{
+    const rank=x=>x.v>=25?5:x.v>=10?4:x.v>1?3:x.v>=-1?2:1;
+    return rank(b)-rank(a) || b.v-a.v || b.casos-a.casos;
+  });
+  const topAlerts=alerts.slice(0,3);
+
+  // Nivel regional: toma la alerta de mayor prioridad existente.
+  const regional=topAlerts[0] ? topAlerts[0].n : {t:'SIN COMPARABLE',c:'#7b8794'};
+
+  const impactV=impactTop ? variation({...f,provincia:region,delito:impactTop.Delito}) : null;
+  const impactTxt=impactTop
+    ? `${impactTop.Delito} registra ${fmt(+impactTop.Casos||0)} casos en el período seleccionado${impactV==null?'':` y una variación interanual de ${impactV>=0?'+':''}${impactV.toFixed(1)}%`}.`
+    : 'No se dispone de información comparable para delitos de alto impacto en esta selección.';
+
+  const terrTxt=topP
+    ? `${topP[0]} concentra el mayor número de casos dentro de la lectura territorial seleccionada (${fmt(topP[1])}).`
+    : 'No se dispone de una provincia líder para la selección actual.';
+
+  const trendTxt=topAlerts[0]
+    ? `${topAlerts[0].delito} presenta la señal de seguimiento más relevante: ${topAlerts[0].v>=0?'+':''}${topAlerts[0].v.toFixed(1)}% interanual, nivel ${topAlerts[0].n.t.toLowerCase()}.`
+    : 'La selección actual no cuenta con variación interanual comparable.';
+
+  host.innerHTML=`
+  <div class="coresec-command">
+    <div class="coresec-head">
+      <div><h3>SALA CORESEC · SÍNTESIS PARA DECISIÓN</h3>
+      <p>Lectura ejecutiva de situación, prioridades territoriales y señales de seguimiento.</p></div>
+      <div class="coresec-live">● INFORMACIÓN ACTUALIZADA</div>
+    </div>
+
+    <div class="coresec-kpis">
+      <div class="coresec-kpi"><small>Situación regional</small><strong style="color:${regional.c}">${regional.t}</strong><span>Mayor nivel de seguimiento detectado</span></div>
+      <div class="coresec-kpi"><small>Alto impacto estratégico</small><strong>${impactTop?impactTop.Delito:'—'}</strong><span>${impactTop?fmt(+impactTop.Casos||0)+' casos':'Sin información'}</span></div>
+      <div class="coresec-kpi"><small>Territorio prioritario</small><strong>${topP?topP[0]:'—'}</strong><span>${topP?fmt(topP[1])+' casos':'Sin información'}</span></div>
+      <div class="coresec-kpi"><small>Presión por volumen</small><strong>${volumeTop?volumeTop.Delito:'—'}</strong><span>${volumeTop?volumeShare.toFixed(1)+'% del volumen total':'Sin información'}</span></div>
+      <div class="coresec-kpi"><small>Total de la selección</small><strong>${fmt(total)}</strong><span>Registro regional oficial</span></div>
+    </div>
+
+    <div class="coresec-grid">
+      <div class="coresec-panel">
+        <h4>LECTURA EJECUTIVA AUTOMÁTICA</h4>
+        <div class="coresec-reading">
+          <b>Impacto:</b> ${impactTxt}<br>
+          <b>Territorio:</b> ${terrTxt}<br>
+          <b>Tendencia:</b> ${trendTxt}
+        </div>
+      </div>
+      <div class="coresec-panel">
+        <h4>SEÑALES PRIORITARIAS PARA SEGUIMIENTO</h4>
+        ${topAlerts.length?topAlerts.map(x=>`
+          <div class="coresec-alert-row">
+            <i class="coresec-dot" style="background:${x.n.c}"></i>
+            <div><b>${x.delito}</b><br>${x.n.t} · Variación interanual ${x.v>=0?'+':''}${x.v.toFixed(1)}%</div>
+          </div>`).join(''):'<div class="coresec-reading">Sin comparables disponibles.</div>'}
+      </div>
+    </div>
+
+    <div class="coresec-panel" style="margin-top:12px">
+      <h4>PRIORIDADES DE LECTURA CORESEC</h4>
+      <div class="coresec-priority">
+        <div><b>IMPACTO ESTRATÉGICO</b><span>${impactTop?`${impactTop.Delito} · ${fmt(+impactTop.Casos||0)} casos`:'Sin información comparable'}</span></div>
+        <div><b>PRESIÓN POR VOLUMEN</b><span>${volumeTop?`${volumeTop.Delito} · participación ${volumeShare.toFixed(1)}%`:'Sin información'}</span></div>
+        <div><b>TERRITORIO PRIORITARIO</b><span>${topP?`${topP[0]} · ${fmt(topP[1])} casos`:'Sin información'}</span></div>
+      </div>
+    </div>
+
+    <div class="coresec-footer">SALA CORESEC · INFORMACIÓN PARA PRIORIZACIÓN Y APOYO A LA TOMA DE DECISIONES</div>
+  </div>`;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>{
+    // Busca el módulo Sala CORESEC ya existente y agrega la nueva sala al final.
+    let anchor=document.querySelector('#sala, #coresec, [data-modulo="sala"]');
+    if(!anchor){
+      const texts=[...document.querySelectorAll('section,div')].filter(x=>/SALA CORESEC/i.test(x.textContent||''));
+      anchor=texts.length?texts[texts.length-1]:document.body;
+    }
+    if(!document.getElementById('salaCoresecEjecutiva')){
+      const d=document.createElement('div');
+      d.id='salaCoresecEjecutiva';
+      (anchor===document.body?document.body:anchor).appendChild(d);
+    }
+    orsecCoresecBuild();
+
+    // Recalcula la Sala al cambiar filtros ORSEC.
+    document.querySelectorAll('select').forEach(s=>{
+      s.addEventListener('change',()=>setTimeout(orsecCoresecBuild,80));
+    });
+  },1300);
 });
 </script>
 

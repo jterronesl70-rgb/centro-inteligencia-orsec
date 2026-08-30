@@ -1,19 +1,26 @@
-ORSEC 1.8.3 – INDICADORES PRECISOS
+ORSEC 1.9 – SALA CORESEC EJECUTIVA
 
-MEJORAS DE LECTURA:
-- Presión por Volumen ahora dice expresamente:
-  "Participación en el volumen delictivo total: X%".
-- Alertas ahora identifican expresamente:
-  "Variación interanual: X%".
-- Se agrega una guía conceptual dentro del panel:
-  Impacto Estratégico / Presión por Volumen / Tendencia-Alertas.
+OBJETIVO
+Convertir Sala CORESEC en una pantalla de síntesis para autoridades:
+¿qué ocurre?, ¿dónde?, ¿qué tan relevante es? y ¿qué debe priorizarse para seguimiento?
 
-OBJETIVO:
-Evitar que un porcentaje de participación se confunda con una variación interanual.
+NUEVOS COMPONENTES
+- Situación regional / nivel de seguimiento.
+- Delito de alto impacto estratégico.
+- Territorio prioritario.
+- Presión por volumen claramente identificada.
+- Total regional oficial sin doble conteo.
+- Lectura ejecutiva automática.
+- Tres señales prioritarias para seguimiento.
+- Prioridades CORESEC: impacto, volumen y territorio.
 
-Se conserva la corrección ORSEC 1.8.2 del total regional.
+CRITERIO INSTITUCIONAL
+La Sala identifica señales y prioridades. No prescribe operativos ni sustituye
+la decisión de las autoridades competentes.
 
-INSTALACIÓN:
-Reemplaza SOLO index.html.
-Conserva datos.json.
-Commit changes -> Vercel -> Ctrl + F5.
+Se conservan las correcciones de ORSEC 1.8.2 y 1.8.3.
+
+INSTALACIÓN
+Reemplazar solo index.html.
+Conservar datos.json.
+Commit -> Vercel -> Ctrl+F5.
