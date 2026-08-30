@@ -1,15 +1,18 @@
-ORSEC 1.11.5 – PANORAMA ANALÍTICO POR DELITO
+ORSEC 1.12 – INFOGRAFÍA REGIONAL INTEGRADA
 
-- Con TODOS los delitos: mantiene el bloque de Alto Impacto Estratégico.
-- Con un delito específico: el bloque cambia a ANÁLISIS DEL DELITO.
-- Muestra casos, variación interanual, nivel de alerta y lectura específica.
-- El ranking territorial se recalcula solo para ese delito.
-- La situación estratégica queda enfocada exclusivamente en el delito y provincia elegidos.
+NUEVO:
+- Botón “DESCARGAR INFOGRAFÍA REGIONAL” dentro de Panorama Regional.
+- Vista previa en ventana modal.
+- Descarga directa de la infografía aprobada.
+- La infografía queda embebida en index.html, por lo que el botón funciona sin depender de rutas externas.
+- Pie institucional de la ventana:
+  Fuente: Unidad de Estadística de la Región Policial La Libertad
+  Elaborado: ORSEC / GRDN / GORELL
 
-Ejemplo:
-CHEPEN + HOMICIDIOS = análisis exclusivo de Homicidios en Chepén, sin mezclar Extorsión ni Detonaciones.
-
-Instalación:
-Reemplazar solo index.html.
+INSTALACIÓN:
+Reemplazar index.html.
 Conservar datos.json.
 Commit -> Vercel -> Ctrl+F5.
+
+NOTA:
+Esta versión integra la infografía aprobada como pieza institucional descargable.
