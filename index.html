@@ -1457,4 +1457,197 @@ document.addEventListener('DOMContentLoaded',()=>{
 })();
 </script>
 
+
+<script>
+/* ===== ORSEC 1.11.5 · PANORAMA ANALÍTICO POR DELITO ===== */
+(function(){
+  window.renderPanorama = function(){
+    const host=document.getElementById('panoramaContenido');
+    if(!host) return;
+
+    try{
+      if(typeof DB==='undefined' || !Array.isArray(DB) || DB.length===0){
+        host.innerHTML='<div class="pano-mini"><b>Esperando la carga de datos ORSEC…</b></div>';
+        return;
+      }
+
+      const f=current();
+      const seleccionProv=(f.provincia && f.provincia!=='TODAS') ? f.provincia : 'TOTAL REGION';
+      const esRegion=seleccionProv==='TOTAL REGION';
+      const delitoSeleccionado=(f.delito && f.delito!=='TODOS') ? f.delito : 'TODOS';
+      const esDelitoEspecifico=delitoSeleccionado!=='TODOS';
+
+      let rr=DB.filter(r =>
+        r.Anio==f.anio &&
+        r.TipoPeriodo===f.tipo &&
+        r.Periodo===f.periodo &&
+        r.Provincia===seleccionProv
+      );
+      if(esDelitoEspecifico) rr=rr.filter(r=>r.Delito===delitoSeleccionado);
+
+      const total=rr.reduce((s,r)=>s+(Number(r.Casos)||0),0);
+      const orden=[...rr].sort((a,b)=>(Number(b.Casos)||0)-(Number(a.Casos)||0));
+      const top=orden[0];
+      const share=top&&total?(Number(top.Casos)||0)/total*100:0;
+
+      const impacto=['HOMICIDIOS','EXTORSION','DETONACIONES'];
+      const universeProv=DB.filter(r =>
+        r.Anio==f.anio &&
+        r.TipoPeriodo===f.tipo &&
+        r.Periodo===f.periodo &&
+        r.Provincia===seleccionProv
+      );
+
+      const imp=universeProv.filter(r=>impacto.includes(r.Delito));
+      const impTotal=imp.reduce((s,r)=>s+(Number(r.Casos)||0),0);
+      const impTop=[...imp].sort((a,b)=>(Number(b.Casos)||0)-(Number(a.Casos)||0))[0];
+
+      const selectedCrimeRow=esDelitoEspecifico
+        ? universeProv.find(r=>r.Delito===delitoSeleccionado)
+        : null;
+      const selectedCrimeCases=selectedCrimeRow ? Number(selectedCrimeRow.Casos)||0 : 0;
+
+      const selectedCrimeVar=esDelitoEspecifico
+        ? variation({
+            anio:f.anio,tipo:f.tipo,periodo:f.periodo,
+            provincia:seleccionProv,delito:delitoSeleccionado
+          })
+        : null;
+
+      const nivel=v=>{
+        if(v==null)return {t:'SIN COMPARABLE',c:'#7b8794'};
+        if(v>=25)return {t:'CRÍTICA',c:'#d93025'};
+        if(v>=10)return {t:'ALTA',c:'#f28c28'};
+        if(v>1)return {t:'VIGILANCIA',c:'#e0b400'};
+        if(v>=-1)return {t:'ESTABLE',c:'#2684d8'};
+        return {t:'FAVORABLE',c:'#25a55b'};
+      };
+
+      const selectedNivel=nivel(selectedCrimeVar);
+
+      const alerts=[];
+      universeProv.forEach(r=>{
+        const v=variation({
+          anio:f.anio,tipo:f.tipo,periodo:f.periodo,
+          provincia:seleccionProv,delito:r.Delito
+        });
+        if(v!=null) alerts.push({d:r.Delito,c:Number(r.Casos)||0,v,n:nivel(v)});
+      });
+      const rank=v=>v>=25?5:v>=10?4:v>1?3:v>=-1?2:1;
+      alerts.sort((a,b)=>rank(b.v)-rank(a.v)||b.v-a.v);
+
+      let regionalRows=DB.filter(r =>
+        r.Anio==f.anio &&
+        r.TipoPeriodo===f.tipo &&
+        r.Periodo===f.periodo &&
+        r.Provincia!=='TOTAL REGION'
+      );
+      if(esDelitoEspecifico) regionalRows=regionalRows.filter(r=>r.Delito===delitoSeleccionado);
+
+      const bp={};
+      regionalRows.forEach(r=>bp[r.Provincia]=(bp[r.Provincia]||0)+(Number(r.Casos)||0));
+      const rankingAll=Object.entries(bp).sort((a,b)=>b[1]-a[1]);
+      const provs=rankingAll.slice(0,5);
+      const ptotal=Object.values(bp).reduce((s,v)=>s+v,0);
+      const pmax=provs[0]?.[1]||1;
+      const selectedVol=bp[seleccionProv]||0;
+      const selectedShare=ptotal?selectedVol/ptotal*100:0;
+      const selectedRank=rankingAll.findIndex(x=>x[0]===seleccionProv)+1;
+
+      const suben=alerts.filter(x=>x.v>1).length;
+      const bajan=alerts.filter(x=>x.v<-1).length;
+      const periodoTexto=document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||f.periodo;
+      const contexto=esRegion?'REGIÓN LA LIBERTAD':seleccionProv;
+
+      const territorialDetalle = esRegion
+        ? `<div class="pano-stat"><small>${esDelitoEspecifico?'Mayor concentración territorial del delito':'Mayor concentración territorial'}</small><strong style="font-size:15px">${provs[0]?.[0]||'—'}</strong><span>${provs[0]?fmt(provs[0][1])+' incidencias · '+(ptotal?(provs[0][1]/ptotal*100).toFixed(1):'0.0')+'% del volumen territorial':'Sin información'}</span></div>`
+        : `<div class="pano-stat"><small>Provincia seleccionada</small><strong style="font-size:15px">${seleccionProv}</strong><span>${fmt(selectedVol)} incidencias ${esDelitoEspecifico?'de '+delitoSeleccionado:''} · ${selectedShare.toFixed(1)}% del volumen territorial · puesto ${selectedRank||'—'} regional</span></div>`;
+
+      const incidenciaBlock = esDelitoEspecifico
+        ? `
+          <div class="pano-stat"><small>Comportamiento del delito seleccionado</small><strong style="font-size:16px">${delitoSeleccionado}</strong><span>${fmt(selectedCrimeCases)} casos en ${contexto}</span></div>
+          <div class="pano-stat"><small>Variación interanual</small><strong style="font-size:18px;color:${selectedNivel.c}">${selectedCrimeVar==null?'—':(selectedCrimeVar>=0?'+':'')+selectedCrimeVar.toFixed(1)+'%'}</strong><span>Nivel: ${selectedNivel.t}</span></div>
+          <div class="pano-mini"><b>Lectura específica:</b> ${selectedCrimeVar==null
+            ? `No existe período comparable para ${delitoSeleccionado} en ${contexto}.`
+            : selectedCrimeVar>1
+              ? `${delitoSeleccionado} registra un incremento interanual en ${contexto}, por lo que requiere seguimiento según su nivel de alerta.`
+              : selectedCrimeVar<-1
+                ? `${delitoSeleccionado} registra una reducción interanual en ${contexto}.`
+                : `${delitoSeleccionado} se mantiene estable en ${contexto}.`
+          }</div>`
+        : `
+          <div class="pano-stat"><small>Alto impacto estratégico</small><strong>${fmt(impTotal)}</strong><span>Homicidios + Extorsión + Detonaciones</span></div>
+          <div class="pano-stat"><small>Mayor volumen dentro del alto impacto</small><strong style="font-size:15px">${impTop?.Delito||'—'}</strong><span>${impTop?fmt(impTop.Casos)+' casos':'Sin información'}</span></div>
+          <div class="pano-mini"><b>Principales delitos por volumen</b><br>${orden.slice(0,5).map((r,i)=>`${i+1}. ${r.Delito}: ${fmt(r.Casos)}`).join('<br>')||'Sin información'}</div>`;
+
+      host.innerHTML=`
+      <div class="panorama-shell">
+        <div class="panorama-title">
+          <div><h2>PANORAMA REGIONAL DE SEGURIDAD</h2>
+          <p>${contexto} · ${esDelitoEspecifico?delitoSeleccionado+' · ':''}Centro de Inteligencia ORSEC · fotografía ejecutiva del período seleccionado</p></div>
+          <div class="panorama-badge">${f.anio} · ${periodoTexto} · ${contexto}${esDelitoEspecifico?' · '+delitoSeleccionado:''}</div>
+        </div>
+
+        <div class="panorama-grid">
+          <div class="pano-col"><h3>PANORAMA ${esRegion?'REGIONAL':'PROVINCIAL'}</h3><div class="pano-body">
+            <div class="pano-stat"><small>${esDelitoEspecifico?'Casos del delito seleccionado':'Total de incidencias'}</small><strong>${fmt(total)}</strong><span>${esRegion?'Registro regional oficial':'Provincia seleccionada: '+seleccionProv}</span></div>
+            ${esDelitoEspecifico
+              ? `<div class="pano-stat"><small>Delito seleccionado</small><strong style="font-size:15px">${delitoSeleccionado}</strong><span>Participación dentro de la selección: ${share.toFixed(1)}%</span></div>`
+              : `<div class="pano-stat"><small>Delito de mayor volumen</small><strong style="font-size:15px">${top?.Delito||'—'}</strong><span>${top?fmt(top.Casos)+' casos · '+share.toFixed(1)+'% del volumen':'Sin información'}</span></div>`
+            }
+            <div class="pano-stat"><small>Delitos con incremento</small><strong>${suben}</strong><span>Variación interanual superior a +1%</span></div>
+            <div class="pano-stat"><small>Delitos con disminución</small><strong>${bajan}</strong><span>Variación interanual inferior a -1%</span></div>
+          </div></div>
+
+          <div class="pano-col"><h3>${esDelitoEspecifico?'ANÁLISIS DEL DELITO':'INCIDENCIA DELICTIVA'}</h3><div class="pano-body">
+            ${incidenciaBlock}
+          </div></div>
+
+          <div class="pano-col"><h3>INTELIGENCIA TERRITORIAL</h3><div class="pano-body">
+            ${territorialDetalle}
+            <div class="pano-provs">${provs.map(([p,c])=>`<div class="pano-prov"><b>${p}${p===seleccionProv?' ●':''}</b><div class="pano-bar"><i style="width:${c/pmax*100}%"></i></div><span>${fmt(c)}</span></div>`).join('')}</div>
+            <div class="pano-mini">${esDelitoEspecifico
+              ? `La comparación territorial corresponde exclusivamente a <b>${delitoSeleccionado}</b>.`
+              : esRegion
+                ? 'La concentración territorial expresa volumen y no equivale por sí sola a prioridad estratégica.'
+                : `${seleccionProv} se compara contra el conjunto regional sin perder el contexto territorial.`
+            }</div>
+          </div></div>
+
+          <div class="pano-col"><h3>SITUACIÓN ESTRATÉGICA</h3><div class="pano-body">
+            ${esDelitoEspecifico && selectedCrimeVar!=null
+              ? `<div class="pano-alert"><i class="pano-dot" style="background:${selectedNivel.c}"></i><div><b>${delitoSeleccionado}</b><br>${selectedNivel.t} · Variación interanual ${selectedCrimeVar>=0?'+':''}${selectedCrimeVar.toFixed(1)}%</div></div>`
+              : alerts.slice(0,4).map(x=>`<div class="pano-alert"><i class="pano-dot" style="background:${x.n.c}"></i><div><b>${x.d}</b><br>${x.n.t} · Variación interanual ${x.v>=0?'+':''}${x.v.toFixed(1)}%</div></div>`).join('')||'<div class="pano-mini">Sin comparables disponibles.</div>'
+            }
+            <div class="pano-mini"><b>Lectura ejecutiva:</b> ${
+              esDelitoEspecifico
+                ? (selectedCrimeVar==null
+                    ? `No existe comparación interanual disponible para ${delitoSeleccionado} en ${contexto}.`
+                    : `${delitoSeleccionado} presenta una variación interanual de ${selectedCrimeVar>=0?'+':''}${selectedCrimeVar.toFixed(1)}% en ${contexto}, clasificada como ${selectedNivel.t}.`)
+                : (alerts[0]?`${alerts[0].d} presenta la señal de seguimiento más relevante en ${contexto} (${alerts[0].v>=0?'+':''}${alerts[0].v.toFixed(1)}%).`:'No existen variaciones comparables para esta selección.')
+            }</div>
+          </div></div>
+        </div>
+      </div>`;
+    }catch(err){
+      console.error('ORSEC Panorama analítico:',err);
+      host.innerHTML='<div class="error"><b>No se pudo construir el Panorama Regional.</b></div>';
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    setTimeout(()=>{
+      ['anio','tipoPeriodo','periodo','provincia','delito'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el && !el.dataset.panoAnaliticoHook){
+          el.dataset.panoAnaliticoHook='1';
+          el.addEventListener('change',()=>setTimeout(()=>window.renderPanorama(),80));
+        }
+      });
+      window.renderPanorama();
+    },1200);
+  });
+})();
+</script>
+
 </body></html>

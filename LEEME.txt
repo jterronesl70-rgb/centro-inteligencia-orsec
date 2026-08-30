@@ -1,25 +1,15 @@
-ORSEC 1.11.4 – PANORAMA DINÁMICO POR PROVINCIAS
+ORSEC 1.11.5 – PANORAMA ANALÍTICO POR DELITO
 
-NUEVA CAPACIDAD
-El Panorama Regional ahora responde directamente a la provincia seleccionada.
+- Con TODOS los delitos: mantiene el bloque de Alto Impacto Estratégico.
+- Con un delito específico: el bloque cambia a ANÁLISIS DEL DELITO.
+- Muestra casos, variación interanual, nivel de alerta y lectura específica.
+- El ranking territorial se recalcula solo para ese delito.
+- La situación estratégica queda enfocada exclusivamente en el delito y provincia elegidos.
 
-COMPORTAMIENTO
-- Si Provincia = TODAS, muestra la fotografía de toda La Libertad.
-- Si se selecciona TRUJILLO, ASCOPE, VIRÚ, etc., el Panorama cambia a una
-  fotografía ejecutiva de esa provincia.
-- Se recalculan:
-  * Total de incidencias
-  * Delito de mayor volumen
-  * Alto impacto estratégico
-  * Delitos que suben/bajan
-  * Alertas interanuales
-  * Lectura ejecutiva
-- Inteligencia Territorial mantiene la comparación regional y resalta la
-  provincia elegida.
-- Se muestra participación de la provincia dentro del volumen territorial
-  y su puesto regional.
+Ejemplo:
+CHEPEN + HOMICIDIOS = análisis exclusivo de Homicidios en Chepén, sin mezclar Extorsión ni Detonaciones.
 
-INSTALACIÓN
+Instalación:
 Reemplazar solo index.html.
 Conservar datos.json.
 Commit -> Vercel -> Ctrl+F5.
