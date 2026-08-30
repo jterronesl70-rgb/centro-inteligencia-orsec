@@ -1714,20 +1714,86 @@ document.addEventListener('DOMContentLoaded',()=>{
   const c=ctx(),rr=rows(c),all=allProv(c),rank=ranking(c),total=rr.reduce((s,r)=>s+(+r.Casos||0),0);
   const orden=[...rr].sort((a,b)=>(+b.Casos||0)-(+a.Casos||0)),top=orden[0],impacto=['HOMICIDIOS','EXTORSION','DETONACIONES'];
   const impTotal=all.filter(r=>impacto.includes(r.Delito)).reduce((s,r)=>s+(+r.Casos||0),0);
-  const delitos=c.esDelito?[[c.delito,total]]:orden.slice(0,5).map(r=>[r.Delito,+r.Casos||0]);
-  const focoDel=c.esDelito?c.delito:(top?.Delito||'');const v=focoDel?vard(c,focoDel):null,n=nivel(v);
-  const lugar=c.esRegion?'REGIÓN LA LIBERTAD':c.prov;const periodo=document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||c.f.periodo;
-  const titulo=c.esDelito&&!c.esRegion?'FICHA ANALÍTICA TERRITORIAL':'PANORAMA REGIONAL DE SEGURIDAD';
-  const k2=c.esDelito?(v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%'):fmt(impTotal);
-  const alert=v==null?'Sin período comparable disponible.':(v>1?`${focoDel} presenta incremento interanual de ${(v>=0?'+':'')+v.toFixed(1)}% (${n.t}).`:v<-1?`${focoDel} presenta reducción interanual de ${v.toFixed(1)}% (${n.t}).`:`${focoDel} se mantiene estable.`);
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="794" height="1123" viewBox="0 0 794 1123"><style>.h1{font:700 28px Arial;fill:white}.h2{font:700 15px Arial;fill:#123d60}.k{font:700 10px Arial;fill:#6e8190}.kv{font:700 25px Arial;fill:#123d60}.sm{font:10px Arial;fill:#49667b}.strong{font-weight:700}.sec{font:700 12px Arial;fill:white}</style><rect width="794" height="1123" fill="#f3f7fa"/><rect width="794" height="118" fill="#0c2f4a"/><text x="40" y="45" class="h1">${esc(titulo)}</text><text x="40" y="72" fill="white" font-family="Arial" font-size="14">${esc(lugar)} · ${c.esDelito?esc(c.delito)+' · ':''}${c.f.anio} · ${esc(periodo)}</text><text x="40" y="96" fill="white" font-family="Arial" font-size="11">Centro de Inteligencia ORSEC · Región La Libertad</text>
-  <rect x="40" y="140" width="220" height="105" rx="12" fill="white" stroke="#d6e2ea"/><text x="58" y="166" class="k">${c.esDelito?'CASOS DEL DELITO':'TOTAL DE INCIDENCIAS'}</text><text x="58" y="207" class="kv">${fmt(total)}</text><text x="58" y="228" class="sm">${esc(lugar)}</text>
-  <rect x="287" y="140" width="220" height="105" rx="12" fill="white" stroke="#d6e2ea"/><text x="305" y="166" class="k">${c.esDelito?'VARIACIÓN INTERANUAL':'ALTO IMPACTO ESTRATÉGICO'}</text><text x="305" y="207" class="kv">${esc(k2)}</text><text x="305" y="228" class="sm">${c.esDelito?'Nivel: '+esc(n.t):'Homicidios + Extorsión + Detonaciones'}</text>
-  <rect x="534" y="140" width="220" height="105" rx="12" fill="white" stroke="#d6e2ea"/><text x="552" y="166" class="k">MAYOR CONCENTRACIÓN</text><text x="552" y="205" class="h2">${esc(rank[0]?.[0]||'—')}</text><text x="552" y="228" class="sm">${rank[0]?fmt(rank[0][1])+' incidencias':'Sin información'}</text>
-  <rect x="40" y="270" width="714" height="34" rx="8" fill="#2e78a8"/><text x="57" y="292" class="sec">INCIDENCIA DELICTIVA</text><rect x="40" y="313" width="714" height="220" rx="12" fill="white" stroke="#d6e2ea"/>${bars(delitos,60,345,delitos[0]?.[1]||1,'#2e78a8')}
-  <rect x="40" y="555" width="714" height="34" rx="8" fill="#188588"/><text x="57" y="577" class="sec">INTELIGENCIA TERRITORIAL</text><rect x="40" y="598" width="714" height="220" rx="12" fill="white" stroke="#d6e2ea"/>${bars(rank.slice(0,5),60,630,rank[0]?.[1]||1,'#188588')}
-  <rect x="40" y="840" width="714" height="34" rx="8" fill="#56616b"/><text x="57" y="862" class="sec">SITUACIÓN ESTRATÉGICA</text><rect x="40" y="883" width="714" height="125" rx="12" fill="white" stroke="#d6e2ea"/><circle cx="65" cy="915" r="7" fill="${n.c}"/><text x="82" y="919" class="h2">${esc(focoDel||'SIN ALERTA')} · ${esc(n.t)}</text><text x="60" y="953" font-family="Arial" font-size="12" fill="#29495f">${esc(alert)}</text>
-  <line x1="40" y1="1033" x2="754" y2="1033" stroke="#c9d8e3"/><text x="40" y="1058" class="sm strong">Fuente: Unidad de Estadística de la Región Policial La Libertad</text><text x="40" y="1078" class="sm strong">Elaborado: ORSEC / GRDN / GORELL</text><text x="40" y="1098" class="sm">Generado automáticamente con la selección vigente de ORSEC.</text></svg>`;
+  const delitos=c.esDelito?[[c.delito,total]]:orden.slice(0,4).map(r=>[r.Delito,+r.Casos||0]);
+  const focoDel=c.esDelito?c.delito:(top?.Delito||'');
+  const v=focoDel?vard(c,focoDel):null,n=nivel(v);
+  const lugar=c.esRegion?'REGIÓN LA LIBERTAD':c.prov;
+  const periodo=document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||c.f.periodo;
+  const titulo=c.esDelito&&!c.esRegion?'FICHA ANALÍTICA TERRITORIAL':'INFOGRAFÍA REGIONAL DE SEGURIDAD';
+  const subt=c.esDelito?`${lugar} · ${c.delito}`:`${lugar}`;
+  const rank1=rank[0]||['—',0];
+  const cardColor=n.c;
+  const varTxt=v==null?'—':(v>=0?'+':'')+v.toFixed(1)+'%';
+  const alert=v==null?'Sin período comparable disponible.':(v>1?`${focoDel} registra una variación interanual de ${varTxt}. Nivel ${n.t}.`:v<-1?`${focoDel} registra una reducción interanual de ${varTxt}. Nivel ${n.t}.`:`${focoDel} se mantiene estable frente al período comparable.`);
+  const mkBars=(items,x,y,maxV,color)=>items.map((it,i)=>{const w=maxV?Math.max(5,it[1]/maxV*390):5;return `<text x="${x}" y="${y+i*34+10}" class="lbl">${esc(it[0])}</text><rect x="${x+150}" y="${y+i*34}" width="390" height="11" rx="5.5" fill="#e7eef4"/><rect x="${x+150}" y="${y+i*34}" width="${w}" height="11" rx="5.5" fill="${color}"/><text x="${x+555}" y="${y+i*34+10}" class="val">${fmt(it[1])}</text>`}).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="794" height="1123" viewBox="0 0 794 1123">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a2c48"/><stop offset="1" stop-color="#0b5d91"/></linearGradient>
+    <style>
+      .title{font:700 30px Arial;fill:#fff}.subtitle{font:700 13px Arial;fill:#d8ecf7}
+      .eyebrow{font:700 10px Arial;fill:#7d93a6;letter-spacing:.8px}.big{font:700 28px Arial;fill:#0c3556}
+      .cardlabel{font:700 11px Arial;fill:#5f7588}.cardtext{font:12px Arial;fill:#38556c}
+      .section{font:700 13px Arial;fill:#fff;letter-spacing:.4px}.lbl{font:11px Arial;fill:#36566d}.val{font:700 11px Arial;fill:#0d3554}
+      .small{font:10px Arial;fill:#566f82}.smallb{font:700 10px Arial;fill:#3e5a70}
+    </style>
+  </defs>
+  <rect width="794" height="1123" fill="#f5f8fb"/>
+  <rect x="0" y="0" width="794" height="188" fill="url(#g1)"/>
+  <text x="42" y="48" class="eyebrow" fill="#cbe2f2">CENTRO DE INTELIGENCIA ORSEC · GOBIERNO REGIONAL LA LIBERTAD</text>
+  <text x="42" y="88" class="title">${esc(titulo)}</text>
+  <text x="42" y="117" class="subtitle">${esc(subt)}</text>
+  <text x="42" y="142" class="subtitle">${c.f.anio} · ${esc(periodo)}</text>
+  <circle cx="704" cy="82" r="42" fill="rgba(255,255,255,.13)" stroke="rgba(255,255,255,.35)" stroke-width="2"/>
+  <text x="704" y="78" text-anchor="middle" font-family="Arial" font-size="14" font-weight="700" fill="#fff">ORSEC</text>
+  <text x="704" y="96" text-anchor="middle" font-family="Arial" font-size="9" fill="#dbeefa">LA LIBERTAD</text>
+
+  <rect x="42" y="214" width="218" height="118" rx="14" fill="#fff" stroke="#d7e3ec"/>
+  <text x="62" y="242" class="eyebrow">${c.esDelito?'CASOS DEL DELITO':'TOTAL DE INCIDENCIAS'}</text>
+  <text x="62" y="287" class="big">${fmt(total)}</text>
+  <text x="62" y="312" class="cardtext">${esc(lugar)}</text>
+
+  <rect x="288" y="214" width="218" height="118" rx="14" fill="#fff" stroke="#d7e3ec"/>
+  <text x="308" y="242" class="eyebrow">${c.esDelito?'VARIACIÓN INTERANUAL':'ALTO IMPACTO ESTRATÉGICO'}</text>
+  <text x="308" y="287" class="big" fill="${c.esDelito?cardColor:'#0c3556'}">${c.esDelito?esc(varTxt):fmt(impTotal)}</text>
+  <text x="308" y="312" class="cardtext">${c.esDelito?'Nivel '+esc(n.t):'Homicidios + Extorsión + Detonaciones'}</text>
+
+  <rect x="534" y="214" width="218" height="118" rx="14" fill="#fff" stroke="#d7e3ec"/>
+  <text x="554" y="242" class="eyebrow">MAYOR CONCENTRACIÓN TERRITORIAL</text>
+  <text x="554" y="282" font-family="Arial" font-size="21" font-weight="700" fill="#0c3556">${esc(rank1[0])}</text>
+  <text x="554" y="312" class="cardtext">${fmt(rank1[1])} incidencias</text>
+
+  <rect x="42" y="362" width="710" height="38" rx="9" fill="#2c7dae"/>
+  <text x="60" y="386" class="section">${c.esDelito?'COMPORTAMIENTO DEL DELITO':'PRINCIPALES INDICADORES DELICTIVOS'}</text>
+  <rect x="42" y="410" width="710" height="232" rx="14" fill="#fff" stroke="#d7e3ec"/>
+  ${mkBars(delitos,62,447,delitos[0]?.[1]||1,'#2c7dae')}
+
+  <rect x="42" y="670" width="340" height="272" rx="14" fill="#fff" stroke="#d7e3ec"/>
+  <rect x="42" y="670" width="340" height="38" rx="14" fill="#17878b"/>
+  <rect x="42" y="694" width="340" height="14" fill="#17878b"/>
+  <text x="60" y="694" class="section">LECTURA TERRITORIAL</text>
+  ${mkBars(rank.slice(0,5),62,738,rank[0]?.[1]||1,'#17878b')}
+  <text x="62" y="917" class="small">Concentración por volumen. No equivale por sí sola</text>
+  <text x="62" y="931" class="small">a prioridad estratégica.</text>
+
+  <rect x="412" y="670" width="340" height="272" rx="14" fill="#fff" stroke="#d7e3ec"/>
+  <rect x="412" y="670" width="340" height="38" rx="14" fill="#59636d"/>
+  <rect x="412" y="694" width="340" height="14" fill="#59636d"/>
+  <text x="430" y="694" class="section">SITUACIÓN ESTRATÉGICA</text>
+  <circle cx="440" cy="746" r="9" fill="${cardColor}"/>
+  <text x="460" y="751" font-family="Arial" font-size="15" font-weight="700" fill="#0c3556">${esc(n.t)}</text>
+  <text x="430" y="786" class="smallb">${esc(focoDel||'SIN ALERTA COMPARABLE')}</text>
+  <foreignObject x="430" y="808" width="292" height="108">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font:12px Arial;color:#38556c;line-height:1.45">${esc(alert)}</div>
+  </foreignObject>
+
+  <rect x="42" y="970" width="710" height="90" rx="12" fill="#eaf2f8"/>
+  <text x="60" y="994" class="smallb">FUENTE Y ELABORACIÓN</text>
+  <text x="60" y="1016" class="small">Fuente: Unidad de Estadística de la Región Policial La Libertad</text>
+  <text x="60" y="1035" class="small">Elaborado: ORSEC / GRDN / GORELL</text>
+  <text x="60" y="1054" class="small">Generado automáticamente con los filtros vigentes de la plataforma ORSEC.</text>
+  <rect x="0" y="1090" width="794" height="33" fill="#0a2c48"/>
+  <text x="397" y="1111" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">OBSERVATORIO REGIONAL DE SEGURIDAD CIUDADANA · LA LIBERTAD</text>
+  </svg>`;
  };
  window.abrirInfografiaRegional=function(){const s=generarInfografiaDinamica();document.getElementById('orsecDynInfo').innerHTML=s;const c=ctx();document.getElementById('orsecInfoTitulo').textContent=(c.esDelito&&!c.esRegion)?'Ficha Analítica Territorial':'Infografía Regional ORSEC';document.getElementById('orsecInfoModal').classList.add('abierto')};
  window.cerrarInfografiaRegional=function(){document.getElementById('orsecInfoModal').classList.remove('abierto')};

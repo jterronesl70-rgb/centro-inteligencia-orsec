@@ -1,14 +1,17 @@
-ORSEC 1.13.1 – INFOGRAFÍA DINÁMICA VISIBLE
+ORSEC 1.13.2 – INFOGRAFÍA DINÁMICA CON DISEÑO INSTITUCIONAL
 
 Corrección:
-- Restituye de forma segura el botón de Infografía dentro de Panorama Regional.
-- Si el botón no existe, el sistema lo crea automáticamente.
-- Mantiene la infografía dinámica y la ficha analítica territorial.
-- Cada actualización de datos.json seguirá alimentando automáticamente la infografía.
+La descarga ya no se presenta como un simple tablero/Panorama Regional.
+Ahora se genera como una infografía A4 institucional:
+- cabecera ORSEC
+- tres indicadores principales
+- principales delitos
+- lectura territorial
+- situación estratégica
+- fuente y elaboración institucional
+
+La pieza sigue siendo DINÁMICA:
+cada actualización de datos.json actualiza automáticamente la infografía.
 
 Instalación:
-1. Reemplazar index.html.
-2. Mantener datos.json.
-3. Commit.
-4. Esperar despliegue en Vercel.
-5. Ctrl + F5.
+Reemplazar index.html, conservar datos.json, Commit, Vercel, Ctrl+F5.
