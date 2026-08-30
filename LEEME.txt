@@ -1,11 +1,16 @@
-ORSEC 1.7 – ALERTAS INTELIGENTES
-Reemplaza SOLO index.html y conserva datos.json.
+ORSEC 1.8 – RIESGO ESTRATÉGICO TERRITORIAL
 
-Nuevo criterio:
-ROJO: incremento >= 25% — ALERTA CRÍTICA
-NARANJA: incremento 10% a <25% — ALERTA ALTA
-AMARILLO: incremento >1% a <10% — VIGILANCIA
-AZUL: entre -1% y +1% — ESTABLE
-VERDE: disminución < -1% — EVOLUCIÓN FAVORABLE
+NOVEDAD:
+Se incorpora una lectura diferenciada:
+1. IMPACTO ESTRATÉGICO: Homicidios, Extorsión y Detonaciones.
+2. PRESIÓN POR VOLUMEN: delitos de mayor frecuencia.
+3. ÍNDICE ORSEC PILOTO: combina impacto/tendencia (60%) y presión por volumen (40%).
 
-El mismo lenguaje se aplica al panel de Alertas y Sala CORESEC.
+IMPORTANTE:
+La ponderación 60/40 es un modelo piloto de apoyo analítico, no una escala oficial ni validada.
+Podrá calibrarse con criterios institucionales antes de utilizarse como indicador formal.
+
+INSTALACIÓN:
+Reemplaza SOLO index.html.
+Conserva datos.json.
+Haz Commit changes, espera Vercel y luego Ctrl + F5.

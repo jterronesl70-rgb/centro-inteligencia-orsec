@@ -124,6 +124,21 @@ background-size:42px 42px;transform:perspective(700px) rotateX(62deg) translateY
 .mini-alert.favorable{border-left-color:#18864b;background:#eefaf3}
 .azul{color:#1976d2}.naranja{color:#ef6c00}.amarillo{color:#9a7600}
 
+
+/* ===== ORSEC 1.8 · RIESGO ESTRATÉGICO TERRITORIAL ===== */
+.riesgo-wrap{margin-top:22px}
+.riesgo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.riesgo-card{padding:16px;border-radius:16px;background:#fff;border:1px solid rgba(15,45,70,.12);box-shadow:0 8px 24px rgba(0,0,0,.05)}
+.riesgo-card h4{margin:0 0 7px;font-size:15px}
+.riesgo-card .score{font-size:28px;font-weight:900;margin:4px 0}
+.riesgo-card.critica{border-left:7px solid #b71c1c}
+.riesgo-card.alta-riesgo{border-left:7px solid #ef6c00}
+.riesgo-card.vigilancia{border-left:7px solid #d9a400}
+.riesgo-card.estable{border-left:7px solid #1976d2}
+.riesgo-card.favorable{border-left:7px solid #18864b}
+.riesgo-leyenda{font-size:12px;opacity:.78;margin-top:10px}
+@media(max-width:900px){.riesgo-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -404,6 +419,114 @@ if(_renderSalaCORESEC_ORSEC16){
    box.innerHTML=a.map(x=>{const n=nivelRiesgo(x.v);return `<div class="mini-alert ${n.clase}"><b>${n.icono} ${x.d}</b> · ${x.v>=0?'+':''}${x.v.toFixed(1)}% · ${n.etiqueta}</div>`}).join('')||'<div class="nota">Sin alertas comparables.</div>';
  }
 }
+</script>
+
+
+<section class="panel riesgo-wrap" id="riesgoEstrategicoORSEC">
+  <div class="panel-head">
+    <div>
+      <h2>Índice de Riesgo Estratégico Territorial ORSEC</h2>
+      <p>Lectura diferenciada entre impacto estratégico, presión por volumen y tendencia interanual.</p>
+    </div>
+    <span class="badge">ORSEC 1.8</span>
+  </div>
+  <div id="riesgoResumen" class="riesgo-grid"></div>
+  <div class="riesgo-leyenda">
+    Delitos de alto impacto estratégico: Homicidios · Extorsión · Detonaciones.
+    La lectura de presión por volumen considera el conjunto de delitos disponibles y evita equiparar automáticamente cantidad con criticidad.
+  </div>
+</section>
+
+
+<script>
+/* ===== ORSEC 1.8 · MOTOR DE RIESGO ESTRATÉGICO ===== */
+const ORSEC_ALTO_IMPACTO = ['HOMICIDIOS','EXTORSION','DETONACIONES'];
+
+function orsecNormDelito(s){
+  return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();
+}
+function orsecVariacion(actual, anterior){
+  if(anterior==null || anterior<=0) return null;
+  return (actual-anterior)/anterior*100;
+}
+function orsecClasePorScore(s){
+  if(s>=75)return {c:'critica',i:'🔴',e:'CRÍTICO'};
+  if(s>=55)return {c:'alta-riesgo',i:'🟠',e:'ALTO'};
+  if(s>=35)return {c:'vigilancia',i:'🟡',e:'MEDIO'};
+  if(s>=20)return {c:'estable',i:'🔵',e:'MODERADO'};
+  return {c:'favorable',i:'🟢',e:'BAJO'};
+}
+function orsecScoreTendencia(v){
+  if(v==null)return 35;
+  if(v>=25)return 100;
+  if(v>=10)return 80;
+  if(v>1)return 60;
+  if(v>=-1)return 40;
+  if(v>-10)return 25;
+  return 10;
+}
+function orsecDatosComparables(){
+  if(typeof current!=='function' || typeof registros!=='function') return [];
+  const f=current(), p=f.provincia==='TODAS'?'TOTAL REGION':f.provincia;
+  if(f.anio!==2026)return [];
+  const cur=registros({anio:2026,tipo:f.tipo,periodo:f.periodo,provincia:p})||[];
+  return cur.map(r=>{
+    const prev=(registros({anio:2025,tipo:f.tipo,periodo:f.periodo,provincia:p,delito:r.Delito})||[])[0];
+    return {delito:r.Delito, casos:+r.Casos||0, prev:prev?+prev.Casos||0:null,
+            v:prev?orsecVariacion(+r.Casos||0,+prev.Casos||0):null};
+  });
+}
+function renderRiesgoEstrategico(){
+  const box=document.getElementById('riesgoResumen'); if(!box)return;
+  const rows=orsecDatosComparables();
+  if(!rows.length){
+    box.innerHTML='<div class="riesgo-card estable"><h4>🔵 Índice ORSEC</h4><p>Selecciona un período comparable de 2026 para activar la lectura estratégica.</p></div>';
+    return;
+  }
+  const impacto=rows.filter(x=>ORSEC_ALTO_IMPACTO.includes(orsecNormDelito(x.delito)));
+  const total=rows.reduce((s,x)=>s+x.casos,0);
+  const impactoCasos=impacto.reduce((s,x)=>s+x.casos,0);
+  const tendenciaImpacto=impacto.length?impacto.reduce((s,x)=>s+orsecScoreTendencia(x.v),0)/impacto.length:0;
+
+  // Presión de volumen: concentración relativa dentro del universo seleccionado.
+  // Se presenta separada del impacto para evitar que el delito más numeroso sea automáticamente el más crítico.
+  const top=rows.slice().sort((a,b)=>b.casos-a.casos)[0];
+  const concentracion=total>0 && top ? top.casos/total*100 : 0;
+  const scoreVol=Math.min(100, concentracion*2.2);
+
+  // Índice piloto: 60% impacto estratégico/tendencia + 40% presión de volumen.
+  const indice=Math.round(Math.min(100, tendenciaImpacto*.60 + scoreVol*.40));
+  const n=orsecClasePorScore(indice);
+  const ni=orsecClasePorScore(Math.round(tendenciaImpacto));
+  const nv=orsecClasePorScore(Math.round(scoreVol));
+
+  box.innerHTML=`
+    <div class="riesgo-card ${n.c}">
+      <h4>${n.i} ÍNDICE ORSEC</h4>
+      <div class="score">${indice}/100</div>
+      <b>RIESGO ${n.e}</b>
+      <p>Integra impacto estratégico, tendencia y presión delictiva.</p>
+    </div>
+    <div class="riesgo-card ${ni.c}">
+      <h4>${ni.i} IMPACTO ESTRATÉGICO</h4>
+      <div class="score">${Math.round(tendenciaImpacto)}/100</div>
+      <b>${ni.e}</b>
+      <p>${impactoCasos.toLocaleString('es-PE')} casos en Homicidios, Extorsión y Detonaciones dentro de la selección actual.</p>
+    </div>
+    <div class="riesgo-card ${nv.c}">
+      <h4>${nv.i} PRESIÓN POR VOLUMEN</h4>
+      <div class="score">${Math.round(scoreVol)}/100</div>
+      <b>${nv.e}</b>
+      <p>${top?top.delito:'—'} concentra ${concentracion.toFixed(1)}% del volumen observado.</p>
+    </div>`;
+}
+
+/* Se engancha a los renderizadores existentes sin eliminar funcionalidad previa. */
+const _orsec17RenderAll = (typeof renderAll==='function') ? renderAll : null;
+if(_orsec17RenderAll){
+  renderAll=function(){ _orsec17RenderAll(); renderRiesgoEstrategico(); };
+}
+document.addEventListener('DOMContentLoaded',()=>setTimeout(renderRiesgoEstrategico,450));
 </script>
 
 </body></html>
