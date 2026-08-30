@@ -174,6 +174,20 @@ background-size:42px 42px;transform:perspective(700px) rotateX(62deg) translateY
 .coresec-footer{margin-top:12px;text-align:center;font-size:10px;letter-spacing:1px;color:#a9cbe5}
 @media(max-width:1000px){.coresec-kpis{grid-template-columns:repeat(2,1fr)}.coresec-grid{grid-template-columns:1fr}.coresec-priority{grid-template-columns:1fr}}
 
+
+/* ===== ORSEC 1.10 · FILTROS SINCRONIZADOS ENTRE MÓDULOS ===== */
+.orsec-contexto{margin:14px 0 16px;padding:13px 14px;border:1px solid #d6e4ef;border-radius:14px;background:linear-gradient(180deg,#f9fcff,#f1f7fb)}
+.orsec-contexto-titulo{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.orsec-contexto-titulo b{font-size:11px;color:#0b4b7d;letter-spacing:.8px}
+.orsec-contexto-resumen{font-size:11px;color:#57738d}
+.orsec-sync-filtros{display:grid;grid-template-columns:120px 155px minmax(180px,1.2fr) minmax(150px,1fr) minmax(170px,1.2fr);gap:9px}
+.orsec-sync-campo label{display:block;font-size:9px;font-weight:800;color:#6a849a;text-transform:uppercase;letter-spacing:.55px;margin:0 0 4px 2px}
+.orsec-sync-campo select{width:100%;padding:9px 10px;border-radius:9px;border:1px solid #c9d9e6;background:#fff;color:#17324b;font-size:11px}
+.orsec-sync-nota{margin-top:8px;font-size:9.5px;color:#71889b}
+#sala .orsec-contexto{background:rgba(255,255,255,.96)}
+@media(max-width:1000px){.orsec-sync-filtros{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.orsec-sync-filtros{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -861,6 +875,142 @@ document.addEventListener('DOMContentLoaded',()=>{
     });
   },1300);
 });
+</script>
+
+
+<script>
+/* ===== ORSEC 1.10 · CONTEXTO GLOBAL SINCRONIZADO =====
+   Boletines, Alertas y Sala CORESEC controlan los mismos filtros maestros
+   de Incidencia Delictiva. No existen universos separados de datos.
+*/
+(function(){
+  const masterIds=['anio','tipoPeriodo','periodo','provincia','delito'];
+  const nombres={anio:'Año',tipoPeriodo:'Tipo de período',periodo:'Período',provincia:'Provincia',delito:'Delito'};
+  const modulos=['boletines','alertas','sala'];
+
+  function master(id){ return document.getElementById(id); }
+
+  function copiarOpciones(origen,destino){
+    if(!origen||!destino)return;
+    const valor=origen.value;
+    destino.innerHTML=origen.innerHTML;
+    destino.value=valor;
+  }
+
+  function etiquetaActual(id){
+    const el=master(id);
+    if(!el)return '—';
+    return el.options[el.selectedIndex]?.textContent || el.value || '—';
+  }
+
+  function actualizarResumen(){
+    const txt=`${etiquetaActual('anio')} · ${etiquetaActual('periodo')} · ${etiquetaActual('provincia')} · ${etiquetaActual('delito')}`;
+    document.querySelectorAll('.orsec-contexto-resumen').forEach(x=>x.textContent=txt);
+  }
+
+  function sincronizarDesdeMaestros(){
+    modulos.forEach(mod=>{
+      masterIds.forEach(id=>{
+        const s=document.getElementById(`sync-${mod}-${id}`);
+        copiarOpciones(master(id),s);
+      });
+    });
+    actualizarResumen();
+  }
+
+  function actualizarTodo(){
+    if(typeof renderAll==='function') renderAll();
+    if(typeof renderIntegrado==='function') renderIntegrado();
+    if(typeof orsecCoresecBuild==='function') orsecCoresecBuild();
+    sincronizarDesdeMaestros();
+  }
+
+  function cambiarMaestro(id,valor){
+    const m=master(id);
+    if(!m)return;
+    m.value=valor;
+
+    // Año y tipo de período regeneran la lista de períodos del motor principal.
+    if(id==='anio'||id==='tipoPeriodo'){
+      if(typeof updatePeriods==='function') updatePeriods();
+      setTimeout(()=>{
+        sincronizarDesdeMaestros();
+        if(typeof renderIntegrado==='function') renderIntegrado();
+        if(typeof orsecCoresecBuild==='function') orsecCoresecBuild();
+      },40);
+    }else{
+      actualizarTodo();
+    }
+  }
+
+  function construirBarra(mod){
+    const sec=document.getElementById(mod);
+    if(!sec || sec.querySelector('.orsec-contexto'))return;
+
+    const box=document.createElement('div');
+    box.className='orsec-contexto';
+    box.innerHTML=`
+      <div class="orsec-contexto-titulo">
+        <b>CONTEXTO GLOBAL DE ANÁLISIS</b>
+        <span class="orsec-contexto-resumen">Sincronizando…</span>
+      </div>
+      <div class="orsec-sync-filtros">
+        ${masterIds.map(id=>`
+          <div class="orsec-sync-campo">
+            <label>${nombres[id]}</label>
+            <select id="sync-${mod}-${id}" data-master="${id}"></select>
+          </div>`).join('')}
+      </div>
+      <div class="orsec-sync-nota">Los cambios realizados aquí se sincronizan automáticamente con Incidencia Delictiva y con los demás módulos ORSEC.</div>`;
+
+    const head=sec.querySelector('.seccion-head');
+    if(head && head.nextSibling) sec.insertBefore(box,head.nextSibling);
+    else sec.prepend(box);
+
+    box.querySelectorAll('select[data-master]').forEach(s=>{
+      s.addEventListener('change',()=>cambiarMaestro(s.dataset.master,s.value));
+    });
+  }
+
+  function iniciar(){
+    if(!master('anio') || !master('periodo')) return false;
+    modulos.forEach(construirBarra);
+    sincronizarDesdeMaestros();
+
+    // Si el usuario cambia filtros desde Incidencia, todos los módulos lo reflejan.
+    masterIds.forEach(id=>{
+      const m=master(id);
+      if(m && !m.dataset.orsecSyncHook){
+        m.dataset.orsecSyncHook='1';
+        m.addEventListener('change',()=>setTimeout(sincronizarDesdeMaestros,50));
+      }
+    });
+
+    // Refresca al abrir un módulo, conservando exactamente el mismo contexto.
+    if(typeof abrir==='function' && !window.__orsecAbrirSync){
+      window.__orsecAbrirSync=true;
+      const abrirOriginal=abrir;
+      abrir=function(id,card){
+        abrirOriginal(id,card);
+        setTimeout(()=>{
+          sincronizarDesdeMaestros();
+          if(id==='boletines' && typeof renderBoletin==='function') renderBoletin();
+          if(id==='alertas' && typeof renderAlertas==='function') renderAlertas();
+          if(id==='sala' && typeof orsecCoresecBuild==='function') orsecCoresecBuild();
+        },70);
+      };
+    }
+    return true;
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    let intentos=0;
+    const timer=setInterval(()=>{
+      intentos++;
+      if(iniciar() || intentos>25) clearInterval(timer);
+    },120);
+  });
+})();
 </script>
 
 </body></html>

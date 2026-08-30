@@ -1,20 +1,40 @@
-ORSEC 1.9.1 – CORRECCIÓN DE CONCENTRACIÓN TERRITORIAL
+ORSEC 1.10 – FILTROS GLOBALES SINCRONIZADOS
 
-CAMBIO PRINCIPAL
-Se reemplaza el concepto "Territorio Prioritario" por:
-"MAYOR CONCENTRACIÓN TERRITORIAL"
+NUEVA MEJORA
+Boletines, Alertas y Sala CORESEC incorporan su propia barra visible de filtros:
+- Año
+- Tipo de período
+- Período
+- Provincia
+- Delito
 
-NUEVA INTERPRETACIÓN
-- Muestra la provincia con mayor volumen agregado de incidencias.
-- Muestra también su participación porcentual dentro del volumen territorial.
-- Se aclara que concentración por volumen NO equivale por sí sola a prioridad estratégica.
+FUNCIONAMIENTO
+No son filtros independientes.
+Todos controlan el mismo contexto global de ORSEC.
 
-OBJETIVO
-Evitar que un volumen alto sea interpretado automáticamente como mayor riesgo estratégico.
+Ejemplo:
+Si desde Sala CORESEC cambias Provincia de TOTAL REGION a ASCOPE:
+- Sala CORESEC se recalcula para ASCOPE.
+- Alertas conserva ASCOPE.
+- Boletines conserva ASCOPE.
+- Incidencia Delictiva también queda en ASCOPE.
 
-Se mantienen intactas las demás mejoras de ORSEC 1.9.
+Si luego cambias el delito a EXTORSION desde Boletines, toda la plataforma
+pasa al mismo contexto.
+
+INTELIGENCIA TERRITORIAL
+No se modifica estructuralmente en esta versión para conservar su función
+de comparación geográfica regional.
+
+SE CONSERVA
+- Motor de total regional corregido.
+- Indicadores precisos.
+- Sala CORESEC ejecutiva.
+- Mayor Concentración Territorial diferenciada de prioridad estratégica.
 
 INSTALACIÓN
-Reemplazar solo index.html.
-Conservar datos.json.
-Commit -> Vercel -> Ctrl+F5.
+1. Reemplazar solo index.html.
+2. Conservar datos.json.
+3. Commit changes.
+4. Esperar Vercel.
+5. Ctrl + F5.
