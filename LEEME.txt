@@ -1,37 +1,21 @@
-ORSEC 1.11 – PANORAMA REGIONAL DE SEGURIDAD
+ORSEC 1.11.1 – PANORAMA REGIONAL VISIBLE
 
-NUEVO MÓDULO
-PANORAMA REGIONAL DE SEGURIDAD · REGIÓN LA LIBERTAD
+CORRECCIÓN:
+La versión 1.11 sí contenía la lógica del Panorama Regional, pero la tarjeta
+de acceso no se insertó porque la clase real de los módulos es "tarjeta".
+Por eso el usuario no podía abrirla.
 
-FINALIDAD
-Brindar una fotografía ejecutiva de la situación regional en una sola pantalla,
-inspirada en la lógica de un resumen estadístico institucional, pero con identidad ORSEC.
+AHORA:
+- Panorama Regional aparece como una sexta tarjeta visible.
+- Al hacer clic abre una pantalla real en cuatro bloques:
+  1. Panorama Regional
+  2. Incidencia Delictiva
+  3. Inteligencia Territorial
+  4. Situación Estratégica
+- Los botones internos ya enlazan correctamente con:
+  Incidencia, Alertas, Territorio y Sala CORESEC.
 
-CUATRO BLOQUES
-1. Panorama Regional
-2. Incidencia Delictiva
-3. Inteligencia Territorial
-4. Situación Estratégica
-
-INCLUYE
-- Total regional oficial
-- Delito de mayor volumen y participación
-- Delitos que aumentan/disminuyen
-- Alto impacto estratégico
-- Ranking de delitos por volumen
-- Mayor concentración territorial y participación
-- Ranking provincial
-- Principales alertas interanuales
-- Lectura ejecutiva
-- Accesos a módulos de profundidad
-
-NO REEMPLAZA SALA CORESEC
-Panorama Regional = fotografía integral.
-Sala CORESEC = interpretación y priorización para decisión.
-
-Se conservan las mejoras y correcciones de ORSEC 1.10.
-
-INSTALACIÓN
+INSTALACIÓN:
 Reemplazar solo index.html.
 Conservar datos.json.
 Commit -> Vercel -> Ctrl+F5.

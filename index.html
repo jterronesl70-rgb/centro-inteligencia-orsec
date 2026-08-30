@@ -245,12 +245,18 @@ background-size:42px 42px;transform:perspective(700px) rotateX(62deg) translateY
 </header>
 <section class="hero"><h2>Centro de Inteligencia ORSEC</h2><p>Información, análisis y estadísticas para una toma de decisiones basada en evidencia.</p><div class="fuente" id="fuente">Conectando con el Excel institucional…</div></section>
 <section class="grid">
+ <div class="tarjeta" data-mod="panorama" onclick="abrir('panorama',this)"><div class="icono">◉</div><h3>Panorama Regional</h3><div class="numero">360°</div><p>Fotografía ejecutiva de La Libertad.</p></div>
  <div class="tarjeta" data-mod="incidencia" onclick="abrir('incidencia',this)"><div class="icono">📊</div><h3>Incidencia Delictiva</h3><div class="numero" id="kpiRegistros">--</div><p>Consulta dinámica del Excel.</p></div>
  <div class="tarjeta" data-mod="boletines" onclick="abrir('boletines',this)"><div class="icono">📑</div><h3>Boletines</h3><div class="numero" id="kpiBoletin">AUTO</div><p>Resumen ejecutivo automático.</p></div>
  <div class="tarjeta" data-mod="alertas" onclick="abrir('alertas',this)"><div class="icono">🚨</div><h3>Alertas</h3><div class="numero" id="kpiAlertas">--</div><p>Variaciones 2025–2026.</p></div>
  <div class="tarjeta" data-mod="territorio" onclick="abrir('territorio',this)"><div class="icono">🗺️</div><h3>Inteligencia Territorial</h3><div class="numero" id="kpiProvincias">12</div><p>Mapa y ranking provincial.</p></div>
  <div class="tarjeta" data-mod="sala" onclick="abrir('sala',this)"><div class="icono">🧠</div><h3>Sala CORESEC</h3><div class="numero">LIVE</div><p>Vista ejecutiva consolidada.</p></div>
 </section>
+
+<div id="panorama" class="seccion">
+ <div class="seccion-head"><h2>Panorama Regional de Seguridad</h2><span class="badge">REGIÓN LA LIBERTAD · VISTA EJECUTIVA</span></div>
+ <div id="panoramaContenido" class="loading">Construyendo panorama regional…</div>
+</div>
 
 <div id="incidencia" class="seccion activa">
  <div class="seccion-head"><h2>Incidencia Delictiva</h2><span class="badge" id="badgePeriodo">Datos institucionales</span></div>
@@ -320,7 +326,7 @@ const MESES=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','
 let DB=[];let META={};
 const $=id=>document.getElementById(id);const fmt=n=>Number(n||0).toLocaleString('es-PE');
 function reloj(){const a=new Date();$('reloj').textContent=a.toLocaleDateString('es-PE')+' · '+a.toLocaleTimeString('es-PE')}setInterval(reloj,1000);reloj();
-function abrir(id,card){document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.tarjeta').forEach(t=>t.classList.remove('activa'));if(card)card.classList.add('activa');if(id==='boletines')renderBoletin();if(id==='alertas')renderAlertas();if(id==='territorio')renderTerritorio();if(id==='sala')renderSalaCORESEC();setTimeout(()=>$(id).scrollIntoView({behavior:'smooth',block:'start'}),40)}
+function abrir(id,card){document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.tarjeta').forEach(t=>t.classList.remove('activa'));if(card)card.classList.add('activa');if(id==='panorama'&&typeof renderPanorama==='function')renderPanorama();if(id==='boletines')renderBoletin();if(id==='alertas')renderAlertas();if(id==='territorio')renderTerritorio();if(id==='sala')renderSalaCORESEC();setTimeout(()=>$(id).scrollIntoView({behavior:'smooth',block:'start'}),40)}
 function option(sel,vals,label){sel.innerHTML='';vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=(label&&label[v])||v;sel.appendChild(o)})}
 function registros(f={}){return DB.filter(r=>(!f.anio||r.Anio==f.anio)&&(!f.tipo||r.TipoPeriodo===f.tipo)&&(!f.periodo||r.Periodo===f.periodo)&&(!f.provincia||r.Provincia===f.provincia)&&(!f.delito||r.Delito===f.delito))}
 function current(){return {anio:+$('anio').value,tipo:$('tipoPeriodo').value,periodo:$('periodo').value,provincia:$('provincia').value,delito:$('delito').value}}
@@ -1113,7 +1119,7 @@ function renderPanorama(){
   <div class="pano-actions">
    <button onclick="abrir('incidencia')">VER INCIDENCIA</button>
    <button onclick="abrir('alertas')">VER ALERTAS</button>
-   <button onclick="abrir('territorial')">VER TERRITORIO</button>
+   <button onclick="abrir('territorio')">VER TERRITORIO</button>
    <button onclick="abrir('sala')">IR A SALA CORESEC</button>
   </div>
  </div>`;
@@ -1121,7 +1127,7 @@ function renderPanorama(){
 
 document.addEventListener('DOMContentLoaded',()=>{
  setTimeout(()=>{
-   if(!document.getElementById('panorama')){
+   if(false && !document.getElementById('panorama')){
      const main=document.querySelector('main')||document.body;
      const s=document.createElement('section'); s.id='panorama'; s.className='seccion';
      s.innerHTML='<div id="panoramaContenido"></div>';
@@ -1131,7 +1137,7 @@ document.addEventListener('DOMContentLoaded',()=>{
    renderPanorama();
 
    // Agrega tarjeta/módulo de acceso junto a los módulos existentes.
-   const cards=[...document.querySelectorAll('.module-card,.modulo-card,.card-modulo,.module')];
+   const cards=[];
    const container=cards[0]?.parentElement;
    if(container && !document.getElementById('cardPanorama')){
      const c=document.createElement(cards[0].tagName||'div');
