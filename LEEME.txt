@@ -1,17 +1,25 @@
-ORSEC 1.13.2 – INFOGRAFÍA DINÁMICA CON DISEÑO INSTITUCIONAL
+ORSEC 1.13.3 – INFOGRAFÍA ORIGINAL RECUPERADA
 
-Corrección:
-La descarga ya no se presenta como un simple tablero/Panorama Regional.
-Ahora se genera como una infografía A4 institucional:
-- cabecera ORSEC
-- tres indicadores principales
-- principales delitos
-- lectura territorial
-- situación estratégica
-- fuente y elaboración institucional
+Esta versión recupera EXACTAMENTE la infografía institucional original:
+- diseño A4 azul/blanco
+- encabezado Observatorio Regional de Seguridad Ciudadana
+- cuatro indicadores principales
+- comparativo interanual
+- fotografía regional
+- delitos de alto impacto
+- concentración provincial
+- evolución
+- alertas territoriales
+- lectura ejecutiva
+- fuente y elaboración
 
-La pieza sigue siendo DINÁMICA:
-cada actualización de datos.json actualiza automáticamente la infografía.
+El botón de Panorama Regional vuelve a abrir esta infografía original.
+Se puede descargar como PNG o guardar/imprimir como PDF.
+
+IMPORTANTE:
+Esta versión prioriza recuperar el formato original exacto.
+La automatización dinámica se retomará después usando este mismo diseño,
+sin volver a reemplazarlo por un tablero genérico.
 
 Instalación:
-Reemplazar index.html, conservar datos.json, Commit, Vercel, Ctrl+F5.
+Reemplazar index.html, conservar datos.json, Commit, Vercel y Ctrl+F5.
