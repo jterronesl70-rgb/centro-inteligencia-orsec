@@ -1,15 +1,11 @@
-ORSEC 1.6.1 – LOGOS EMBEBIDOS
+ORSEC 1.7 – ALERTAS INTELIGENTES
+Reemplaza SOLO index.html y conserva datos.json.
 
-CORRECCIÓN:
-Los logos del Gobierno Regional La Libertad y del Observatorio Regional de Seguridad Ciudadana ahora están incrustados directamente dentro de index.html.
-Ya NO depende de una carpeta assets para mostrarlos.
+Nuevo criterio:
+ROJO: incremento >= 25% — ALERTA CRÍTICA
+NARANJA: incremento 10% a <25% — ALERTA ALTA
+AMARILLO: incremento >1% a <10% — VIGILANCIA
+AZUL: entre -1% y +1% — ESTABLE
+VERDE: disminución < -1% — EVOLUCIÓN FAVORABLE
 
-INSTALACIÓN:
-1. Reemplaza SOLO index.html.
-2. Conserva datos.json.
-3. No necesitas subir la carpeta assets para esta corrección.
-4. Commit changes.
-5. Espera Vercel.
-6. Ctrl + F5.
-
-La intro de ~3 segundos se mantiene, al igual que el mapa real, módulos, gráficos, alertas, boletines y Sala CORESEC.
+El mismo lenguaje se aplica al panel de Alertas y Sala CORESEC.

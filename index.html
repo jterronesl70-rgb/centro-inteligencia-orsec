@@ -110,6 +110,20 @@ background-size:42px 42px;transform:perspective(700px) rotateX(62deg) translateY
   .brand-side.gore img,.brand-side.obs img{height:54px}
 }
 
+
+/* ORSEC 1.7 · Semáforo de riesgo */
+.alert-card.critica{border-left:6px solid #b71c1c;background:#fff1f1}
+.alert-card.alta-riesgo{border-left:6px solid #ef6c00;background:#fff6eb}
+.alert-card.vigilancia{border-left:6px solid #d9a400;background:#fffbea}
+.alert-card.estable{border-left:6px solid #1976d2;background:#eef6ff}
+.alert-card.favorable{border-left:6px solid #18864b;background:#eefaf3}
+.mini-alert.critica{border-left-color:#b71c1c;background:#fff1f1}
+.mini-alert.alta-riesgo{border-left-color:#ef6c00;background:#fff6eb}
+.mini-alert.vigilancia{border-left-color:#d9a400;background:#fffbea}
+.mini-alert.estable{border-left-color:#1976d2;background:#eef6ff}
+.mini-alert.favorable{border-left-color:#18864b;background:#eefaf3}
+.azul{color:#1976d2}.naranja{color:#ef6c00}.amarillo{color:#9a7600}
+
 </style>
 </head>
 <body>
@@ -339,6 +353,57 @@ document.addEventListener('DOMContentLoaded',()=>{
  setTimeout(()=>{if(intro)intro.classList.add('intro-out')},3200);
  setTimeout(()=>{if(intro)intro.remove()},3900);
 });
+</script>
+
+
+<script>
+/* ===== ORSEC 1.7 · INTERPRETACIÓN OPERACIONAL DEL RIESGO ===== */
+function nivelRiesgo(v){
+  if(v==null || !Number.isFinite(v)) return {clase:'estable',etiqueta:'SIN DATO',icono:'⚪',texto:'Sin comparación homogénea'};
+  if(v>=25) return {clase:'critica',etiqueta:'ALERTA CRÍTICA',icono:'🔴',texto:'Incremento crítico · tendencia desfavorable'};
+  if(v>=10) return {clase:'alta-riesgo',etiqueta:'ALERTA ALTA',icono:'🟠',texto:'Incremento relevante · requiere atención'};
+  if(v>1) return {clase:'vigilancia',etiqueta:'VIGILANCIA',icono:'🟡',texto:'Incremento moderado · mantener vigilancia'};
+  if(v>=-1) return {clase:'estable',etiqueta:'ESTABLE',icono:'🔵',texto:'Sin cambio significativo'};
+  return {clase:'favorable',etiqueta:'EVOLUCIÓN FAVORABLE',icono:'🟢',texto:'Disminución interanual · tendencia favorable'};
+}
+function colorTextoRiesgo(v){
+  const n=nivelRiesgo(v);
+  return n.clase==='critica'?'rojo':n.clase==='favorable'?'verde':n.clase==='estable'?'azul':n.clase==='alta-riesgo'?'naranja':'amarillo';
+}
+function renderAlertas(){
+ const f=current();
+ if(f.anio!==2026){$('alertasBox').innerHTML='<div class="alerta">Selecciona 2026 para activar el comparativo interanual 2025–2026.</div>';return}
+ const p=f.provincia==='TODAS'?'TOTAL REGION':f.provincia;
+ const currentRows=registros({anio:2026,tipo:f.tipo,periodo:f.periodo,provincia:p});
+ const alerts=[];
+ currentRows.forEach(r=>{
+   const prev=registros({anio:2025,tipo:f.tipo,periodo:f.periodo,provincia:p,delito:r.Delito})[0];
+   if(prev&&prev.Casos>0){const v=(r.Casos-prev.Casos)/prev.Casos*100;alerts.push({d:r.Delito,a:r.Casos,b:prev.Casos,v})}
+ });
+ alerts.sort((a,b)=>b.v-a.v);
+ $('kpiAlertas').textContent=alerts.filter(x=>x.v>1).length;
+ $('alertasBox').innerHTML=alerts.slice(0,8).map(x=>{
+   const n=nivelRiesgo(x.v), tc=colorTextoRiesgo(x.v);
+   return `<div class="alert-card ${n.clase}"><strong>${n.icono} ${x.d} · ${n.etiqueta}</strong><br>2026: ${fmt(x.a)} · 2025: ${fmt(x.b)} · <span class="var ${tc}">${x.v>=0?'+':''}${x.v.toFixed(1)}%</span><br><small>${n.texto}</small></div>`;
+ }).join('')||'<div class="alerta">No hay comparativos homogéneos disponibles para esta selección.</div>';
+}
+function renderAlertasExtra(){
+ const b=$('alertasComparativas'); if(!b)return;
+ const a=alertasData().slice().sort((x,y)=>y.v-x.v).slice(0,8);
+ b.innerHTML=a.length?a.map(x=>{
+   const n=nivelRiesgo(x.v);
+   return `<div class="alert-card ${n.clase}"><b>${n.icono} ${x.d}</b><div class="delta">${x.v>=0?'+':''}${x.v.toFixed(1)}%</div><small><b>${n.etiqueta}</b> · ${n.texto}</small></div>`;
+ }).join(''):'<div class="nota">No hay comparación interanual disponible.</div>';
+}
+const _renderSalaCORESEC_ORSEC16 = typeof renderSalaCORESEC==='function' ? renderSalaCORESEC : null;
+if(_renderSalaCORESEC_ORSEC16){
+ renderSalaCORESEC=function(){
+   _renderSalaCORESEC_ORSEC16();
+   const box=$('salaAlertas'); if(!box)return;
+   const a=alertasData().slice().sort((x,y)=>y.v-x.v).slice(0,5);
+   box.innerHTML=a.map(x=>{const n=nivelRiesgo(x.v);return `<div class="mini-alert ${n.clase}"><b>${n.icono} ${x.d}</b> · ${x.v>=0?'+':''}${x.v.toFixed(1)}% · ${n.etiqueta}</div>`}).join('')||'<div class="nota">Sin alertas comparables.</div>';
+ }
+}
 </script>
 
 </body></html>
