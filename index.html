@@ -761,6 +761,8 @@ function orsecCoresecBuild(){
   if(f.delito!=='TODOS') prov=prov.filter(r=>r.Delito===f.delito);
   const bp={}; prov.forEach(r=>bp[r.Provincia]=(bp[r.Provincia]||0)+(+r.Casos||0));
   const topP=Object.entries(bp).sort((a,b)=>b[1]-a[1])[0];
+  const provTotal=Object.values(bp).reduce((s,v)=>s+(+v||0),0);
+  const topPShare=topP&&provTotal ? (topP[1]/provTotal*100) : 0;
 
   // Variaciones por delito para priorización de alertas.
   const alerts=[];
@@ -783,7 +785,7 @@ function orsecCoresecBuild(){
     : 'No se dispone de información comparable para delitos de alto impacto en esta selección.';
 
   const terrTxt=topP
-    ? `${topP[0]} concentra el mayor número de casos dentro de la lectura territorial seleccionada (${fmt(topP[1])}).`
+    ? `${topP[0]} registra la mayor concentración territorial de incidencias (${fmt(topP[1])}), equivalente al ${topPShare.toFixed(1)}% del volumen provincial observado. Este indicador expresa concentración por volumen y no equivale, por sí solo, a prioridad territorial estratégica.`
     : 'No se dispone de una provincia líder para la selección actual.';
 
   const trendTxt=topAlerts[0]
@@ -801,7 +803,7 @@ function orsecCoresecBuild(){
     <div class="coresec-kpis">
       <div class="coresec-kpi"><small>Situación regional</small><strong style="color:${regional.c}">${regional.t}</strong><span>Mayor nivel de seguimiento detectado</span></div>
       <div class="coresec-kpi"><small>Alto impacto estratégico</small><strong>${impactTop?impactTop.Delito:'—'}</strong><span>${impactTop?fmt(+impactTop.Casos||0)+' casos':'Sin información'}</span></div>
-      <div class="coresec-kpi"><small>Territorio prioritario</small><strong>${topP?topP[0]:'—'}</strong><span>${topP?fmt(topP[1])+' casos':'Sin información'}</span></div>
+      <div class="coresec-kpi"><small>Mayor concentración territorial</small><strong>${topP?topP[0]:'—'}</strong><span>${topP?fmt(topP[1])+' incidencias · '+topPShare.toFixed(1)+'% del volumen territorial':'Sin información'}</span></div>
       <div class="coresec-kpi"><small>Presión por volumen</small><strong>${volumeTop?volumeTop.Delito:'—'}</strong><span>${volumeTop?volumeShare.toFixed(1)+'% del volumen total':'Sin información'}</span></div>
       <div class="coresec-kpi"><small>Total de la selección</small><strong>${fmt(total)}</strong><span>Registro regional oficial</span></div>
     </div>
@@ -830,11 +832,11 @@ function orsecCoresecBuild(){
       <div class="coresec-priority">
         <div><b>IMPACTO ESTRATÉGICO</b><span>${impactTop?`${impactTop.Delito} · ${fmt(+impactTop.Casos||0)} casos`:'Sin información comparable'}</span></div>
         <div><b>PRESIÓN POR VOLUMEN</b><span>${volumeTop?`${volumeTop.Delito} · participación ${volumeShare.toFixed(1)}%`:'Sin información'}</span></div>
-        <div><b>TERRITORIO PRIORITARIO</b><span>${topP?`${topP[0]} · ${fmt(topP[1])} casos`:'Sin información'}</span></div>
+        <div><b>MAYOR CONCENTRACIÓN TERRITORIAL</b><span>${topP?`${topP[0]} · ${fmt(topP[1])} incidencias · ${topPShare.toFixed(1)}% del volumen territorial`:'Sin información'}</span></div>
       </div>
     </div>
 
-    <div class="coresec-footer">SALA CORESEC · INFORMACIÓN PARA PRIORIZACIÓN Y APOYO A LA TOMA DE DECISIONES</div>
+    <div class="coresec-footer">SALA CORESEC · INFORMACIÓN PARA PRIORIZACIÓN Y APOYO A LA TOMA DE DECISIONES · CONCENTRACIÓN TERRITORIAL ≠ PRIORIDAD ESTRATÉGICA</div>
   </div>`;
 }
 

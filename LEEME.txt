@@ -1,24 +1,18 @@
-ORSEC 1.9 – SALA CORESEC EJECUTIVA
+ORSEC 1.9.1 – CORRECCIÓN DE CONCENTRACIÓN TERRITORIAL
+
+CAMBIO PRINCIPAL
+Se reemplaza el concepto "Territorio Prioritario" por:
+"MAYOR CONCENTRACIÓN TERRITORIAL"
+
+NUEVA INTERPRETACIÓN
+- Muestra la provincia con mayor volumen agregado de incidencias.
+- Muestra también su participación porcentual dentro del volumen territorial.
+- Se aclara que concentración por volumen NO equivale por sí sola a prioridad estratégica.
 
 OBJETIVO
-Convertir Sala CORESEC en una pantalla de síntesis para autoridades:
-¿qué ocurre?, ¿dónde?, ¿qué tan relevante es? y ¿qué debe priorizarse para seguimiento?
+Evitar que un volumen alto sea interpretado automáticamente como mayor riesgo estratégico.
 
-NUEVOS COMPONENTES
-- Situación regional / nivel de seguimiento.
-- Delito de alto impacto estratégico.
-- Territorio prioritario.
-- Presión por volumen claramente identificada.
-- Total regional oficial sin doble conteo.
-- Lectura ejecutiva automática.
-- Tres señales prioritarias para seguimiento.
-- Prioridades CORESEC: impacto, volumen y territorio.
-
-CRITERIO INSTITUCIONAL
-La Sala identifica señales y prioridades. No prescribe operativos ni sustituye
-la decisión de las autoridades competentes.
-
-Se conservan las correcciones de ORSEC 1.8.2 y 1.8.3.
+Se mantienen intactas las demás mejoras de ORSEC 1.9.
 
 INSTALACIÓN
 Reemplazar solo index.html.
