@@ -1,18 +1,19 @@
-ORSEC 1.12 – INFOGRAFÍA REGIONAL INTEGRADA
+ORSEC 1.12.1 – INFOGRAFÍA REGIONAL INSTITUCIONAL
 
-NUEVO:
-- Botón “DESCARGAR INFOGRAFÍA REGIONAL” dentro de Panorama Regional.
-- Vista previa en ventana modal.
-- Descarga directa de la infografía aprobada.
-- La infografía queda embebida en index.html, por lo que el botón funciona sin depender de rutas externas.
-- Pie institucional de la ventana:
-  Fuente: Unidad de Estadística de la Región Policial La Libertad
-  Elaborado: ORSEC / GRDN / GORELL
+Esta es la nueva entrega para reemplazar ORSEC 1.12.
 
-INSTALACIÓN:
-Reemplazar index.html.
-Conservar datos.json.
-Commit -> Vercel -> Ctrl+F5.
+CORRECCIÓN DE LA INFOGRAFÍA DESCARGABLE:
+- Se actualizó la pieza incorporada a la plataforma.
+- Fuente: Unidad de Estadística de la Región Policial La Libertad.
+- Elaborado: ORSEC / GRDN / GORELL.
+- Se mantiene la identidad ORSEC en la cabecera.
+- La nueva infografía está embebida directamente en index.html.
 
-NOTA:
-Esta versión integra la infografía aprobada como pieza institucional descargable.
+PARA ACTUALIZAR:
+1. Reemplazar el index.html anterior por este nuevo index.html.
+2. Mantener datos.json.
+3. Commit en GitHub.
+4. Esperar despliegue de Vercel.
+5. Ctrl + F5.
+
+El botón “DESCARGAR INFOGRAFÍA REGIONAL” descargará la nueva versión institucional.
