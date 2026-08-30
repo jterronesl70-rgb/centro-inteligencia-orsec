@@ -1732,7 +1732,24 @@ document.addEventListener('DOMContentLoaded',()=>{
  window.abrirInfografiaRegional=function(){const s=generarInfografiaDinamica();document.getElementById('orsecDynInfo').innerHTML=s;const c=ctx();document.getElementById('orsecInfoTitulo').textContent=(c.esDelito&&!c.esRegion)?'Ficha Analítica Territorial':'Infografía Regional ORSEC';document.getElementById('orsecInfoModal').classList.add('abierto')};
  window.cerrarInfografiaRegional=function(){document.getElementById('orsecInfoModal').classList.remove('abierto')};
  window.descargarInfografiaSVG=function(){const s=generarInfografiaDinamica(),c=ctx(),b=new Blob([s],{type:'image/svg+xml'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=((c.esDelito&&!c.esRegion)?`ORSEC_Ficha_${c.prov}_${c.delito}_${c.f.anio}.svg`:`ORSEC_Infografia_Regional_${c.f.anio}.svg`).replace(/\s+/g,'_');a.click();setTimeout(()=>URL.revokeObjectURL(u),500)};
- function syncBtn(){const b=document.getElementById('btnInfografiaRegional');if(!b)return;const c=ctx();b.onclick=abrirInfografiaRegional;b.textContent=(c.esDelito&&!c.esRegion)?'⇩ GENERAR FICHA ANALÍTICA TERRITORIAL':'⇩ DESCARGAR INFOGRAFÍA REGIONAL'}
+ function syncBtn(){
+  let b=document.getElementById('btnInfografiaRegional');
+  if(!b){
+    const panorama=document.getElementById('panorama');
+    if(!panorama)return;
+    const tools=document.createElement('div');
+    tools.className='orsec-infografia-tools';
+    tools.id='orsecInfografiaTools';
+    tools.innerHTML='<button id="btnInfografiaRegional" class="orsec-infografia-btn">⇩ DESCARGAR INFOGRAFÍA REGIONAL</button>';
+    const contenido=document.getElementById('panoramaContenido');
+    if(contenido) panorama.insertBefore(tools, contenido);
+    else panorama.insertAdjacentElement('afterbegin', tools);
+    b=document.getElementById('btnInfografiaRegional');
+  }
+  const c=ctx();
+  b.onclick=abrirInfografiaRegional;
+  b.textContent=(c.esDelito&&!c.esRegion)?'⇩ GENERAR FICHA ANALÍTICA TERRITORIAL':'⇩ DESCARGAR INFOGRAFÍA REGIONAL';
+}
  document.addEventListener('DOMContentLoaded',()=>{setTimeout(syncBtn,700);setTimeout(syncBtn,1600);document.addEventListener('change',e=>{if(['anio','tipoPeriodo','periodo','provincia','delito'].includes(e.target?.id))setTimeout(syncBtn,30)});document.getElementById('orsecInfoModal')?.addEventListener('click',e=>{if(e.target.id==='orsecInfoModal')cerrarInfografiaRegional()})});
 })();
 </script>

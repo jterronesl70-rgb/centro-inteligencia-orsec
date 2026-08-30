@@ -1,13 +1,14 @@
-ORSEC 1.13 – INFOGRAFÍA DINÁMICA
+ORSEC 1.13.1 – INFOGRAFÍA DINÁMICA VISIBLE
 
-La infografía ya no es fija: se genera con los mismos filtros y datos de ORSEC.
+Corrección:
+- Restituye de forma segura el botón de Infografía dentro de Panorama Regional.
+- Si el botón no existe, el sistema lo crea automáticamente.
+- Mantiene la infografía dinámica y la ficha analítica territorial.
+- Cada actualización de datos.json seguirá alimentando automáticamente la infografía.
 
-- Región + TODOS: Infografía Regional.
-- Provincia + delito específico: Ficha Analítica Territorial.
-- Cada nuevo datos.json actualiza automáticamente la infografía.
-- Descarga en SVG de alta calidad.
-- Guardar/Imprimir PDF desde el navegador.
-- Fuente: Unidad de Estadística de la Región Policial La Libertad.
-- Elaborado: ORSEC / GRDN / GORELL.
-
-Instalación: reemplazar index.html, mantener datos.json, commit, Vercel y Ctrl+F5.
+Instalación:
+1. Reemplazar index.html.
+2. Mantener datos.json.
+3. Commit.
+4. Esperar despliegue en Vercel.
+5. Ctrl + F5.
