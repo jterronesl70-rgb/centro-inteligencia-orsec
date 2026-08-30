@@ -1152,4 +1152,145 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
+
+<script>
+/* ===== ORSEC 1.11.2 · PANORAMA REGIONAL ROBUSTO =====
+   Render desacoplado de los hooks anteriores. Se ejecuta:
+   - al abrir Panorama
+   - cada vez que renderAll termina
+   - después de cargar datos.json
+*/
+(function(){
+  function nivel(v){
+    if(v==null)return {t:'SIN COMPARABLE',c:'#7b8794'};
+    if(v>=25)return {t:'CRÍTICA',c:'#d93025'};
+    if(v>=10)return {t:'ALTA',c:'#f28c28'};
+    if(v>1)return {t:'VIGILANCIA',c:'#e0b400'};
+    if(v>=-1)return {t:'ESTABLE',c:'#2684d8'};
+    return {t:'FAVORABLE',c:'#25a55b'};
+  }
+
+  window.renderPanorama = function(){
+    const host=document.getElementById('panoramaContenido');
+    if(!host) return;
+
+    try{
+      if(typeof DB==='undefined' || !Array.isArray(DB) || DB.length===0){
+        host.innerHTML='<div class="pano-mini"><b>Esperando la carga de datos ORSEC…</b><br>La pantalla se actualizará automáticamente.</div>';
+        return;
+      }
+
+      const f=current();
+      const base={anio:f.anio,tipo:f.tipo,periodo:f.periodo};
+      const region='TOTAL REGION';
+      const rr=DB.filter(r=>r.Anio==f.anio && r.TipoPeriodo===f.tipo && r.Periodo===f.periodo && r.Provincia===region);
+
+      if(!rr.length){
+        host.innerHTML='<div class="pano-mini"><b>No existen registros regionales para esta selección.</b><br>Prueba con otro período.</div>';
+        return;
+      }
+
+      const total=rr.reduce((s,r)=>s+(Number(r.Casos)||0),0);
+      const orden=[...rr].sort((a,b)=>(Number(b.Casos)||0)-(Number(a.Casos)||0));
+      const top=orden[0];
+      const share=top&&total?(Number(top.Casos)||0)/total*100:0;
+
+      const impacto=['HOMICIDIOS','EXTORSION','DETONACIONES'];
+      const imp=rr.filter(r=>impacto.includes(r.Delito));
+      const impTotal=imp.reduce((s,r)=>s+(Number(r.Casos)||0),0);
+      const impTop=[...imp].sort((a,b)=>(Number(b.Casos)||0)-(Number(a.Casos)||0))[0];
+
+      const alerts=[];
+      rr.forEach(r=>{
+        const v=variation({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:region,delito:r.Delito});
+        if(v!=null) alerts.push({d:r.Delito,c:Number(r.Casos)||0,v,n:nivel(v)});
+      });
+      const rank=v=>v>=25?5:v>=10?4:v>1?3:v>=-1?2:1;
+      alerts.sort((a,b)=>rank(b.v)-rank(a.v)||b.v-a.v);
+
+      const pr=DB.filter(r=>r.Anio==f.anio && r.TipoPeriodo===f.tipo && r.Periodo===f.periodo && r.Provincia!=='TOTAL REGION');
+      const bp={};
+      pr.forEach(r=>bp[r.Provincia]=(bp[r.Provincia]||0)+(Number(r.Casos)||0));
+      const provs=Object.entries(bp).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      const ptotal=Object.values(bp).reduce((s,v)=>s+v,0);
+      const pmax=provs[0]?.[1]||1;
+
+      const suben=alerts.filter(x=>x.v>1).length;
+      const bajan=alerts.filter(x=>x.v<-1).length;
+      const periodoTexto=document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||f.periodo;
+
+      host.innerHTML=`
+      <div class="panorama-shell">
+        <div class="panorama-title">
+          <div><h2>PANORAMA REGIONAL DE SEGURIDAD</h2><p>Región La Libertad · Centro de Inteligencia ORSEC · fotografía ejecutiva del período seleccionado</p></div>
+          <div class="panorama-badge">${f.anio} · ${periodoTexto}</div>
+        </div>
+
+        <div class="panorama-grid">
+          <div class="pano-col"><h3>PANORAMA REGIONAL</h3><div class="pano-body">
+            <div class="pano-stat"><small>Total de incidencias</small><strong>${fmt(total)}</strong><span>Registro regional oficial</span></div>
+            <div class="pano-stat"><small>Delito de mayor volumen</small><strong style="font-size:15px">${top?.Delito||'—'}</strong><span>${top?fmt(top.Casos)+' casos · '+share.toFixed(1)+'% del volumen':'Sin información'}</span></div>
+            <div class="pano-stat"><small>Delitos con incremento</small><strong>${suben}</strong><span>Variación interanual superior a +1%</span></div>
+            <div class="pano-stat"><small>Delitos con disminución</small><strong>${bajan}</strong><span>Variación interanual inferior a -1%</span></div>
+          </div></div>
+
+          <div class="pano-col"><h3>INCIDENCIA DELICTIVA</h3><div class="pano-body">
+            <div class="pano-stat"><small>Alto impacto estratégico</small><strong>${fmt(impTotal)}</strong><span>Homicidios + Extorsión + Detonaciones</span></div>
+            <div class="pano-stat"><small>Mayor volumen dentro del alto impacto</small><strong style="font-size:15px">${impTop?.Delito||'—'}</strong><span>${impTop?fmt(impTop.Casos)+' casos':'Sin información'}</span></div>
+            <div class="pano-mini"><b>Principales delitos por volumen</b><br>${orden.slice(0,5).map((r,i)=>`${i+1}. ${r.Delito}: ${fmt(r.Casos)}`).join('<br>')}</div>
+          </div></div>
+
+          <div class="pano-col"><h3>INTELIGENCIA TERRITORIAL</h3><div class="pano-body">
+            <div class="pano-stat"><small>Mayor concentración territorial</small><strong style="font-size:15px">${provs[0]?.[0]||'—'}</strong><span>${provs[0]?fmt(provs[0][1])+' incidencias · '+(provs[0][1]/ptotal*100).toFixed(1)+'% del volumen territorial':'Sin información'}</span></div>
+            <div class="pano-provs">${provs.map(([p,c])=>`<div class="pano-prov"><b>${p}</b><div class="pano-bar"><i style="width:${c/pmax*100}%"></i></div><span>${fmt(c)}</span></div>`).join('')}</div>
+            <div class="pano-mini">La concentración territorial expresa volumen y <b>no equivale por sí sola a prioridad estratégica</b>.</div>
+          </div></div>
+
+          <div class="pano-col"><h3>SITUACIÓN ESTRATÉGICA</h3><div class="pano-body">
+            ${alerts.slice(0,4).map(x=>`<div class="pano-alert"><i class="pano-dot" style="background:${x.n.c}"></i><div><b>${x.d}</b><br>${x.n.t} · Variación interanual ${x.v>=0?'+':''}${x.v.toFixed(1)}%</div></div>`).join('')||'<div class="pano-mini">Sin comparables disponibles.</div>'}
+            <div class="pano-mini"><b>Lectura ejecutiva:</b> ${alerts[0]?`${alerts[0].d} presenta la señal de seguimiento más relevante (${alerts[0].v>=0?'+':''}${alerts[0].v.toFixed(1)}%).`:'No existen variaciones comparables para esta selección.'}</div>
+          </div></div>
+        </div>
+
+        <div class="pano-actions">
+          <button onclick="abrir('incidencia')">VER INCIDENCIA</button>
+          <button onclick="abrir('alertas')">VER ALERTAS</button>
+          <button onclick="abrir('territorio')">VER TERRITORIO</button>
+          <button onclick="abrir('sala')">IR A SALA CORESEC</button>
+        </div>
+      </div>`;
+    }catch(err){
+      console.error('ORSEC Panorama:',err);
+      host.innerHTML='<div class="error"><b>No se pudo construir el Panorama Regional.</b><br>Actualiza la página con Ctrl+F5. Si persiste, revisaremos la consola.</div>';
+    }
+  };
+
+  // Garantiza que cada ciclo general actualice también Panorama.
+  if(typeof renderAll==='function' && !window.__orsecPanoramaRenderAll){
+    window.__orsecPanoramaRenderAll=true;
+    const oldRenderAll=renderAll;
+    renderAll=function(){
+      oldRenderAll();
+      setTimeout(()=>window.renderPanorama(),0);
+    };
+  }
+
+  // Garantiza render al abrir la tarjeta.
+  if(typeof abrir==='function' && !window.__orsecPanoramaAbrir){
+    window.__orsecPanoramaAbrir=true;
+    const oldAbrir=abrir;
+    abrir=function(id,card){
+      oldAbrir(id,card);
+      if(id==='panorama') setTimeout(()=>window.renderPanorama(),30);
+    };
+  }
+
+  // Primer intento, y segundo intento después de la carga inicial.
+  document.addEventListener('DOMContentLoaded',()=>{
+    setTimeout(()=>window.renderPanorama(),700);
+    setTimeout(()=>window.renderPanorama(),1800);
+  });
+})();
+</script>
+
 </body></html>

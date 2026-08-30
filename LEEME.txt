@@ -1,21 +1,24 @@
-ORSEC 1.11.1 – PANORAMA REGIONAL VISIBLE
+ORSEC 1.11.2 – PANORAMA REGIONAL · CARGA CORREGIDA
 
-CORRECCIÓN:
-La versión 1.11 sí contenía la lógica del Panorama Regional, pero la tarjeta
-de acceso no se insertó porque la clase real de los módulos es "tarjeta".
-Por eso el usuario no podía abrirla.
+PROBLEMA DETECTADO
+La tarjeta Panorama Regional ya era visible, pero su contenido no se
+reconstruía de forma robusta después de cargar datos.json.
 
-AHORA:
-- Panorama Regional aparece como una sexta tarjeta visible.
-- Al hacer clic abre una pantalla real en cuatro bloques:
-  1. Panorama Regional
-  2. Incidencia Delictiva
-  3. Inteligencia Territorial
-  4. Situación Estratégica
-- Los botones internos ya enlazan correctamente con:
-  Incidencia, Alertas, Territorio y Sala CORESEC.
+CORRECCIÓN
+- RenderPanorama desacoplado de los hooks anteriores.
+- Se ejecuta al abrir Panorama.
+- Se ejecuta después de renderAll.
+- Se reintenta después de la carga inicial.
+- Incluye manejo de error visible en pantalla.
 
-INSTALACIÓN:
+RESULTADO ESPERADO
+Al hacer clic en PANORAMA REGIONAL deben aparecer cuatro columnas:
+1. Panorama Regional
+2. Incidencia Delictiva
+3. Inteligencia Territorial
+4. Situación Estratégica
+
+INSTALACIÓN
 Reemplazar solo index.html.
 Conservar datos.json.
 Commit -> Vercel -> Ctrl+F5.
