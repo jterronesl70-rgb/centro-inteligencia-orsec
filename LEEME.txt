@@ -1,25 +1,19 @@
-ORSEC 1.8.2 – MOTOR ÚNICO DE TOTALIZACIÓN
+ORSEC 1.8.3 – INDICADORES PRECISOS
 
-CORRECCIÓN INTEGRAL:
-Cuando se selecciona TODAS o TOTAL REGION, los KPIs y la tabla toman
-exclusivamente el registro oficial TOTAL REGION.
+MEJORAS DE LECTURA:
+- Presión por Volumen ahora dice expresamente:
+  "Participación en el volumen delictivo total: X%".
+- Alertas ahora identifican expresamente:
+  "Variación interanual: X%".
+- Se agrega una guía conceptual dentro del panel:
+  Impacto Estratégico / Presión por Volumen / Tendencia-Alertas.
 
-Nunca se vuelve a sumar:
-PROVINCIAS + TOTAL REGION.
+OBJETIVO:
+Evitar que un porcentaje de participación se confunda con una variación interanual.
 
-Ejemplo validado:
-HOMICIDIOS · Enero–22 agosto 2026
-Total seleccionado = 151
-Delito principal = HOMICIDIOS · 151
-Tabla = HOMICIDIOS · 151
-Gráfico = 151
-
-La Provincia líder se sigue calculando únicamente con las provincias,
-por lo que TRUJILLO · 59 permanece como ranking territorial.
+Se conserva la corrección ORSEC 1.8.2 del total regional.
 
 INSTALACIÓN:
-1. Reemplaza SOLO index.html.
-2. Conserva datos.json.
-3. Commit changes.
-4. Espera Vercel.
-5. Ctrl + F5.
+Reemplaza SOLO index.html.
+Conserva datos.json.
+Commit changes -> Vercel -> Ctrl + F5.

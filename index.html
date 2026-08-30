@@ -139,6 +139,14 @@ background-size:42px 42px;transform:perspective(700px) rotateX(62deg) translateY
 .riesgo-leyenda{font-size:12px;opacity:.78;margin-top:10px}
 @media(max-width:900px){.riesgo-grid{grid-template-columns:1fr}}
 
+
+/* ===== ORSEC 1.8.3 · CLARIDAD DE INDICADORES ===== */
+.orsec-defs{margin-top:14px;padding:14px 16px;border-radius:14px;background:#f6f9fc;border:1px solid #dce7f1;font-size:13px;line-height:1.55}
+.orsec-defs b{color:#083b69}
+.orsec-defs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.orsec-def{padding:10px 12px;background:#fff;border-radius:11px;border:1px solid #e1eaf2}
+@media(max-width:900px){.orsec-defs-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -330,7 +338,7 @@ function alertasData(){
 }
 function renderAlertasExtra(){
  const b=$('alertasComparativas');if(!b)return;const a=alertasData().slice(0,8);
- b.innerHTML=a.length?a.map(x=>{const z=Math.abs(x.v),n=z>=25?'alta':z>=10?'media':'baja';return `<div class="alert-card ${n}"><b>${x.d}</b><div class="delta">${x.v>=0?'+':''}${x.v.toFixed(1)}%</div><small>${x.v>0?'Incremento':'Disminución'} interanual · prioridad ${n}</small></div>`}).join(''):'<div class="nota">No hay comparación interanual disponible.</div>';
+ b.innerHTML=a.length?a.map(x=>{const z=Math.abs(x.v),n=z>=25?'alta':z>=10?'media':'baja';return `<div class="alert-card ${n}"><b>${x.d}</b><div class="delta">Variación interanual: ${x.v>=0?'+':''}${x.v.toFixed(1)}%</div><small>${x.v>0?'Incremento':'Disminución'} interanual · prioridad ${n}</small></div>`}).join(''):'<div class="nota">No hay comparación interanual disponible.</div>';
 }
 function renderSalaCORESEC(){
  if(!$('salaTotal'))return;
@@ -399,7 +407,7 @@ function renderAlertas(){
  $('kpiAlertas').textContent=alerts.filter(x=>x.v>1).length;
  $('alertasBox').innerHTML=alerts.slice(0,8).map(x=>{
    const n=nivelRiesgo(x.v), tc=colorTextoRiesgo(x.v);
-   return `<div class="alert-card ${n.clase}"><strong>${n.icono} ${x.d} · ${n.etiqueta}</strong><br>2026: ${fmt(x.a)} · 2025: ${fmt(x.b)} · <span class="var ${tc}">${x.v>=0?'+':''}${x.v.toFixed(1)}%</span><br><small>${n.texto}</small></div>`;
+   return `<div class="alert-card ${n.clase}"><strong>${n.icono} ${x.d} · ${n.etiqueta}</strong><br>2026: ${fmt(x.a)} · 2025: ${fmt(x.b)} · <b>Variación interanual:</b> <span class="var ${tc}">${x.v>=0?'+':''}${x.v.toFixed(1)}%</span><br><small>${n.texto}</small></div>`;
  }).join('')||'<div class="alerta">No hay comparativos homogéneos disponibles para esta selección.</div>';
 }
 function renderAlertasExtra(){
@@ -407,7 +415,7 @@ function renderAlertasExtra(){
  const a=alertasData().slice().sort((x,y)=>y.v-x.v).slice(0,8);
  b.innerHTML=a.length?a.map(x=>{
    const n=nivelRiesgo(x.v);
-   return `<div class="alert-card ${n.clase}"><b>${n.icono} ${x.d}</b><div class="delta">${x.v>=0?'+':''}${x.v.toFixed(1)}%</div><small><b>${n.etiqueta}</b> · ${n.texto}</small></div>`;
+   return `<div class="alert-card ${n.clase}"><b>${n.icono} ${x.d}</b><div class="delta">Variación interanual: ${x.v>=0?'+':''}${x.v.toFixed(1)}%</div><small><b>${n.etiqueta}</b> · ${n.texto}</small></div>`;
  }).join(''):'<div class="nota">No hay comparación interanual disponible.</div>';
 }
 const _renderSalaCORESEC_ORSEC16 = typeof renderSalaCORESEC==='function' ? renderSalaCORESEC : null;
@@ -517,7 +525,7 @@ function renderRiesgoEstrategico(){
       <h4>${nv.i} PRESIÓN POR VOLUMEN</h4>
       <div class="score">${Math.round(scoreVol)}/100</div>
       <b>${nv.e}</b>
-      <p>${top?top.delito:'—'} concentra ${concentracion.toFixed(1)}% del volumen observado.</p>
+      <p>${top?top.delito:'—'} · Participación en el volumen delictivo total: ${concentracion.toFixed(1)}%.</p>
     </div>`;
 }
 
@@ -666,6 +674,26 @@ document.addEventListener('DOMContentLoaded',()=>{
       if(typeof renderRiesgoEstrategico==='function') renderRiesgoEstrategico();
     }
   },1100);
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>{
+    const panel=document.getElementById('riesgoEstrategicoORSEC');
+    if(panel && !document.getElementById('orsecDefiniciones')){
+      const d=document.createElement('div');
+      d.id='orsecDefiniciones';
+      d.className='orsec-defs';
+      d.innerHTML=`<div class="orsec-defs-grid">
+        <div class="orsec-def"><b>Impacto Estratégico</b><br>Prioriza Homicidios, Extorsión y Detonaciones considerando su tendencia y relevancia para la seguridad territorial.</div>
+        <div class="orsec-def"><b>Presión por Volumen</b><br>Mide la participación del delito de mayor frecuencia dentro del volumen delictivo total de la selección. No representa variación interanual.</div>
+        <div class="orsec-def"><b>Tendencia / Alertas</b><br>La variación interanual compara 2026 frente a 2025 para el mismo delito y período. Indica crecimiento, estabilidad o disminución.</div>
+      </div>`;
+      panel.appendChild(d);
+    }
+  },900);
 });
 </script>
 
