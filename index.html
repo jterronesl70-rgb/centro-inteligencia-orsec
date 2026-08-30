@@ -529,4 +529,81 @@ if(_orsec17RenderAll){
 document.addEventListener('DOMContentLoaded',()=>setTimeout(renderRiesgoEstrategico,450));
 </script>
 
+
+<script>
+/* ===== ORSEC 1.8.1 · CORRECCIÓN DE DOBLE CONTEO REGIONAL =====
+   Regla:
+   - TODAS = suma de provincias, EXCLUYENDO "TOTAL REGION".
+   - Si el motor necesita un total oficial, se usa "TOTAL REGION" como alternativa,
+     pero nunca ambos al mismo tiempo.
+*/
+function orsecEsTotalRegion(p){
+  return String(p||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toUpperCase().replace(/\s+/g,' ').trim() === 'TOTAL REGION';
+}
+function orsecFiltrarSinTotalRegion(rows){
+  return (rows||[]).filter(r => !orsecEsTotalRegion(r.Provincia));
+}
+function orsecTotalOficial(rows){
+  return (rows||[]).find(r => orsecEsTotalRegion(r.Provincia)) || null;
+}
+
+/* Parche del motor registros():
+   Si una consulta pide TODAS, devuelve SOLO provincias.
+   Si pide TOTAL REGION, conserva el registro oficial.
+*/
+if(typeof registros === 'function'){
+  const _registros_ORSEC_180 = registros;
+  registros = function(q={}){
+    const rows = _registros_ORSEC_180(q) || [];
+    if(q && q.provincia === 'TODAS') return orsecFiltrarSinTotalRegion(rows);
+    return rows;
+  };
+}
+
+/* Corrección específica de la selección visual:
+   varias rutinas históricas convertían TODAS -> TOTAL REGION y después otras
+   agregaban nuevamente provincias. Esta función obtiene un total único.
+*/
+function orsecTotalUnicoSeleccion(f, delito){
+  if(typeof registros!=='function') return 0;
+  if(f.provincia && f.provincia!=='TODAS'){
+    const r=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:f.provincia,delito});
+    return (r||[]).reduce((s,x)=>s+(+x.Casos||0),0);
+  }
+  const oficial=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo,provincia:'TOTAL REGION',delito});
+  if(oficial && oficial.length) return +oficial[0].Casos||0;
+  const prov=registros({anio:f.anio,tipo:f.tipo,periodo:f.periodo,delito});
+  return orsecFiltrarSinTotalRegion(prov).reduce((s,x)=>s+(+x.Casos||0),0);
+}
+
+/* Guard rail: corrige KPIs visibles si detecta exactamente total oficial + provincias.
+   Se ejecuta después de cada render sin alterar datos.json.
+*/
+function orsecAuditarDobleConteo(){
+  if(typeof current!=='function' || typeof registros!=='function') return;
+  const f=current();
+  if(!f || f.provincia!=='TODAS' || !f.delito || f.delito==='TODOS') return;
+  const correcto=orsecTotalUnicoSeleccion(f,f.delito);
+  const kpi=document.getElementById('kpiTotal');
+  if(kpi) kpi.textContent=Number(correcto).toLocaleString('es-PE');
+
+  // Corrige cualquier texto de "Delito principal" que contenga el valor duplicado.
+  const candidatos=[...document.querySelectorAll('.kpi, .stat, .metric, .card, [id*="kpi"]')];
+  candidatos.forEach(el=>{
+    const t=el.textContent||'';
+    if(t.includes(f.delito) && /Delito principal/i.test(t)){
+      const strong=el.querySelector('strong,b,.value');
+      if(strong && strong.textContent.includes(f.delito)){
+        strong.textContent=`${f.delito} · ${Number(correcto).toLocaleString('es-PE')}`;
+      }
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(orsecAuditarDobleConteo,700);
+  document.addEventListener('change',()=>setTimeout(orsecAuditarDobleConteo,120));
+});
+</script>
+
 </body></html>

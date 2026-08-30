@@ -1,16 +1,24 @@
-ORSEC 1.8 – RIESGO ESTRATÉGICO TERRITORIAL
+ORSEC 1.8.1 – CORRECCIÓN TOTAL REGIONAL
 
-NOVEDAD:
-Se incorpora una lectura diferenciada:
-1. IMPACTO ESTRATÉGICO: Homicidios, Extorsión y Detonaciones.
-2. PRESIÓN POR VOLUMEN: delitos de mayor frecuencia.
-3. ÍNDICE ORSEC PILOTO: combina impacto/tendencia (60%) y presión por volumen (40%).
+CORRECCIÓN:
+Se elimina el doble conteo cuando Provincia = TODAS.
 
-IMPORTANTE:
-La ponderación 60/40 es un modelo piloto de apoyo analítico, no una escala oficial ni validada.
-Podrá calibrarse con criterios institucionales antes de utilizarse como indicador formal.
+Antes:
+Suma de provincias + TOTAL REGION = dato duplicado.
+Ejemplo Violación Sexual:
+213 + 213 = 426 (incorrecto).
+
+Ahora:
+ORSEC utiliza un único total.
+Violación Sexual enero–22 agosto 2026 = 213.
+
+La corrección es general para todos los delitos, no solo Violación Sexual.
 
 INSTALACIÓN:
-Reemplaza SOLO index.html.
-Conserva datos.json.
-Haz Commit changes, espera Vercel y luego Ctrl + F5.
+1. Reemplaza SOLO index.html.
+2. Conserva datos.json.
+3. Commit changes.
+4. Espera despliegue de Vercel.
+5. Ctrl + F5.
+
+No se modifica el Excel ni los datos oficiales.
