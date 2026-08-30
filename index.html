@@ -606,4 +606,67 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
+
+<script>
+/* ===== ORSEC 1.8.2 · MOTOR ÚNICO DE TOTALIZACIÓN =====
+   TODAS y TOTAL REGION utilizan el registro oficial TOTAL REGION
+   para KPIs y tabla. Las provincias se usan únicamente para ranking
+   territorial. Así se evita cualquier suma: provincias + total regional.
+*/
+renderIncidencia = function(){
+  const f=current();
+  const base={anio:f.anio,tipo:f.tipo,periodo:f.periodo};
+
+  // Fuente única para indicadores y tabla:
+  // TODAS/TOTAL REGION => registro oficial TOTAL REGION.
+  const provinciaDatos=(f.provincia==='TODAS'||f.provincia==='TOTAL REGION')
+    ? 'TOTAL REGION' : f.provincia;
+
+  let rows=registros({...base,provincia:provinciaDatos});
+  if(f.delito!=='TODOS') rows=rows.filter(r=>r.Delito===f.delito);
+
+  const total=rows.reduce((s,r)=>s+(+r.Casos||0),0);
+  $('kTotal').textContent=fmt(total);
+
+  const byD={};
+  rows.forEach(r=>byD[r.Delito]=(byD[r.Delito]||0)+(+r.Casos||0));
+  const arr=Object.entries(byD).sort((a,b)=>b[1]-a[1]);
+  const topD=arr[0];
+  $('kDelito').textContent=topD?`${topD[0]} · ${fmt(topD[1])}`:'--';
+
+  // Provincia líder: siempre se calcula SOLO con provincias,
+  // excluyendo el registro TOTAL REGION.
+  let prow=registros(base).filter(r=>r.Provincia!=='TOTAL REGION');
+  if(f.delito!=='TODOS') prow=prow.filter(r=>r.Delito===f.delito);
+  const byP={};
+  prow.forEach(r=>byP[r.Provincia]=(byP[r.Provincia]||0)+(+r.Casos||0));
+  const topP=Object.entries(byP).sort((a,b)=>b[1]-a[1])[0];
+  $('kProvincia').textContent=topP?`${topP[0]} · ${fmt(topP[1])}`:'--';
+
+  const vf={...f,provincia:provinciaDatos,delito:f.delito==='TODOS'?null:f.delito};
+  const v=variation(vf);
+  $('kVariacion').textContent=v==null?'N/D':`${v>=0?'+':''}${v.toFixed(1)}%`;
+  $('kVariacion').className=v==null?'':(v>0?'rojo':'verde');
+
+  const label=rows[0]?.EtiquetaPeriodo||f.periodo;
+  $('badgePeriodo').textContent=`${f.anio} · ${label}`;
+
+  const max=arr[0]?.[1]||1;
+  $('tablaWrap').innerHTML=`<table><thead><tr><th>Delito</th><th>Casos</th><th>Participación</th></tr></thead><tbody>${
+    arr.map(([d,c])=>`<tr><td>${d}</td><td class="num">${fmt(c)}</td><td><div class="barwrap"><div class="bar" style="width:${Math.max(2,c/max*100)}%"></div></div></td></tr>`).join('')
+  }</tbody></table>`;
+};
+
+/* Re-render inmediato después de que la base ya haya cargado. */
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>{
+    if(typeof DB!=='undefined' && DB.length) {
+      renderIncidencia();
+      if(typeof renderIntegrado==='function') renderIntegrado();
+      if(typeof renderRiesgoEstrategico==='function') renderRiesgoEstrategico();
+    }
+  },1100);
+});
+</script>
+
 </body></html>

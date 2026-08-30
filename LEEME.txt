@@ -1,24 +1,25 @@
-ORSEC 1.8.1 – CORRECCIÓN TOTAL REGIONAL
+ORSEC 1.8.2 – MOTOR ÚNICO DE TOTALIZACIÓN
 
-CORRECCIÓN:
-Se elimina el doble conteo cuando Provincia = TODAS.
+CORRECCIÓN INTEGRAL:
+Cuando se selecciona TODAS o TOTAL REGION, los KPIs y la tabla toman
+exclusivamente el registro oficial TOTAL REGION.
 
-Antes:
-Suma de provincias + TOTAL REGION = dato duplicado.
-Ejemplo Violación Sexual:
-213 + 213 = 426 (incorrecto).
+Nunca se vuelve a sumar:
+PROVINCIAS + TOTAL REGION.
 
-Ahora:
-ORSEC utiliza un único total.
-Violación Sexual enero–22 agosto 2026 = 213.
+Ejemplo validado:
+HOMICIDIOS · Enero–22 agosto 2026
+Total seleccionado = 151
+Delito principal = HOMICIDIOS · 151
+Tabla = HOMICIDIOS · 151
+Gráfico = 151
 
-La corrección es general para todos los delitos, no solo Violación Sexual.
+La Provincia líder se sigue calculando únicamente con las provincias,
+por lo que TRUJILLO · 59 permanece como ranking territorial.
 
 INSTALACIÓN:
 1. Reemplaza SOLO index.html.
 2. Conserva datos.json.
 3. Commit changes.
-4. Espera despliegue de Vercel.
+4. Espera Vercel.
 5. Ctrl + F5.
-
-No se modifica el Excel ni los datos oficiales.
