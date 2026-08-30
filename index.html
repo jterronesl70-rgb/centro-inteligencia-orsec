@@ -188,6 +188,28 @@ background-size:42px 42px;transform:perspective(700px) rotateX(62deg) translateY
 @media(max-width:1000px){.orsec-sync-filtros{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:620px){.orsec-sync-filtros{grid-template-columns:1fr}}
 
+
+/* ===== ORSEC 1.11 · PANORAMA REGIONAL DE SEGURIDAD ===== */
+#panorama{display:none}
+.panorama-shell{background:linear-gradient(180deg,#f4f8fc,#eaf2f8);border:1px solid #d7e4ee;border-radius:18px;padding:18px}
+.panorama-title{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin-bottom:14px}
+.panorama-title h2{margin:0;color:#073e6d;font-size:22px}.panorama-title p{margin:4px 0 0;color:#617b91;font-size:11px}
+.panorama-badge{background:#073e6d;color:#fff;border-radius:999px;padding:7px 11px;font-size:10px;white-space:nowrap}
+.panorama-grid{display:grid;grid-template-columns:1fr 1.15fr 1.15fr 1fr;gap:10px}
+.pano-col{background:#fff;border:1px solid #d7e4ee;border-radius:14px;overflow:hidden;min-height:355px}
+.pano-col h3{margin:0;padding:11px 13px;color:#fff;font-size:12px;letter-spacing:.4px}
+.pano-col:nth-child(1) h3{background:#3978ad}.pano-col:nth-child(2) h3{background:#c45145}.pano-col:nth-child(3) h3{background:#167f82}.pano-col:nth-child(4) h3{background:#5d6670}
+.pano-body{padding:12px}
+.pano-stat{padding:9px 0;border-bottom:1px solid #e6edf3}.pano-stat:last-child{border-bottom:0}
+.pano-stat small{display:block;color:#70879a;font-size:9px;text-transform:uppercase;font-weight:800}.pano-stat strong{display:block;color:#123d60;font-size:19px;margin-top:3px}.pano-stat span{font-size:10px;color:#60788d}
+.pano-alert{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #e7edf2;font-size:10px}.pano-alert:last-child{border-bottom:0}
+.pano-dot{width:9px;height:9px;border-radius:50%;margin-top:3px;flex:0 0 9px}
+.pano-mini{background:#f3f8fb;border:1px solid #dce8f1;border-radius:10px;padding:9px;margin-top:8px;font-size:10px;line-height:1.45}
+.pano-provs{display:grid;gap:6px;margin-top:8px}.pano-prov{display:grid;grid-template-columns:95px 1fr 55px;align-items:center;gap:6px;font-size:9px}
+.pano-bar{height:6px;background:#e4edf4;border-radius:10px;overflow:hidden}.pano-bar i{display:block;height:100%;background:#287fba;border-radius:10px}
+.pano-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.pano-actions button{border:0;background:#0b568d;color:#fff;border-radius:8px;padding:8px 11px;font-size:9px;cursor:pointer}
+@media(max-width:1050px){.panorama-grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.panorama-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -1011,6 +1033,117 @@ document.addEventListener('DOMContentLoaded',()=>{
     },120);
   });
 })();
+</script>
+
+
+<script>
+/* ===== ORSEC 1.11 · PANORAMA REGIONAL ===== */
+function orsecPanoNivel(v){
+ if(v==null)return {t:'SIN COMPARABLE',c:'#7b8794'};
+ if(v>=25)return {t:'CRÍTICA',c:'#d93025'};
+ if(v>=10)return {t:'ALTA',c:'#f28c28'};
+ if(v>1)return {t:'VIGILANCIA',c:'#e0b400'};
+ if(v>=-1)return {t:'ESTABLE',c:'#2684d8'};
+ return {t:'FAVORABLE',c:'#25a55b'};
+}
+function renderPanorama(){
+ const host=document.getElementById('panoramaContenido');
+ if(!host || typeof DB==='undefined' || !DB.length)return;
+ const f=current(), base={anio:f.anio,tipo:f.tipo,periodo:f.periodo}, region='TOTAL REGION';
+ const rr=registros({...base,provincia:region});
+ const total=rr.reduce((s,r)=>s+(+r.Casos||0),0);
+ const orden=[...rr].sort((a,b)=>(+b.Casos||0)-(+a.Casos||0));
+ const top=orden[0], share=top&&total?(+top.Casos||0)/total*100:0;
+ const impacto=['HOMICIDIOS','EXTORSION','DETONACIONES'];
+ const imp=rr.filter(r=>impacto.includes(r.Delito));
+ const impTotal=imp.reduce((s,r)=>s+(+r.Casos||0),0);
+ const impTop=[...imp].sort((a,b)=>(+b.Casos||0)-(+a.Casos||0))[0];
+
+ const alerts=rr.map(r=>{
+   const v=variation({...f,provincia:region,delito:r.Delito});
+   return {d:r.Delito,c:+r.Casos||0,v,n:orsecPanoNivel(v)};
+ }).filter(x=>x.v!=null).sort((a,b)=>{
+   const rk=x=>x.v>=25?5:x.v>=10?4:x.v>1?3:x.v>=-1?2:1;
+   return rk(b)-rk(a)||b.v-a.v;
+ });
+
+ const pr=registros(base).filter(r=>r.Provincia!=='TOTAL REGION');
+ const bp={};pr.forEach(r=>bp[r.Provincia]=(bp[r.Provincia]||0)+(+r.Casos||0));
+ const provs=Object.entries(bp).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ const ptotal=Object.values(bp).reduce((s,v)=>s+v,0), pmax=provs[0]?.[1]||1;
+
+ const comparable=rr.reduce((acc,r)=>{
+   const v=variation({...f,provincia:region,delito:r.Delito});
+   if(v!=null){acc.push({d:r.Delito,v,c:+r.Casos||0});}
+   return acc;
+ },[]);
+ const suben=comparable.filter(x=>x.v>1).length, bajan=comparable.filter(x=>x.v<-1).length;
+
+ host.innerHTML=`
+ <div class="panorama-shell">
+  <div class="panorama-title">
+   <div><h2>PANORAMA REGIONAL DE SEGURIDAD</h2><p>Región La Libertad · Centro de Inteligencia ORSEC · fotografía ejecutiva del período seleccionado</p></div>
+   <div class="panorama-badge">${f.anio} · ${document.getElementById('periodo')?.selectedOptions[0]?.textContent||f.periodo}</div>
+  </div>
+  <div class="panorama-grid">
+   <div class="pano-col"><h3>PANORAMA REGIONAL</h3><div class="pano-body">
+    <div class="pano-stat"><small>Total de incidencias</small><strong>${fmt(total)}</strong><span>Registro regional oficial de la selección</span></div>
+    <div class="pano-stat"><small>Delito de mayor volumen</small><strong style="font-size:15px">${top?top.Delito:'—'}</strong><span>${top?fmt(+top.Casos||0)+' casos · '+share.toFixed(1)+'% del volumen':'Sin información'}</span></div>
+    <div class="pano-stat"><small>Delitos con incremento</small><strong>${suben}</strong><span>Variación interanual superior a +1%</span></div>
+    <div class="pano-stat"><small>Delitos con disminución</small><strong>${bajan}</strong><span>Variación interanual inferior a -1%</span></div>
+   </div></div>
+
+   <div class="pano-col"><h3>INCIDENCIA DELICTIVA</h3><div class="pano-body">
+    <div class="pano-stat"><small>Alto impacto estratégico</small><strong>${fmt(impTotal)}</strong><span>Homicidios + Extorsión + Detonaciones</span></div>
+    <div class="pano-stat"><small>Mayor volumen dentro del alto impacto</small><strong style="font-size:15px">${impTop?impTop.Delito:'—'}</strong><span>${impTop?fmt(+impTop.Casos||0)+' casos':'Sin información'}</span></div>
+    <div class="pano-mini"><b>Principales delitos por volumen</b><br>${orden.slice(0,5).map((r,i)=>`${i+1}. ${r.Delito}: ${fmt(+r.Casos||0)}`).join('<br>')}</div>
+   </div></div>
+
+   <div class="pano-col"><h3>INTELIGENCIA TERRITORIAL</h3><div class="pano-body">
+    <div class="pano-stat"><small>Mayor concentración territorial</small><strong style="font-size:15px">${provs[0]?provs[0][0]:'—'}</strong><span>${provs[0]?fmt(provs[0][1])+' incidencias · '+(provs[0][1]/ptotal*100).toFixed(1)+'% del volumen territorial':'Sin información'}</span></div>
+    <div class="pano-provs">${provs.map(([p,c])=>`<div class="pano-prov"><b>${p}</b><div class="pano-bar"><i style="width:${c/pmax*100}%"></i></div><span>${fmt(c)}</span></div>`).join('')}</div>
+    <div class="pano-mini">La concentración territorial expresa volumen registrado y <b>no equivale por sí sola a prioridad estratégica</b>.</div>
+   </div></div>
+
+   <div class="pano-col"><h3>SITUACIÓN ESTRATÉGICA</h3><div class="pano-body">
+    ${alerts.slice(0,4).map(x=>`<div class="pano-alert"><i class="pano-dot" style="background:${x.n.c}"></i><div><b>${x.d}</b><br>${x.n.t} · Variación interanual ${x.v>=0?'+':''}${x.v.toFixed(1)}%</div></div>`).join('')||'<div class="pano-mini">Sin comparables disponibles.</div>'}
+    <div class="pano-mini"><b>Lectura ejecutiva:</b> ${alerts[0]?`${alerts[0].d} presenta la señal de seguimiento más relevante del período (${alerts[0].v>=0?'+':''}${alerts[0].v.toFixed(1)}%).`:'No existen variaciones comparables para esta selección.'}</div>
+   </div></div>
+  </div>
+  <div class="pano-actions">
+   <button onclick="abrir('incidencia')">VER INCIDENCIA</button>
+   <button onclick="abrir('alertas')">VER ALERTAS</button>
+   <button onclick="abrir('territorial')">VER TERRITORIO</button>
+   <button onclick="abrir('sala')">IR A SALA CORESEC</button>
+  </div>
+ </div>`;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+ setTimeout(()=>{
+   if(!document.getElementById('panorama')){
+     const main=document.querySelector('main')||document.body;
+     const s=document.createElement('section'); s.id='panorama'; s.className='seccion';
+     s.innerHTML='<div id="panoramaContenido"></div>';
+     const first=main.querySelector('section');
+     if(first) main.insertBefore(s,first); else main.appendChild(s);
+   }
+   renderPanorama();
+
+   // Agrega tarjeta/módulo de acceso junto a los módulos existentes.
+   const cards=[...document.querySelectorAll('.module-card,.modulo-card,.card-modulo,.module')];
+   const container=cards[0]?.parentElement;
+   if(container && !document.getElementById('cardPanorama')){
+     const c=document.createElement(cards[0].tagName||'div');
+     c.id='cardPanorama'; c.className=cards[0].className;
+     c.innerHTML='<div class="icon">◉</div><h3>PANORAMA REGIONAL</h3><p>Fotografía ejecutiva de la seguridad ciudadana en La Libertad.</p>';
+     c.onclick=()=>{ if(typeof abrir==='function') abrir('panorama',c); else {document.getElementById('panorama').style.display='block';renderPanorama();} };
+     container.insertBefore(c,container.firstChild);
+   }
+
+   document.querySelectorAll('select').forEach(x=>x.addEventListener('change',()=>setTimeout(renderPanorama,90)));
+ },1400);
+});
 </script>
 
 </body></html>

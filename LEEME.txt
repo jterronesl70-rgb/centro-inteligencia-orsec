@@ -1,40 +1,37 @@
-ORSEC 1.10 – FILTROS GLOBALES SINCRONIZADOS
+ORSEC 1.11 – PANORAMA REGIONAL DE SEGURIDAD
 
-NUEVA MEJORA
-Boletines, Alertas y Sala CORESEC incorporan su propia barra visible de filtros:
-- Año
-- Tipo de período
-- Período
-- Provincia
-- Delito
+NUEVO MÓDULO
+PANORAMA REGIONAL DE SEGURIDAD · REGIÓN LA LIBERTAD
 
-FUNCIONAMIENTO
-No son filtros independientes.
-Todos controlan el mismo contexto global de ORSEC.
+FINALIDAD
+Brindar una fotografía ejecutiva de la situación regional en una sola pantalla,
+inspirada en la lógica de un resumen estadístico institucional, pero con identidad ORSEC.
 
-Ejemplo:
-Si desde Sala CORESEC cambias Provincia de TOTAL REGION a ASCOPE:
-- Sala CORESEC se recalcula para ASCOPE.
-- Alertas conserva ASCOPE.
-- Boletines conserva ASCOPE.
-- Incidencia Delictiva también queda en ASCOPE.
+CUATRO BLOQUES
+1. Panorama Regional
+2. Incidencia Delictiva
+3. Inteligencia Territorial
+4. Situación Estratégica
 
-Si luego cambias el delito a EXTORSION desde Boletines, toda la plataforma
-pasa al mismo contexto.
+INCLUYE
+- Total regional oficial
+- Delito de mayor volumen y participación
+- Delitos que aumentan/disminuyen
+- Alto impacto estratégico
+- Ranking de delitos por volumen
+- Mayor concentración territorial y participación
+- Ranking provincial
+- Principales alertas interanuales
+- Lectura ejecutiva
+- Accesos a módulos de profundidad
 
-INTELIGENCIA TERRITORIAL
-No se modifica estructuralmente en esta versión para conservar su función
-de comparación geográfica regional.
+NO REEMPLAZA SALA CORESEC
+Panorama Regional = fotografía integral.
+Sala CORESEC = interpretación y priorización para decisión.
 
-SE CONSERVA
-- Motor de total regional corregido.
-- Indicadores precisos.
-- Sala CORESEC ejecutiva.
-- Mayor Concentración Territorial diferenciada de prioridad estratégica.
+Se conservan las mejoras y correcciones de ORSEC 1.10.
 
 INSTALACIÓN
-1. Reemplazar solo index.html.
-2. Conservar datos.json.
-3. Commit changes.
-4. Esperar Vercel.
-5. Ctrl + F5.
+Reemplazar solo index.html.
+Conservar datos.json.
+Commit -> Vercel -> Ctrl+F5.
