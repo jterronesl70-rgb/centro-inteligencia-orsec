@@ -1,19 +1,13 @@
-ORSEC 1.12.1 – INFOGRAFÍA REGIONAL INSTITUCIONAL
+ORSEC 1.13 – INFOGRAFÍA DINÁMICA
 
-Esta es la nueva entrega para reemplazar ORSEC 1.12.
+La infografía ya no es fija: se genera con los mismos filtros y datos de ORSEC.
 
-CORRECCIÓN DE LA INFOGRAFÍA DESCARGABLE:
-- Se actualizó la pieza incorporada a la plataforma.
+- Región + TODOS: Infografía Regional.
+- Provincia + delito específico: Ficha Analítica Territorial.
+- Cada nuevo datos.json actualiza automáticamente la infografía.
+- Descarga en SVG de alta calidad.
+- Guardar/Imprimir PDF desde el navegador.
 - Fuente: Unidad de Estadística de la Región Policial La Libertad.
 - Elaborado: ORSEC / GRDN / GORELL.
-- Se mantiene la identidad ORSEC en la cabecera.
-- La nueva infografía está embebida directamente en index.html.
 
-PARA ACTUALIZAR:
-1. Reemplazar el index.html anterior por este nuevo index.html.
-2. Mantener datos.json.
-3. Commit en GitHub.
-4. Esperar despliegue de Vercel.
-5. Ctrl + F5.
-
-El botón “DESCARGAR INFOGRAFÍA REGIONAL” descargará la nueva versión institucional.
+Instalación: reemplazar index.html, mantener datos.json, commit, Vercel y Ctrl+F5.
