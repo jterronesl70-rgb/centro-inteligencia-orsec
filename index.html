@@ -190,7 +190,7 @@ background-size:42px 42px;transform:perspective(700px) rotateX(62deg) translateY
 
 
 /* ===== ORSEC 1.11 · PANORAMA REGIONAL DE SEGURIDAD ===== */
-#panorama{display:none}
+#panorama{max-width:1200px}
 .panorama-shell{background:linear-gradient(180deg,#f4f8fc,#eaf2f8);border:1px solid #d7e4ee;border-radius:18px;padding:18px}
 .panorama-title{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin-bottom:14px}
 .panorama-title h2{margin:0;color:#073e6d;font-size:22px}.panorama-title p{margin:4px 0 0;color:#617b91;font-size:11px}
@@ -209,6 +209,10 @@ background-size:42px 42px;transform:perspective(700px) rotateX(62deg) translateY
 .pano-bar{height:6px;background:#e4edf4;border-radius:10px;overflow:hidden}.pano-bar i{display:block;height:100%;background:#287fba;border-radius:10px}
 .pano-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.pano-actions button{border:0;background:#0b568d;color:#fff;border-radius:8px;padding:8px 11px;font-size:9px;cursor:pointer}
 @media(max-width:1050px){.panorama-grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.panorama-grid{grid-template-columns:1fr}}
+
+
+/* ORSEC 1.11.3 · corrección definitiva de visibilidad Panorama */
+#panorama.seccion.activa{display:block !important;}
 
 </style>
 </head>

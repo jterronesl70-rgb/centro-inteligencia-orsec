@@ -1,18 +1,22 @@
-ORSEC 1.11.2 – PANORAMA REGIONAL · CARGA CORREGIDA
+ORSEC 1.11.3 – PANORAMA REGIONAL · VISIBILIDAD CORREGIDA
 
-PROBLEMA DETECTADO
-La tarjeta Panorama Regional ya era visible, pero su contenido no se
-reconstruía de forma robusta después de cargar datos.json.
+CAUSA EXACTA ENCONTRADA
+El CSS contenía:
+#panorama { display:none }
+
+Ese selector por ID tenía mayor prioridad que:
+.seccion.activa { display:block }
+
+Por eso, aunque la tarjeta Panorama Regional se abría correctamente,
+el contenido quedaba oculto.
 
 CORRECCIÓN
-- RenderPanorama desacoplado de los hooks anteriores.
-- Se ejecuta al abrir Panorama.
-- Se ejecuta después de renderAll.
-- Se reintenta después de la carga inicial.
-- Incluye manejo de error visible en pantalla.
+- Se eliminó display:none del selector #panorama.
+- Se agregó la garantía:
+  #panorama.seccion.activa { display:block !important; }
 
-RESULTADO ESPERADO
-Al hacer clic en PANORAMA REGIONAL deben aparecer cuatro columnas:
+RESULTADO
+Al hacer clic en PANORAMA REGIONAL deben verse los cuatro bloques:
 1. Panorama Regional
 2. Incidencia Delictiva
 3. Inteligencia Territorial
