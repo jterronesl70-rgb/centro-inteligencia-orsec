@@ -1,18 +1,20 @@
-ORSEC 2.2.1 – INTELIGENCIA DE CONTEXTO · MEJORA DE LEGIBILIDAD
+ORSEC 2.3 – BITÁCORA OPERATIVA REGIONAL
 
-Se aumentó el tamaño y contraste de:
-- Título y subtítulo de la capa de connotación.
-- Títulos de eventos.
-- Descripciones.
-- Factores y estado de validación.
-- Etiquetas EVENTO CRÍTICO / ALTA CONNOTACIÓN.
-- Lectura de connotación.
-- Regla metodológica ORSEC.
+NUEVO:
+- Formulario para registrar incidencias conocidas durante el período.
+- Fecha/hora, provincia, distrito, delito, casos/víctimas, fuente, estado y descripción.
+- Casilla para señalar POSIBLE EVENTO DE CONNOTACIÓN: EVALUAR.
+- Estados: Por verificar / En verificación / Confirmado operativamente / Conciliado con estadística.
+- Exportación CSV.
+- Los registros NO alimentan los KPIs estadísticos oficiales.
+- Persistencia local en el navegador (localStorage), apropiada para esta fase demo.
 
-También se mejora la visualización responsive: en pantallas más estrechas,
-eventos y lectura se apilan para evitar texto demasiado comprimido.
+IMPORTANTE:
+La versión actual NO es aún multiusuario ni una base institucional centralizada.
+Para producción se recomienda backend con autenticación, auditoría, roles, historial de cambios y base de datos.
 
-No se modifica ningún dato ni cálculo estadístico.
+Se incluye también la Nota de Inteligencia ORSEC 001-2026 dentro del paquete.
 
-Instalación:
-Reemplazar index.html → Commit → Vercel → Ctrl+F5.
+INSTALACIÓN:
+Subir/reemplazar index.html y conservar datos.json. También puede subir la Nota DOCX.
+Commit → Vercel → Ctrl+F5.

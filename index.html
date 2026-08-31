@@ -340,6 +340,36 @@ linear-gradient(145deg,#031728,#052d4a 52%,#041e34);border:1px solid rgba(63,190
   #orsecConnotacion .orsec-connotacion-grid{grid-template-columns:1fr !important}
 }
 
+
+/* ORSEC 2.3 · BITÁCORA OPERATIVA REGIONAL */
+.orsec-bitacora{margin-top:14px;border:1px solid rgba(69,201,255,.32);border-radius:12px;background:rgba(2,25,42,.96);overflow:hidden}
+.orsec-bit-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px;border-bottom:1px solid rgba(69,201,255,.18)}
+.orsec-bit-head h3{margin:0;color:#55caff;font-size:16px}
+.orsec-bit-head p{margin:4px 0 0;color:#b8cfdd;font-size:12px}
+.orsec-bit-tag{font-size:11px;font-weight:900;color:#55caff;border:1px solid rgba(69,201,255,.4);padding:6px 9px;border-radius:999px}
+.orsec-bit-body{display:grid;grid-template-columns:.9fr 1.1fr;gap:14px;padding:14px}
+.orsec-bit-form,.orsec-bit-list{border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:13px;background:rgba(0,15,27,.58)}
+.orsec-bit-form h4,.orsec-bit-list h4{margin:0 0 10px;color:#fff;font-size:13px}
+.orsec-bit-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.orsec-bit-fields label{font-size:10px;color:#9fc0d2;display:block}
+.orsec-bit-fields input,.orsec-bit-fields select,.orsec-bit-fields textarea{width:100%;box-sizing:border-box;margin-top:4px;background:#071f31;border:1px solid #24516a;border-radius:6px;color:#eef8fc;padding:8px;font-size:11px}
+.orsec-bit-fields textarea{min-height:70px;resize:vertical}
+.orsec-span2{grid-column:1/-1}
+.orsec-bit-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.orsec-bit-btn{border:0;border-radius:7px;padding:8px 11px;font-size:10px;font-weight:900;cursor:pointer}
+.orsec-bit-primary{background:#f3b400;color:#102337}
+.orsec-bit-secondary{background:#123b54;color:#dff4ff;border:1px solid #2b607b}
+.orsec-bit-item{border-bottom:1px solid rgba(255,255,255,.08);padding:10px 0}
+.orsec-bit-item:last-child{border-bottom:0}
+.orsec-bit-row{display:flex;justify-content:space-between;gap:8px}
+.orsec-bit-item b{font-size:12px;color:#fff}
+.orsec-bit-item p{font-size:11px;line-height:1.5;color:#c8dbe5;margin:5px 0}
+.orsec-bit-meta{font-size:9px;color:#87a9bb}
+.orsec-bit-status{font-size:9px;font-weight:900;padding:4px 6px;border-radius:5px;white-space:nowrap}
+.orsec-bit-warning{margin-top:10px;padding:9px;border-left:3px solid #f3b400;background:rgba(243,180,0,.07);font-size:10px;line-height:1.5;color:#cbdce5}
+.orsec-note-link{display:inline-block;margin-top:7px;padding:6px 9px;border-radius:6px;background:#153f57;border:1px solid #2e6b89;color:#e8f7ff;text-decoration:none;font-size:9px;font-weight:900}
+@media(max-width:1000px){.orsec-bit-body{grid-template-columns:1fr}.orsec-bit-fields{grid-template-columns:1fr}.orsec-span2{grid-column:auto}}
+
 </style>
 </head>
 <body>
@@ -626,6 +656,51 @@ document.addEventListener('change',e=>{
 });
 setTimeout(orsecRenderConnotacion,500);
 
+
+/* ORSEC 2.3 · Bitácora local de demostración.
+   Persistencia en localStorage del navegador. No sustituye una base institucional multiusuario. */
+const ORSEC_BIT_KEY='orsec_bitacora_v23';
+function orsecBitGet(){try{return JSON.parse(localStorage.getItem(ORSEC_BIT_KEY)||'[]')}catch(e){return []}}
+function orsecBitSet(x){localStorage.setItem(ORSEC_BIT_KEY,JSON.stringify(x))}
+function orsecGuardarBitacora(){
+ const g=id=>document.getElementById(id);
+ const x={
+  id:Date.now(),fecha:g('bitFecha').value,hora:g('bitHora').value,
+  provincia:g('bitProvincia').value,distrito:g('bitDistrito').value.trim(),
+  delito:g('bitDelito').value,casos:+g('bitCasos').value||0,
+  fuente:g('bitFuente').value,estado:g('bitEstado').value,
+  descripcion:g('bitDescripcion').value.trim(),connotacion:g('bitConnotacion').checked
+ };
+ if(!x.fecha||!x.descripcion){alert('Ingrese al menos fecha y descripción.');return}
+ const a=orsecBitGet();a.unshift(x);orsecBitSet(a);orsecRenderBitacora();
+ g('bitDescripcion').value='';g('bitConnotacion').checked=false;
+}
+function orsecEliminarBit(id){
+ if(!confirm('¿Eliminar este registro operativo?'))return;
+ orsecBitSet(orsecBitGet().filter(x=>x.id!==id));orsecRenderBitacora();
+}
+function orsecRenderBitacora(){
+ const b=document.getElementById('orsecBitLista');if(!b)return;
+ const a=orsecBitGet();
+ if(!a.length){b.innerHTML='<div class="orsec-contexto-empty">Aún no hay incidencias cargadas en la bitácora operativa.</div>';return}
+ b.innerHTML=a.map(x=>{
+  const col=x.estado==='CONCILIADO CON ESTADÍSTICA'?'#38c979':x.estado==='POR VERIFICAR'?'#ffd23f':'#55caff';
+  return `<div class="orsec-bit-item"><div class="orsec-bit-row"><div><div class="orsec-bit-meta">${x.fecha} ${x.hora||''} · ${x.provincia}${x.distrito?' · '+x.distrito:''}</div><b>${x.delito} · ${x.casos} ${x.casos===1?'caso/víctima':'casos/víctimas'}</b></div><span class="orsec-bit-status" style="color:${col};border:1px solid ${col}">${x.estado}</span></div><p>${x.descripcion}</p><div class="orsec-bit-meta">Fuente: ${x.fuente}${x.connotacion?' · ⚠ POSIBLE CONNOTACIÓN: EVALUAR':''}</div><button class="orsec-bit-btn orsec-bit-secondary" style="margin-top:6px" onclick="orsecEliminarBit(${x.id})">ELIMINAR</button></div>`
+ }).join('');
+}
+function orsecExportarBitacora(){
+ const a=orsecBitGet(); if(!a.length){alert('No hay registros para exportar.');return}
+ const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';
+ const rows=[['Fecha','Hora','Provincia','Distrito','Incidencia','Casos','Fuente','Estado','Posible connotación','Descripción'],...a.map(x=>[x.fecha,x.hora,x.provincia,x.distrito,x.delito,x.casos,x.fuente,x.estado,x.connotacion?'SI':'NO',x.descripcion])];
+ const csv='\ufeff'+rows.map(r=>r.map(q).join(';')).join('\n');
+ const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(blob);
+ const link=document.createElement('a');link.href=u;link.download='ORSEC_Bitacora_Operativa.csv';link.click();URL.revokeObjectURL(u);
+}
+(function(){
+ const f=document.getElementById('bitFecha'); if(f&&!f.value)f.value=new Date().toISOString().slice(0,10);
+ orsecRenderBitacora();
+})();
+
 </script>
 <script>
 document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{
@@ -718,6 +793,41 @@ if(_renderSalaCORESEC_ORSEC16){
       <div class="orsec-contexto-rule"><b>REGLA ORSEC:</b> un evento de connotación puede elevar la atención coyuntural del Centro de Comando, pero nunca altera automáticamente los totales, tendencias o variaciones de la base estadística oficial.</div>
     </div>
   </div>
+</div>
+
+
+<div class="orsec-bitacora" id="orsecBitacora">
+ <div class="orsec-bit-head">
+  <div><h3>BITÁCORA OPERATIVA REGIONAL ORSEC</h3>
+  <p>Registro preliminar de incidencias conocidas durante el período. No alimenta automáticamente la estadística oficial.</p></div>
+  <span class="orsec-bit-tag">REGISTRO OPERATIVO · PRELIMINAR</span>
+ </div>
+ <div class="orsec-bit-body">
+  <div class="orsec-bit-form">
+   <h4>REGISTRAR NUEVA INCIDENCIA</h4>
+   <div class="orsec-bit-fields">
+    <label>Fecha<input id="bitFecha" type="date"></label>
+    <label>Hora<input id="bitHora" type="time"></label>
+    <label>Provincia<select id="bitProvincia"><option>TRUJILLO</option><option>ASCOPE</option><option>BOLIVAR</option><option>CHEPEN</option><option>GRAN CHIMU</option><option>JULCAN</option><option>OTUZCO</option><option>PACASMAYO</option><option>PATAZ</option><option>SANCHEZ CARRION</option><option>STGO. DE CHUCO</option><option>VIRU</option></select></label>
+    <label>Distrito<input id="bitDistrito" placeholder="Distrito"></label>
+    <label>Tipo de incidencia<select id="bitDelito"><option>HOMICIDIOS</option><option>EXTORSION</option><option>DETONACIONES</option><option>LESIONES</option><option>SECUESTRO AL PASO</option><option>VIOLACION SEXUAL</option><option>HURTOS</option><option>ROBOS</option><option>APROPIACION ILICITA</option><option>ESTAFA</option><option>USURPACION</option><option>ROBO DE VEHICULOS</option><option>VIOLENCIA FAMILIAR</option><option>OTRO</option></select></label>
+    <label>N.º víctimas / casos<input id="bitCasos" type="number" min="0" value="1"></label>
+    <label>Fuente<select id="bitFuente"><option>PNP / fuente oficial</option><option>Ministerio Público</option><option>Autoridad pública</option><option>Medio de comunicación</option><option>Reporte institucional</option><option>Otra fuente abierta</option></select></label>
+    <label>Estado<select id="bitEstado"><option>POR VERIFICAR</option><option>EN VERIFICACIÓN</option><option>CONFIRMADO OPERATIVAMENTE</option><option>CONCILIADO CON ESTADÍSTICA</option></select></label>
+    <label class="orsec-span2">Descripción breve<textarea id="bitDescripcion" placeholder="Resumen objetivo del acontecimiento..."></textarea></label>
+    <label class="orsec-span2"><input id="bitConnotacion" type="checkbox" style="width:auto;margin-right:6px"> Marcar para evaluación como posible EVENTO DE CONNOTACIÓN</label>
+   </div>
+   <div class="orsec-bit-actions">
+    <button class="orsec-bit-btn orsec-bit-primary" onclick="orsecGuardarBitacora()">GUARDAR REGISTRO</button>
+    <button class="orsec-bit-btn orsec-bit-secondary" onclick="orsecExportarBitacora()">EXPORTAR CSV</button>
+   </div>
+   <div class="orsec-bit-warning"><b>Control ORSEC:</b> este registro es una bitácora de seguimiento. Un hecho registrado aquí no debe sumarse a los KPIs oficiales hasta su conciliación con la fuente estadística institucional.</div>
+  </div>
+  <div class="orsec-bit-list">
+   <h4>INCIDENCIAS REGISTRADAS</h4>
+   <div id="orsecBitLista"></div>
+  </div>
+ </div>
 </div>
 
 <section class="panel riesgo-wrap" id="riesgoEstrategicoORSEC">
