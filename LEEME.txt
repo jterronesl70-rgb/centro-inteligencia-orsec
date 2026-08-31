@@ -1,25 +1,25 @@
-ORSEC 1.13.3 – INFOGRAFÍA ORIGINAL RECUPERADA
+ORSEC 2.0 – CENTRO DE COMANDO EJECUTIVO / SALA CORESEC
 
-Esta versión recupera EXACTAMENTE la infografía institucional original:
-- diseño A4 azul/blanco
-- encabezado Observatorio Regional de Seguridad Ciudadana
-- cuatro indicadores principales
-- comparativo interanual
-- fotografía regional
-- delitos de alto impacto
-- concentración provincial
-- evolución
-- alertas territoriales
+Evolución visual y ejecutiva de la Sala CORESEC sobre la versión estable 1.13.3.
+
+Se conserva:
+- Panorama Regional
+- Incidencia Delictiva
+- Boletines
+- Alertas
+- Inteligencia Territorial
+- filtros sincronizados
+- datos.json
+- Infografía Regional institucional original
+
+Se transforma la Sala CORESEC:
+- cabecera Centro de Comando Ejecutivo
+- cinco indicadores estratégicos
 - lectura ejecutiva
-- fuente y elaboración
-
-El botón de Panorama Regional vuelve a abrir esta infografía original.
-Se puede descargar como PNG o guardar/imprimir como PDF.
-
-IMPORTANTE:
-Esta versión prioriza recuperar el formato original exacto.
-La automatización dinámica se retomará después usando este mismo diseño,
-sin volver a reemplazarlo por un tablero genérico.
+- inteligencia territorial
+- alertas inteligentes
+- prioridades CORESEC
+- síntesis para decisión
 
 Instalación:
-Reemplazar index.html, conservar datos.json, Commit, Vercel y Ctrl+F5.
+Reemplazar index.html, conservar datos.json, Commit, Vercel, Ctrl+F5.
