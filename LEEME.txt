@@ -1,29 +1,32 @@
-ORSEC 2.1.1 – SALA CORESEC TOTALMENTE SINCRONIZADA
+ORSEC 2.2 – INTELIGENCIA DE CONTEXTO / CONNOTACIÓN ESTRATÉGICA
 
-Corrección principal:
-La Sala CORESEC ahora respeta por completo los filtros globales:
-- Año
-- Tipo de período
-- Período
-- Provincia
-- Delito
+OBJETIVO
+Incorporar hechos de alta relevancia criminal sin mezclarlos con la estadística oficial.
 
-Cambian con la selección:
-- Situación de la selección
-- Delito / impacto estratégico
-- Territorio seleccionado
-- Presión o participación por volumen
-- Total seleccionado
-- Lectura ejecutiva
-- Alertas inteligentes
-- Mapa territorial y ranking
-- Prioridades CORESEC
-- Síntesis para decisión
+SEPARACIÓN METODOLÓGICA
+CAPA ESTADÍSTICA:
+- Se alimenta de datos oficiales consolidados.
+- Calcula casos, tendencias, variaciones, volumen y concentración.
+- Continúa siendo la fuente de todos los KPIs numéricos.
 
-Criterio:
-Si se selecciona una provincia, los indicadores y alertas se calculan para esa provincia.
-Si se selecciona un delito específico, la Sala cambia a análisis de ese delito.
-El mapa conserva la comparación regional del delito para dar contexto territorial y resalta la provincia seleccionada.
+CAPA DE CONNOTACIÓN:
+- Registra acontecimientos relevantes y sus factores cualitativos.
+- Puede elevar la atención coyuntural.
+- NO suma casos a la estadística.
+- NO altera automáticamente totales ni variaciones.
+- Debe mostrar estado/fuente/validación antes de uso institucional.
 
-Instalación:
-Reemplazar index.html, conservar datos.json, Commit, Vercel, Ctrl+F5.
+EVENTOS PILOTO CARGADOS
+30/08/2026 · TRUJILLO:
+- Secuestro con homicidio múltiple.
+- Muerte de efectivo policial.
+- Detonación en establecimiento comercial.
+Se muestran como información contextual y sujetos a consolidación/validación oficial.
+
+RECOMENDACIÓN PARA SIGUIENTE ETAPA
+Crear un formulario institucional de registro de eventos con:
+fecha, provincia/distrito, tipo, resumen, factores de connotación, fuente,
+estado de validación, enlace/documento de respaldo y responsable ORSEC.
+
+INSTALACIÓN
+Reemplazar index.html. Mantener datos.json. Commit → Vercel → Ctrl+F5.
