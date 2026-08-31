@@ -1,20 +1,23 @@
-ORSEC 2.3 – BITÁCORA OPERATIVA REGIONAL
+ORSEC 2.3.2 – ACCESO VISIBLE A NOTAS DE INTELIGENCIA
 
-NUEVO:
-- Formulario para registrar incidencias conocidas durante el período.
-- Fecha/hora, provincia, distrito, delito, casos/víctimas, fuente, estado y descripción.
-- Casilla para señalar POSIBLE EVENTO DE CONNOTACIÓN: EVALUAR.
-- Estados: Por verificar / En verificación / Confirmado operativamente / Conciliado con estadística.
-- Exportación CSV.
-- Los registros NO alimentan los KPIs estadísticos oficiales.
-- Persistencia local en el navegador (localStorage), apropiada para esta fase demo.
+CAMBIOS:
+1. Botón permanente y visible "📚 NOTAS DE INTELIGENCIA" en la cabecera de
+   INTELIGENCIA DE CONTEXTO, junto al distintivo "NO ESTADÍSTICO".
+2. Botón destacado dentro del evento crítico de Trujillo:
+   "📄 NOTA N.° 001-2026 · VER / DESCARGAR".
+3. Biblioteca de Inteligencia ORSEC reforzada visualmente y enlazada desde la cabecera.
+4. Se mantiene la separación metodológica entre:
+   - Estadística oficial.
+   - Bitácora operativa.
+   - Connotación estratégica.
+   - Notas de inteligencia.
 
-IMPORTANTE:
-La versión actual NO es aún multiusuario ni una base institucional centralizada.
-Para producción se recomienda backend con autenticación, auditoría, roles, historial de cambios y base de datos.
-
-Se incluye también la Nota de Inteligencia ORSEC 001-2026 dentro del paquete.
+ARCHIVOS QUE DEBEN SUBIRSE JUNTOS A GITHUB:
+- index.html
+- datos.json
+- Nota_Inteligencia_ORSEC_001_2026_Visual.docx
 
 INSTALACIÓN:
-Subir/reemplazar index.html y conservar datos.json. También puede subir la Nota DOCX.
-Commit → Vercel → Ctrl+F5.
+Reemplazar index.html con el de este paquete y verificar que el DOCX tenga exactamente
+el nombre: Nota_Inteligencia_ORSEC_001_2026_Visual.docx
+Luego Commit → esperar despliegue de Vercel → Ctrl+F5.

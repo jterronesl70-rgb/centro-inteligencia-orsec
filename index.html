@@ -370,6 +370,50 @@ linear-gradient(145deg,#031728,#052d4a 52%,#041e34);border:1px solid rgba(63,190
 .orsec-note-link{display:inline-block;margin-top:7px;padding:6px 9px;border-radius:6px;background:#153f57;border:1px solid #2e6b89;color:#e8f7ff;text-decoration:none;font-size:9px;font-weight:900}
 @media(max-width:1000px){.orsec-bit-body{grid-template-columns:1fr}.orsec-bit-fields{grid-template-columns:1fr}.orsec-span2{grid-column:auto}}
 
+
+/* ORSEC 2.3.1 · NOTAS DE INTELIGENCIA */
+.orsec-nota-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.orsec-nota-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:7px;
+background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;font-size:10px;font-weight:900}
+.orsec-nota-btn:hover{background:#18516f}
+.orsec-biblioteca{margin-top:12px;border:1px solid rgba(86,202,255,.25);border-radius:10px;background:rgba(0,20,34,.6);padding:12px}
+.orsec-biblioteca h4{margin:0 0 8px;color:#55caff;font-size:13px}
+.orsec-bib-item{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.orsec-bib-item:last-child{border-bottom:0}
+.orsec-bib-num{font-size:10px;font-weight:900;color:#ffc55c}
+.orsec-bib-title{font-size:11px;color:#eef8fc;font-weight:800}
+.orsec-bib-meta{font-size:9px;color:#8fb0c2;margin-top:3px}
+@media(max-width:760px){.orsec-bib-item{grid-template-columns:1fr}.orsec-bib-item .orsec-nota-btn{width:max-content}}
+
+
+/* ORSEC 2.3.2 · ACCESO DOCUMENTAL VISIBLE */
+.orsec-doc-topactions{
+  display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:8px;
+}
+.orsec-doc-mainbtn{
+  display:inline-flex; align-items:center; gap:7px;
+  padding:9px 12px; border-radius:8px;
+  background:#f3b400; color:#102337; text-decoration:none;
+  font-size:11px; font-weight:900; border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 0 0 1px rgba(243,180,0,.12),0 3px 10px rgba(0,0,0,.18);
+}
+.orsec-doc-mainbtn:hover{filter:brightness(1.06)}
+.orsec-doc-secondary{
+  background:#123f59; color:#effaff; border:1px solid #2e789a;
+}
+.orsec-context-head-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.orsec-library-panel{
+  margin-top:12px;border:1px solid rgba(85,202,255,.32);border-radius:12px;
+  background:linear-gradient(180deg,rgba(3,36,57,.95),rgba(2,24,39,.98));
+  padding:13px;
+}
+.orsec-library-panel h4{margin:0;color:#55caff;font-size:14px}
+.orsec-library-panel .orsec-bib-item{margin-top:8px}
+@media(max-width:700px){
+  .orsec-context-head-tools{width:100%;justify-content:flex-start}
+  .orsec-doc-mainbtn{font-size:10px}
+}
+
 </style>
 </head>
 <body>
@@ -642,6 +686,9 @@ function orsecRenderConnotacion(){
       </div><span class="orsec-evento-nivel" style="color:${e.color};border:1px solid ${e.color};background:${e.color}18">${e.nivel}</span></div>
       <p>${e.descripcion}</p>
       <div class="orsec-evento-meta">Factores: ${e.factores.join(' · ')}<br>${e.estado}</div>
+      ${e.titulo==='Secuestro con homicidio múltiple'?`<div class="orsec-nota-actions">
+        <a class="orsec-doc-mainbtn" href="Nota_Inteligencia_ORSEC_001_2026_Visual.docx" download>📄 NOTA N.° 001-2026 · VER / DESCARGAR</a>
+      </div>`:''}
     </div>`).join('');
 
   const crit=ev.filter(e=>e.nivel==='EVENTO CRÍTICO').length;
@@ -783,7 +830,10 @@ if(_renderSalaCORESEC_ORSEC16){
       <div class="orsec-connotacion-title">INTELIGENCIA DE CONTEXTO · CONNOTACIÓN ESTRATÉGICA</div>
       <div class="orsec-connotacion-note">Capa cualitativa independiente. No modifica, suma ni reemplaza las estadísticas oficiales de incidencia delictiva.</div>
     </div>
-    <div class="orsec-connotacion-badge">NO ESTADÍSTICO</div>
+    <div class="orsec-context-head-tools">
+      <a class="orsec-doc-mainbtn orsec-doc-secondary" href="#orsecBibliotecaInteligencia">📚 NOTAS DE INTELIGENCIA</a>
+      <div class="orsec-connotacion-badge">NO ESTADÍSTICO</div>
+    </div>
   </div>
   <div class="orsec-connotacion-grid">
     <div class="orsec-eventos" id="orsecEventosConnotacion"></div>
@@ -795,6 +845,19 @@ if(_renderSalaCORESEC_ORSEC16){
   </div>
 </div>
 
+
+
+<div class="orsec-biblioteca orsec-library-panel" id="orsecBibliotecaInteligencia">
+ <h4>📚 BIBLIOTECA DE INTELIGENCIA ORSEC</h4><div style="font-size:10px;color:#9fc0d2;margin-top:4px">Repositorio documental de Notas de Inteligencia de Connotación. Independiente de la estadística oficial.</div>
+ <div class="orsec-bib-item">
+  <div class="orsec-bib-num">N.° 001-2026</div>
+  <div>
+   <div class="orsec-bib-title">Evento criminal de alta connotación registrado en Trujillo</div>
+   <div class="orsec-bib-meta">30 AGO 2026 · TRUJILLO · EVENTO CRÍTICO · Información en desarrollo</div>
+  </div>
+  <a class="orsec-doc-mainbtn" href="Nota_Inteligencia_ORSEC_001_2026_Visual.docx" download>📄 DESCARGAR NOTA</a>
+ </div>
+</div>
 
 <div class="orsec-bitacora" id="orsecBitacora">
  <div class="orsec-bit-head">
