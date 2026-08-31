@@ -842,59 +842,140 @@ function orsecCoresecNivel(v){
 function orsecCoresecBuild(){
   const host=document.getElementById('salaCoresecEjecutiva');
   if(!host || typeof DB==='undefined' || !DB.length) return;
-  const f=current(), base={anio:f.anio,tipo:f.tipo,periodo:f.periodo}, region='TOTAL REGION';
-  let rr=registros({...base,provincia:region}); if(f.delito!=='TODOS')rr=rr.filter(r=>r.Delito===f.delito);
-  const total=rr.reduce((s,r)=>s+(+r.Casos||0),0);
-  const allRegion=registros({...base,provincia:region});
+
+  const f=current(), base={anio:f.anio,tipo:f.tipo,periodo:f.periodo};
+  const selectedProv=(f.provincia && f.provincia!=='TODAS')?f.provincia:'TOTAL REGION';
+  const selectedCrime=(f.delito && f.delito!=='TODOS')?f.delito:'TODOS';
+  const isRegion=selectedProv==='TOTAL REGION', isCrime=selectedCrime!=='TODOS';
+
+  // UNIVERSO PRINCIPAL: respeta provincia + delito seleccionados.
+  let ctxAll=registros({...base,provincia:selectedProv});
+  let ctxRows=isCrime?ctxAll.filter(r=>r.Delito===selectedCrime):ctxAll;
+  const total=ctxRows.reduce((s,r)=>s+(+r.Casos||0),0);
+  const ctxAllTotal=ctxAll.reduce((s,r)=>s+(+r.Casos||0),0);
+
+  // IMPACTO ESTRATÉGICO: siempre dentro del territorio seleccionado.
   const impacto=['HOMICIDIOS','EXTORSION','DETONACIONES'];
-  const impactRows=allRegion.filter(r=>impacto.includes(r.Delito));
+  const impactRows=ctxAll.filter(r=>impacto.includes(r.Delito));
   const impactTotal=impactRows.reduce((s,r)=>s+(+r.Casos||0),0);
   const impactTop=[...impactRows].sort((a,b)=>(+b.Casos||0)-(+a.Casos||0))[0];
-  const volumeTop=[...allRegion].sort((a,b)=>(+b.Casos||0)-(+a.Casos||0))[0];
-  const volumeTotal=allRegion.reduce((s,r)=>s+(+r.Casos||0),0), volumeShare=volumeTop&&volumeTotal?(+volumeTop.Casos||0)/volumeTotal*100:0;
-  let prov=registros(base).filter(r=>r.Provincia!=='TOTAL REGION'); if(f.delito!=='TODOS')prov=prov.filter(r=>r.Delito===f.delito);
-  const bp={};prov.forEach(r=>bp[r.Provincia]=(bp[r.Provincia]||0)+(+r.Casos||0));
-  const ranking=Object.entries(bp).sort((a,b)=>b[1]-a[1]),topP=ranking[0],provTotal=ranking.reduce((s,x)=>s+x[1],0),topPShare=topP&&provTotal?topP[1]/provTotal*100:0;
-  const alerts=[];allRegion.forEach(r=>{const vv=variation({...f,provincia:region,delito:r.Delito});if(vv!=null)alerts.push({delito:r.Delito,v:vv,casos:+r.Casos||0,n:orsecCoresecNivel(vv)})});
-  alerts.sort((a,b)=>{const rank=x=>x.v>=25?5:x.v>=10?4:x.v>1?3:x.v>=-1?2:1;return rank(b)-rank(a)||b.v-a.v||b.casos-a.casos});
-  const topAlerts=alerts.slice(0,3),regional=topAlerts[0]?topAlerts[0].n:{t:'SIN COMPARABLE',c:'#7b8794'};
-  const impactV=impactTop?variation({...f,provincia:region,delito:impactTop.Delito}):null;
-  const impactTxt=impactTop?`${impactTop.Delito} concentra ${fmt(+impactTop.Casos||0)} casos de alto impacto${impactV==null?'':` y presenta una variación interanual de ${impactV>=0?'+':''}${impactV.toFixed(1)}%`}.`:'Sin información comparable de alto impacto.';
-  const terrTxt=topP?`${topP[0]} registra la mayor concentración por volumen: ${fmt(topP[1])} incidencias (${topPShare.toFixed(1)}% del volumen territorial).`:'Sin concentración territorial disponible.';
-  const trendTxt=topAlerts[0]?`${topAlerts[0].delito} constituye la señal de seguimiento más relevante (${topAlerts[0].v>=0?'+':''}${topAlerts[0].v.toFixed(1)}%, nivel ${topAlerts[0].n.t.toLowerCase()}).`:'Sin variación interanual comparable.';
+
+  // PRESIÓN POR VOLUMEN: contexto territorial seleccionado.
+  const volumeTop=[...ctxAll].sort((a,b)=>(+b.Casos||0)-(+a.Casos||0))[0];
+  const selectedCrimeRow=isCrime?ctxAll.find(r=>r.Delito===selectedCrime):null;
+  const selectedCrimeShare=isCrime&&ctxAllTotal?(+selectedCrimeRow?.Casos||0)/ctxAllTotal*100:0;
+  const volumeShare=volumeTop&&ctxAllTotal?(+volumeTop.Casos||0)/ctxAllTotal*100:0;
+
+  // MAPA / RANKING: compara provincias para el delito seleccionado; si TODOS, usa volumen total.
+  let provUniverse=registros(base).filter(r=>r.Provincia!=='TOTAL REGION');
+  if(isCrime) provUniverse=provUniverse.filter(r=>r.Delito===selectedCrime);
+  const bp={}; provUniverse.forEach(r=>bp[r.Provincia]=(bp[r.Provincia]||0)+(+r.Casos||0));
+  const ranking=Object.entries(bp).sort((a,b)=>b[1]-a[1]);
+  const provTotal=ranking.reduce((s,x)=>s+x[1],0);
+  const topP=ranking[0], topPShare=topP&&provTotal?topP[1]/provTotal*100:0;
+  const selectedPEntry=!isRegion?ranking.find(x=>x[0]===selectedProv):null;
+  const selectedPShare=selectedPEntry&&provTotal?selectedPEntry[1]/provTotal*100:0;
+
+  // ALERTAS: territorio seleccionado; si se elige delito, solo ese delito.
+  const alertSource=isCrime?ctxAll.filter(r=>r.Delito===selectedCrime):ctxAll;
+  const alerts=[];
+  alertSource.forEach(r=>{
+    const vv=variation({...f,provincia:selectedProv,delito:r.Delito});
+    if(vv!=null) alerts.push({delito:r.Delito,v:vv,casos:+r.Casos||0,n:orsecCoresecNivel(vv)});
+  });
+  alerts.sort((a,b)=>{
+    const rank=x=>x.v>=25?5:x.v>=10?4:x.v>1?3:x.v>=-1?2:1;
+    return rank(b)-rank(a)||b.v-a.v||b.casos-a.casos;
+  });
+  const topAlerts=alerts.slice(0,3);
+  const situacion=topAlerts[0]?topAlerts[0].n:{t:'SIN COMPARABLE',c:'#7b8794'};
+
+  // LECTURAS CONTEXTUALES.
+  const impactV=impactTop?variation({...f,provincia:selectedProv,delito:impactTop.Delito}):null;
+  const impactTxt=isCrime
+    ? (impacto.includes(selectedCrime)
+        ? `${selectedCrime} registra ${fmt(total)} casos en ${isRegion?'la Región La Libertad':selectedProv}${topAlerts[0]?` y una variación interanual de ${topAlerts[0].v>=0?'+':''}${topAlerts[0].v.toFixed(1)}%`:''}.`
+        : `${selectedCrime} registra ${fmt(total)} casos en ${isRegion?'la Región La Libertad':selectedProv}. No pertenece al grupo ORSEC de alto impacto estratégico (Homicidios, Extorsión y Detonaciones).`)
+    : (impactTop?`${impactTop.Delito} concentra ${fmt(+impactTop.Casos||0)} casos del componente de alto impacto${impactV==null?'':` y presenta una variación interanual de ${impactV>=0?'+':''}${impactV.toFixed(1)}%`}.`:'Sin información comparable de alto impacto.');
+
+  const terrTxt=isRegion
+    ? (topP?`${topP[0]} registra la mayor concentración territorial: ${fmt(topP[1])} incidencias (${topPShare.toFixed(1)}% del volumen territorial${isCrime?' para '+selectedCrime:''}).`:'Sin concentración territorial disponible.')
+    : (selectedPEntry?`${selectedProv} registra ${fmt(selectedPEntry[1])} incidencias (${selectedPShare.toFixed(1)}% del total provincial comparado${isCrime?' para '+selectedCrime:''}).`:'Sin información territorial para la selección.');
+
+  const trendTxt=topAlerts[0]
+    ? `${topAlerts[0].delito} presenta una variación interanual de ${topAlerts[0].v>=0?'+':''}${topAlerts[0].v.toFixed(1)}% y nivel ${topAlerts[0].n.t.toLowerCase()} en ${isRegion?'la región':selectedProv}.`
+    : 'Sin variación interanual comparable para la selección actual.';
+
   const maxP=ranking[0]?.[1]||1;
-  const bars=ranking.slice(0,5).map(x=>`<div class="coresec2-bar-row"><span>${x[0]}</span><div class="coresec2-track"><i style="width:${Math.max(3,x[1]/maxP*100)}%"></i></div><b>${fmt(x[1])}</b></div>`).join('');
+  const bars=ranking.slice(0,5).map(x=>{
+    const selected=x[0]===selectedProv;
+    return `<div class="coresec2-bar-row" style="${selected?'font-weight:800;color:#fff':''}"><span>${x[0]}</span><div class="coresec2-track"><i style="width:${Math.max(3,x[1]/maxP*100)}%;${selected?'background:#ffd23f':''}"></i></div><b>${fmt(x[1])}</b></div>`;
+  }).join('');
+
   const mapCoords={
-'CHEPEN':[18,14],'PACASMAYO':[20,29],'ASCOPE':[29,43],'GRAN CHIMU':[49,37],
-'OTUZCO':[55,51],'TRUJILLO':[39,59],'JULCAN':[62,61],'VIRU':[47,79],
-'SANCHEZ CARRION':[72,44],'SANTIAGO DE CHUCO':[75,62],'BOLIVAR':[91,20],'PATAZ':[90,56]
-};
-const maxMap=ranking[0]?.[1]||1;
-const mapColor=(v)=>{const r=v/maxMap;return r>=.70?'#ff4242':r>=.40?'#ff922b':r>=.20?'#ffd23f':r>=.08?'#38c979':'#3aa7ff'};
-const mapDots=ranking.map(([p,v])=>{const q=mapCoords[p];if(!q)return'';return `<span class="coresec2-hotspot" style="left:${q[0]}%;top:${q[1]}%;--mc:${mapColor(v)}"><i></i><em>${p}</em></span>`}).join('');
-const mapImg='https://upload.wikimedia.org/wikipedia/commons/9/98/Provinces_of_La_Libertad.svg';
+    'CHEPEN':[18,14],'PACASMAYO':[20,29],'ASCOPE':[29,43],'GRAN CHIMU':[49,37],
+    'OTUZCO':[55,51],'TRUJILLO':[39,59],'JULCAN':[62,61],'VIRU':[47,79],
+    'SANCHEZ CARRION':[72,44],'SANTIAGO DE CHUCO':[75,62],'BOLIVAR':[91,20],'PATAZ':[90,56]
+  };
+  const maxMap=ranking[0]?.[1]||1;
+  const mapColor=(v)=>{const r=v/maxMap;return r>=.70?'#ff4242':r>=.40?'#ff922b':r>=.20?'#ffd23f':r>=.08?'#38c979':'#3aa7ff'};
+  const mapDots=ranking.map(([p,v])=>{
+    const q=mapCoords[p];if(!q)return'';
+    const isSel=p===selectedProv;
+    return `<span class="coresec2-hotspot" style="left:${q[0]}%;top:${q[1]}%;--mc:${isSel?'#ffffff':mapColor(v)};${!isRegion&&!isSel?'opacity:.28':''}"><i></i><em>${p}</em></span>`;
+  }).join('');
+  const mapImg='https://upload.wikimedia.org/wikipedia/commons/9/98/Provinces_of_La_Libertad.svg';
+
+  const kpi2Label=isCrime?'DELITO SELECCIONADO':'ALTO IMPACTO ESTRATÉGICO';
+  const kpi2Value=isCrime?fmt(total):fmt(impactTotal);
+  const kpi2Sub=isCrime?selectedCrime:(impactTop?impactTop.Delito+' lidera el componente':'Sin información');
+
+  const kpi3Label=isRegion?'CONCENTRACIÓN TERRITORIAL':'TERRITORIO SELECCIONADO';
+  const kpi3Value=isRegion?(topP?topP[0]:'—'):selectedProv;
+  const kpi3Sub=isRegion?(topP?topPShare.toFixed(1)+'% del volumen territorial':'Sin información'):(selectedPEntry?fmt(selectedPEntry[1])+' incidencias · '+selectedPShare.toFixed(1)+'%':'Sin información');
+
+  const kpi4Label=isCrime?'PARTICIPACIÓN DEL DELITO':'PRESIÓN POR VOLUMEN';
+  const kpi4Value=isCrime?selectedCrime:(volumeTop?volumeTop.Delito:'—');
+  const kpi4Sub=isCrime?(selectedCrimeShare.toFixed(1)+'% del volumen del territorio'):(volumeTop?volumeShare.toFixed(1)+'% del volumen total':'Sin información');
+
   host.innerHTML=`<div class="coresec-command">
-   <div class="coresec2-head"><div><h3>CENTRO DE COMANDO EJECUTIVO · SALA CORESEC</h3><p>MONITOREO · ANÁLISIS · INTELIGENCIA TERRITORIAL · APOYO A LA DECISIÓN</p></div><div class="coresec2-status"><span class="coresec2-pill">● SISTEMA OPERATIVO</span><span class="coresec2-pill">${f.anio} · ${f.periodo}</span></div></div>
-   <div class="coresec2-kpis">
-    <div class="coresec2-kpi"><small>Situación regional</small><strong style="color:${regional.c}">${regional.t}</strong><span>Mayor nivel de seguimiento</span></div>
-    <div class="coresec2-kpi"><small>Alto impacto estratégico</small><strong>${fmt(impactTotal)}</strong><span>${impactTop?impactTop.Delito+' lidera el componente':'Sin información'}</span></div>
-    <div class="coresec2-kpi"><small>Concentración territorial</small><strong>${topP?topP[0]:'—'}</strong><span>${topP?topPShare.toFixed(1)+'% del volumen territorial':'Sin información'}</span></div>
-    <div class="coresec2-kpi"><small>Presión por volumen</small><strong>${volumeTop?volumeTop.Delito:'—'}</strong><span>${volumeTop?volumeShare.toFixed(1)+'% del volumen total':'Sin información'}</span></div>
-    <div class="coresec2-kpi"><small>Total selección</small><strong>${fmt(total)}</strong><span>Registro regional oficial</span></div>
-   </div>
-   <div class="coresec2-main">
-    <div class="coresec2-panel"><h4>LECTURA EJECUTIVA DE SITUACIÓN</h4><div class="coresec2-reading"><b>Impacto estratégico.</b> ${impactTxt}<br><br><b>Territorio.</b> ${terrTxt}<br><br><b>Tendencia.</b> ${trendTxt}<br><br><b>Criterio ORSEC.</b> La concentración territorial expresa volumen observado y no equivale, por sí sola, a prioridad estratégica.</div></div>
-    <div class="coresec2-panel"><h4>INTELIGENCIA TERRITORIAL · MAPA DE LA LIBERTAD</h4>
-<div class="coresec2-map"><img class="coresec2-map-img" src="${mapImg}" alt="Mapa provincial de La Libertad">${mapDots}</div>
-<div class="coresec2-map-legend"><span><i style="background:#ff4242"></i>Muy alta</span><span><i style="background:#ff922b"></i>Alta</span><span><i style="background:#ffd23f"></i>Media</span><span><i style="background:#38c979"></i>Baja</span><span><i style="background:#3aa7ff"></i>Muy baja</span></div>
-<div class="coresec2-territory">${bars||'Sin información territorial.'}</div></div>
-    <div class="coresec2-panel"><h4>ALERTAS INTELIGENTES</h4>${topAlerts.length?topAlerts.map(x=>`<div class="coresec2-alert"><i class="coresec2-dot" style="background:${x.n.c}"></i><div><b>${x.delito}</b><br>${x.n.t} · ${x.v>=0?'+':''}${x.v.toFixed(1)}% interanual · ${fmt(x.casos)} casos</div></div>`).join(''):'<div class="coresec2-reading">Sin comparables disponibles.</div>'}</div>
-   </div>
-   <div class="coresec2-bottom">
-    <div class="coresec2-panel" style="min-height:auto"><h4>PRIORIDADES DE LECTURA CORESEC</h4><div class="coresec2-priority"><div><b>IMPACTO ESTRATÉGICO</b><span>${impactTop?impactTop.Delito+' · '+fmt(+impactTop.Casos||0)+' casos':'Sin información'}</span></div><div><b>PRESIÓN POR VOLUMEN</b><span>${volumeTop?volumeTop.Delito+' · '+volumeShare.toFixed(1)+'%':'Sin información'}</span></div><div><b>CONCENTRACIÓN TERRITORIAL</b><span>${topP?topP[0]+' · '+fmt(topP[1])+' incidencias':'Sin información'}</span></div></div></div>
-    <div class="coresec2-panel" style="min-height:auto"><h4>SÍNTESIS PARA DECISIÓN</h4><div class="coresec2-reading">ORSEC integra información oficial, comportamiento interanual, impacto estratégico y concentración territorial para facilitar una lectura común de la situación. La decisión operativa corresponde a las autoridades competentes.</div></div>
-   </div>
-   <div class="coresec2-footer"><span>ORSEC · GRDN · GORE LA LIBERTAD</span><span>CENTRO DE INTELIGENCIA · INFORMACIÓN PARA PRIORIZACIÓN Y APOYO A LA TOMA DE DECISIONES</span></div>
+    <div class="coresec2-head">
+      <div><h3>CENTRO DE COMANDO EJECUTIVO · SALA CORESEC</h3><p>MONITOREO · ANÁLISIS · INTELIGENCIA TERRITORIAL · APOYO A LA DECISIÓN</p></div>
+      <div class="coresec2-status"><span class="coresec2-pill">● SISTEMA OPERATIVO</span><span class="coresec2-pill">${f.anio} · ${f.periodo} · ${isRegion?'TOTAL REGIÓN':selectedProv} · ${selectedCrime}</span></div>
+    </div>
+
+    <div class="coresec2-kpis">
+      <div class="coresec2-kpi"><small>Situación de la selección</small><strong style="color:${situacion.c}">${situacion.t}</strong><span>${isRegion?'Ámbito regional':selectedProv}${isCrime?' · '+selectedCrime:''}</span></div>
+      <div class="coresec2-kpi"><small>${kpi2Label}</small><strong>${kpi2Value}</strong><span>${kpi2Sub}</span></div>
+      <div class="coresec2-kpi"><small>${kpi3Label}</small><strong>${kpi3Value}</strong><span>${kpi3Sub}</span></div>
+      <div class="coresec2-kpi"><small>${kpi4Label}</small><strong>${kpi4Value}</strong><span>${kpi4Sub}</span></div>
+      <div class="coresec2-kpi"><small>Total selección</small><strong>${fmt(total)}</strong><span>${isRegion?'Registro regional oficial':selectedProv}${isCrime?' · '+selectedCrime:''}</span></div>
+    </div>
+
+    <div class="coresec2-main">
+      <div class="coresec2-panel"><h4>LECTURA EJECUTIVA DE SITUACIÓN</h4><div class="coresec2-reading"><b>Selección.</b> ${f.anio} · ${f.periodo} · ${isRegion?'TOTAL REGIÓN':selectedProv} · ${selectedCrime}.<br><br><b>Impacto / delito.</b> ${impactTxt}<br><br><b>Territorio.</b> ${terrTxt}<br><br><b>Tendencia.</b> ${trendTxt}<br><br><b>Criterio ORSEC.</b> La concentración territorial expresa volumen observado y no equivale, por sí sola, a prioridad estratégica.</div></div>
+
+      <div class="coresec2-panel"><h4>INTELIGENCIA TERRITORIAL · MAPA DE LA LIBERTAD</h4>
+        <div class="coresec2-map"><img class="coresec2-map-img" src="${mapImg}" alt="Mapa provincial de La Libertad">${mapDots}</div>
+        <div class="coresec2-map-legend"><span><i style="background:#ff4242"></i>Muy alta</span><span><i style="background:#ff922b"></i>Alta</span><span><i style="background:#ffd23f"></i>Media</span><span><i style="background:#38c979"></i>Baja</span><span><i style="background:#3aa7ff"></i>Muy baja</span></div>
+        <div class="coresec2-territory">${bars||'Sin información territorial.'}</div>
+      </div>
+
+      <div class="coresec2-panel"><h4>ALERTAS INTELIGENTES · ${isCrime?selectedCrime:(isRegion?'REGIÓN':selectedProv)}</h4>${topAlerts.length?topAlerts.map(x=>`<div class="coresec2-alert"><i class="coresec2-dot" style="background:${x.n.c}"></i><div><b>${x.delito}</b><br>${x.n.t} · ${x.v>=0?'+':''}${x.v.toFixed(1)}% interanual · ${fmt(x.casos)} casos</div></div>`).join(''):'<div class="coresec2-reading">Sin comparables disponibles para la selección.</div>'}</div>
+    </div>
+
+    <div class="coresec2-bottom">
+      <div class="coresec2-panel" style="min-height:auto"><h4>PRIORIDADES DE LECTURA CORESEC</h4>
+        <div class="coresec2-priority">
+          <div><b>${isCrime?'DELITO ANALIZADO':'IMPACTO ESTRATÉGICO'}</b><span>${isCrime?selectedCrime+' · '+fmt(total)+' casos':(impactTop?impactTop.Delito+' · '+fmt(+impactTop.Casos||0)+' casos':'Sin información')}</span></div>
+          <div><b>${isCrime?'PARTICIPACIÓN EN VOLUMEN':'PRESIÓN POR VOLUMEN'}</b><span>${isCrime?selectedCrimeShare.toFixed(1)+'% del territorio':(volumeTop?volumeTop.Delito+' · '+volumeShare.toFixed(1)+'%':'Sin información')}</span></div>
+          <div><b>${isRegion?'CONCENTRACIÓN TERRITORIAL':'TERRITORIO ANALIZADO'}</b><span>${isRegion?(topP?topP[0]+' · '+fmt(topP[1])+' incidencias':'Sin información'):(selectedProv+' · '+fmt(selectedPEntry?.[1]||0)+' incidencias')}</span></div>
+        </div>
+      </div>
+      <div class="coresec2-panel" style="min-height:auto"><h4>SÍNTESIS PARA DECISIÓN</h4><div class="coresec2-reading">La Sala CORESEC está sincronizada con el contexto global. La lectura mostrada corresponde a <b>${isRegion?'TOTAL REGIÓN':selectedProv}</b>${isCrime?' y al delito <b>'+selectedCrime+'</b>':''}. ORSEC integra información oficial, comportamiento interanual e inteligencia territorial para facilitar una lectura común de la situación.</div></div>
+    </div>
+
+    <div class="coresec2-footer"><span>ORSEC · GRDN · GORE LA LIBERTAD</span><span>CONTEXTO ACTIVO: ${f.anio} · ${f.periodo} · ${isRegion?'TOTAL REGIÓN':selectedProv} · ${selectedCrime}</span></div>
   </div>`;
 }
 document.addEventListener('DOMContentLoaded',()=>{

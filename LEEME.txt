@@ -1,23 +1,29 @@
-ORSEC 2.1 – MAPA TERRITORIAL REAL EN SALA CORESEC
+ORSEC 2.1.1 – SALA CORESEC TOTALMENTE SINCRONIZADA
 
-Mejora principal:
-- La Sala CORESEC deja de mostrar puntos aislados.
-- Incorpora el mapa provincial real de La Libertad.
-- Superpone las 12 provincias en su posición territorial.
-- Los puntos cambian de color según concentración relativa:
-  rojo = muy alta, naranja = alta, amarillo = media, verde = baja, azul = muy baja.
-- Mantiene debajo el ranking territorial cuantitativo.
-- Todo responde al período y delito seleccionado en ORSEC.
+Corrección principal:
+La Sala CORESEC ahora respeta por completo los filtros globales:
+- Año
+- Tipo de período
+- Período
+- Provincia
+- Delito
 
-Se conserva íntegramente:
-- Panorama Regional
-- Incidencia Delictiva
-- Boletines
-- Alertas
-- Inteligencia Territorial
-- Infografía Regional original
-- filtros sincronizados
-- datos.json
+Cambian con la selección:
+- Situación de la selección
+- Delito / impacto estratégico
+- Territorio seleccionado
+- Presión o participación por volumen
+- Total seleccionado
+- Lectura ejecutiva
+- Alertas inteligentes
+- Mapa territorial y ranking
+- Prioridades CORESEC
+- Síntesis para decisión
+
+Criterio:
+Si se selecciona una provincia, los indicadores y alertas se calculan para esa provincia.
+Si se selecciona un delito específico, la Sala cambia a análisis de ese delito.
+El mapa conserva la comparación regional del delito para dar contexto territorial y resalta la provincia seleccionada.
 
 Instalación:
-Reemplazar index.html, conservar datos.json, Commit, Vercel y Ctrl+F5.
+Reemplazar index.html, conservar datos.json, Commit, Vercel, Ctrl+F5.
