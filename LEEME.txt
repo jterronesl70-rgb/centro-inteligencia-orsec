@@ -1,3 +1,16 @@
-ORSEC 2.4 – Boletín Inteligente
-Reemplazar index.html. Conserva datos.json y la Nota de Inteligencia en la raíz.
-Mejoras: interpretación ponderada, connotación separada NO ESTADÍSTICA y vista previa/impresión PDF.
+ORSEC 2.4.1 – BOLETÍN INTELIGENTE VISIBLE
+
+Corrección:
+La mejora 2.4 había sido insertada en un bloque operativo secundario del HTML,
+no en la sección visible "Boletín Automático". Esta versión la coloca
+directamente dentro del módulo visible.
+
+Ahora deben verse, debajo de "Top delictivo del período":
+- SITUACIÓN ESTADÍSTICA
+- LECTURA ORSEC · INTERPRETACIÓN PONDERADA
+- CONTEXTO DE CONNOTACIÓN · NO ESTADÍSTICO (solo si corresponde)
+- ACTUALIZAR ANÁLISIS INTELIGENTE
+- COPIAR ANÁLISIS ORSEC
+- VISTA PREVIA / PDF
+
+Para instalar: reemplazar únicamente index.html en GitHub.
