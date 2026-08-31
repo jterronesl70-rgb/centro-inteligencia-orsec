@@ -1,32 +1,18 @@
-ORSEC 2.2 – INTELIGENCIA DE CONTEXTO / CONNOTACIÓN ESTRATÉGICA
+ORSEC 2.2.1 – INTELIGENCIA DE CONTEXTO · MEJORA DE LEGIBILIDAD
 
-OBJETIVO
-Incorporar hechos de alta relevancia criminal sin mezclarlos con la estadística oficial.
+Se aumentó el tamaño y contraste de:
+- Título y subtítulo de la capa de connotación.
+- Títulos de eventos.
+- Descripciones.
+- Factores y estado de validación.
+- Etiquetas EVENTO CRÍTICO / ALTA CONNOTACIÓN.
+- Lectura de connotación.
+- Regla metodológica ORSEC.
 
-SEPARACIÓN METODOLÓGICA
-CAPA ESTADÍSTICA:
-- Se alimenta de datos oficiales consolidados.
-- Calcula casos, tendencias, variaciones, volumen y concentración.
-- Continúa siendo la fuente de todos los KPIs numéricos.
+También se mejora la visualización responsive: en pantallas más estrechas,
+eventos y lectura se apilan para evitar texto demasiado comprimido.
 
-CAPA DE CONNOTACIÓN:
-- Registra acontecimientos relevantes y sus factores cualitativos.
-- Puede elevar la atención coyuntural.
-- NO suma casos a la estadística.
-- NO altera automáticamente totales ni variaciones.
-- Debe mostrar estado/fuente/validación antes de uso institucional.
+No se modifica ningún dato ni cálculo estadístico.
 
-EVENTOS PILOTO CARGADOS
-30/08/2026 · TRUJILLO:
-- Secuestro con homicidio múltiple.
-- Muerte de efectivo policial.
-- Detonación en establecimiento comercial.
-Se muestran como información contextual y sujetos a consolidación/validación oficial.
-
-RECOMENDACIÓN PARA SIGUIENTE ETAPA
-Crear un formulario institucional de registro de eventos con:
-fecha, provincia/distrito, tipo, resumen, factores de connotación, fuente,
-estado de validación, enlace/documento de respaldo y responsable ORSEC.
-
-INSTALACIÓN
-Reemplazar index.html. Mantener datos.json. Commit → Vercel → Ctrl+F5.
+Instalación:
+Reemplazar index.html → Commit → Vercel → Ctrl+F5.
