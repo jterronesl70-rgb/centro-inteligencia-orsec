@@ -261,6 +261,17 @@ linear-gradient(145deg,#031728,#052d4a 52%,#041e34);border:1px solid rgba(63,190
 .coresec2-footer{margin-top:10px;padding-top:9px;border-top:1px solid rgba(105,194,239,.18);display:flex;justify-content:space-between;gap:10px;color:#7fb1cf;font-size:8.5px;letter-spacing:.45px}
 @media(max-width:1050px){.coresec2-kpis{grid-template-columns:repeat(2,1fr)}.coresec2-main{grid-template-columns:1fr}.coresec2-bottom{grid-template-columns:1fr}.coresec2-priority{grid-template-columns:1fr}}
 
+
+/* ORSEC 2.1 · MAPA TERRITORIAL REAL EN SALA CORESEC */
+.coresec2-map{height:235px!important;background:linear-gradient(180deg,rgba(3,39,64,.93),rgba(2,24,42,.96))!important;padding:8px}
+.coresec2-map:before{display:none!important}
+.coresec2-map .coresec2-map-img{position:absolute;inset:7px 9px 7px 9px;width:calc(100% - 18px);height:calc(100% - 14px);object-fit:contain;filter:brightness(.70) saturate(1.25) hue-rotate(160deg) drop-shadow(0 0 10px rgba(40,173,237,.45));opacity:.94}
+.coresec2-map .coresec2-hotspot{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:4px;z-index:3;pointer-events:none}
+.coresec2-map .coresec2-hotspot i{position:relative!important;left:auto!important;top:auto!important;width:10px;height:10px;background:var(--mc,#40d0ff)!important;box-shadow:0 0 0 5px rgba(64,208,255,.16),0 0 13px var(--mc,#40d0ff)!important}
+.coresec2-map .coresec2-hotspot em{font-style:normal;font-size:7px;font-weight:800;color:#e8f7ff;text-shadow:0 1px 4px #001522;white-space:nowrap}
+.coresec2-map-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:7px;font-size:8px;color:#9fc7df}
+.coresec2-map-legend span{display:flex;gap:4px;align-items:center}.coresec2-map-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
+
 </style>
 </head>
 <body>
@@ -853,7 +864,15 @@ function orsecCoresecBuild(){
   const trendTxt=topAlerts[0]?`${topAlerts[0].delito} constituye la señal de seguimiento más relevante (${topAlerts[0].v>=0?'+':''}${topAlerts[0].v.toFixed(1)}%, nivel ${topAlerts[0].n.t.toLowerCase()}).`:'Sin variación interanual comparable.';
   const maxP=ranking[0]?.[1]||1;
   const bars=ranking.slice(0,5).map(x=>`<div class="coresec2-bar-row"><span>${x[0]}</span><div class="coresec2-track"><i style="width:${Math.max(3,x[1]/maxP*100)}%"></i></div><b>${fmt(x[1])}</b></div>`).join('');
-  const dots=[[29,22],[48,34],[60,51],[42,66],[70,74]].map((p,i)=>`<i style="left:${p[0]}%;top:${p[1]}%;opacity:${1-i*.12}"></i>`).join('');
+  const mapCoords={
+'CHEPEN':[18,14],'PACASMAYO':[20,29],'ASCOPE':[29,43],'GRAN CHIMU':[49,37],
+'OTUZCO':[55,51],'TRUJILLO':[39,59],'JULCAN':[62,61],'VIRU':[47,79],
+'SANCHEZ CARRION':[72,44],'SANTIAGO DE CHUCO':[75,62],'BOLIVAR':[91,20],'PATAZ':[90,56]
+};
+const maxMap=ranking[0]?.[1]||1;
+const mapColor=(v)=>{const r=v/maxMap;return r>=.70?'#ff4242':r>=.40?'#ff922b':r>=.20?'#ffd23f':r>=.08?'#38c979':'#3aa7ff'};
+const mapDots=ranking.map(([p,v])=>{const q=mapCoords[p];if(!q)return'';return `<span class="coresec2-hotspot" style="left:${q[0]}%;top:${q[1]}%;--mc:${mapColor(v)}"><i></i><em>${p}</em></span>`}).join('');
+const mapImg='https://upload.wikimedia.org/wikipedia/commons/9/98/Provinces_of_La_Libertad.svg';
   host.innerHTML=`<div class="coresec-command">
    <div class="coresec2-head"><div><h3>CENTRO DE COMANDO EJECUTIVO · SALA CORESEC</h3><p>MONITOREO · ANÁLISIS · INTELIGENCIA TERRITORIAL · APOYO A LA DECISIÓN</p></div><div class="coresec2-status"><span class="coresec2-pill">● SISTEMA OPERATIVO</span><span class="coresec2-pill">${f.anio} · ${f.periodo}</span></div></div>
    <div class="coresec2-kpis">
@@ -865,7 +884,10 @@ function orsecCoresecBuild(){
    </div>
    <div class="coresec2-main">
     <div class="coresec2-panel"><h4>LECTURA EJECUTIVA DE SITUACIÓN</h4><div class="coresec2-reading"><b>Impacto estratégico.</b> ${impactTxt}<br><br><b>Territorio.</b> ${terrTxt}<br><br><b>Tendencia.</b> ${trendTxt}<br><br><b>Criterio ORSEC.</b> La concentración territorial expresa volumen observado y no equivale, por sí sola, a prioridad estratégica.</div></div>
-    <div class="coresec2-panel"><h4>INTELIGENCIA TERRITORIAL</h4><div class="coresec2-map">${dots}</div><div class="coresec2-territory">${bars||'Sin información territorial.'}</div></div>
+    <div class="coresec2-panel"><h4>INTELIGENCIA TERRITORIAL · MAPA DE LA LIBERTAD</h4>
+<div class="coresec2-map"><img class="coresec2-map-img" src="${mapImg}" alt="Mapa provincial de La Libertad">${mapDots}</div>
+<div class="coresec2-map-legend"><span><i style="background:#ff4242"></i>Muy alta</span><span><i style="background:#ff922b"></i>Alta</span><span><i style="background:#ffd23f"></i>Media</span><span><i style="background:#38c979"></i>Baja</span><span><i style="background:#3aa7ff"></i>Muy baja</span></div>
+<div class="coresec2-territory">${bars||'Sin información territorial.'}</div></div>
     <div class="coresec2-panel"><h4>ALERTAS INTELIGENTES</h4>${topAlerts.length?topAlerts.map(x=>`<div class="coresec2-alert"><i class="coresec2-dot" style="background:${x.n.c}"></i><div><b>${x.delito}</b><br>${x.n.t} · ${x.v>=0?'+':''}${x.v.toFixed(1)}% interanual · ${fmt(x.casos)} casos</div></div>`).join(''):'<div class="coresec2-reading">Sin comparables disponibles.</div>'}</div>
    </div>
    <div class="coresec2-bottom">

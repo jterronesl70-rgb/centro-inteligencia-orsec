@@ -1,25 +1,23 @@
-ORSEC 2.0 – CENTRO DE COMANDO EJECUTIVO / SALA CORESEC
+ORSEC 2.1 – MAPA TERRITORIAL REAL EN SALA CORESEC
 
-Evolución visual y ejecutiva de la Sala CORESEC sobre la versión estable 1.13.3.
+Mejora principal:
+- La Sala CORESEC deja de mostrar puntos aislados.
+- Incorpora el mapa provincial real de La Libertad.
+- Superpone las 12 provincias en su posición territorial.
+- Los puntos cambian de color según concentración relativa:
+  rojo = muy alta, naranja = alta, amarillo = media, verde = baja, azul = muy baja.
+- Mantiene debajo el ranking territorial cuantitativo.
+- Todo responde al período y delito seleccionado en ORSEC.
 
-Se conserva:
+Se conserva íntegramente:
 - Panorama Regional
 - Incidencia Delictiva
 - Boletines
 - Alertas
 - Inteligencia Territorial
+- Infografía Regional original
 - filtros sincronizados
 - datos.json
-- Infografía Regional institucional original
-
-Se transforma la Sala CORESEC:
-- cabecera Centro de Comando Ejecutivo
-- cinco indicadores estratégicos
-- lectura ejecutiva
-- inteligencia territorial
-- alertas inteligentes
-- prioridades CORESEC
-- síntesis para decisión
 
 Instalación:
-Reemplazar index.html, conservar datos.json, Commit, Vercel, Ctrl+F5.
+Reemplazar index.html, conservar datos.json, Commit, Vercel y Ctrl+F5.
