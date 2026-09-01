@@ -763,6 +763,16 @@ const ORSEC_EVENTOS_CONNOTACION = [
     estado:'Seguimiento contextual · sujeto a consolidación oficial'
   },
   {
+    fecha:'2026-09-01',
+    provincia:'TRUJILLO',
+    titulo:'Captura internacional de objetivo de alto valor',
+    nivel:'EVENTO CRÍTICO',
+    color:'#ff4545',
+    descripcion:'Captura en La Paz, Bolivia, de Jhonsson Smit Cruz Torres, alias “Jhonsson Pulpo”, señalado por autoridades como cabecilla de “Los Pulpos”. Evento bajo seguimiento por sus posibles implicancias sobre el escenario criminal de La Libertad.',
+    factores:['objetivo de alto valor','crimen organizado','cooperación internacional','posible reacomodo criminal'],
+    estado:'Inteligencia de contexto · Nota ORSEC N.° 002-2026'
+  },
+  {
     fecha:'2026-08-30',
     provincia:'TRUJILLO',
     titulo:'Muerte de efectivo policial',
@@ -807,6 +817,8 @@ function orsecRenderConnotacion(){
       <div class="orsec-evento-meta">Factores: ${e.factores.join(' · ')}<br>${e.estado}</div>
       ${e.titulo==='Secuestro con homicidio múltiple'?`<div class="orsec-nota-actions">
         <a class="orsec-doc-mainbtn" href="Nota_Inteligencia_ORSEC_001_2026_Visual.docx" download>📄 NOTA N.° 001-2026 · VER / DESCARGAR</a>
+      </div>`:e.titulo==='Captura internacional de objetivo de alto valor'?`<div class="orsec-nota-actions">
+        <a class="orsec-doc-mainbtn" href="Nota_Inteligencia_ORSEC_002_2026_Visual.docx" download>📄 NOTA N.° 002-2026 · VER / DESCARGAR</a>
       </div>`:''}
     </div>`).join('');
 

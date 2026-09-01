@@ -1,9 +1,8 @@
-ORSEC 2.7.4
-- Comparativo por delito ordenado por connotación/prioridad de lectura:
-  Homicidios, Extorsión, Detonaciones, Violación Sexual, Robo de Vehículos,
-  Violencia Familiar, Hurtos, Robos, Secuestro al Paso, Lesiones, Estafa,
-  Apropiación Ilícita y Usurpación.
-- El PDF del comparativo por delito ahora incluye CUADRO + GRÁFICO en la misma hoja.
-- Tipografías ampliadas para lectura e impresión.
-- Respeta filtros de período y provincia.
-Para GitHub: reemplazar únicamente index.html.
+ORSEC 2.7.5 · NOTA DE INTELIGENCIA 002 INTEGRADA
+
+1. Reemplazar index.html en GitHub.
+2. Subir también los dos archivos DOCX incluidos a la raíz del repositorio.
+3. La Inteligencia de Contexto mostrará el evento del 01/09/2026 y permitirá descargar la Nota N.° 002-2026.
+4. La Nota 001 se conserva y continúa disponible.
+
+No se modifica la base estadística ni los cálculos de incidencia.
