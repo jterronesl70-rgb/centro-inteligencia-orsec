@@ -1,7 +1,12 @@
-ORSEC 2.7.1
-Corrección visual:
-- El acceso COMPARATIVO 2025 vs 2026 POR DELITO ahora aparece como una franja azul independiente y muy visible debajo de los botones del Comparativo Territorial.
-- Botón amarillo: GENERAR COMPARATIVO POR DELITO.
-- Mantiene tabla, gráfico y descargas PNG/PDF de ORSEC 2.7.
+ORSEC 2.7.2 · COMPARATIVO POR DELITO FUNCIONAL
 
-Para GitHub: reemplazar únicamente index.html.
+CORRECCIÓN
+- El motor del Comparativo por Delito ahora está en un script independiente, al final del documento.
+- Ya no depende de scripts heredados que podían contener un error y bloquear la función.
+- GENERAR COMPARATIVO POR DELITO abre y desplaza automáticamente al cuadro.
+- DESCARGAR GRÁFICO PNG usa Blob/ObjectURL para descarga real.
+- DESCARGAR PDF usa jsPDF.
+- Conserva filtros de Tipo de período, Período y Provincia.
+
+PARA GITHUB:
+Reemplazar únicamente index.html.

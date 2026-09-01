@@ -2563,7 +2563,127 @@ async function orsecDescargarPDFDelitos(){
  }catch(e){console.error(e);alert('No se pudo generar el PDF. Puede descargar el gráfico PNG.');}
 }
 </script>
-</body></html>`);
+</body>
+<script id="orsec272fix">
+(function(){
+  window.ORSEC_DELITO_DATA = [];
+
+  function labelPeriodo(){
+    var el=document.getElementById('periodo');
+    return el && el.selectedOptions && el.selectedOptions[0] ? el.selectedOptions[0].textContent : (window.current?current().periodo:'');
+  }
+  function seguro(s){
+    return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9_-]+/g,'_');
+  }
+  function cargaScript(src,test){
+    return new Promise(function(resolve,reject){
+      if(test()) return resolve();
+      var s=document.createElement('script'); s.src=src; s.onload=resolve; s.onerror=reject; document.head.appendChild(s);
+    });
+  }
+
+  window.orsecGenerarComparativoDelitos=function(){
+    try{
+      var f=current();
+      var prov=(f.provincia==='TODAS'||f.provincia==='TOTAL REGION')?'TOTAL REGION':f.provincia;
+      var dels=(window.META && META.delitos ? META.delitos : []).filter(function(d){return d && d!=='TOTAL';});
+      window.ORSEC_DELITO_DATA=dels.map(function(del){
+        var r25=registros({anio:2025,tipo:f.tipo,periodo:f.periodo,provincia:prov,delito:del});
+        var r26=registros({anio:2026,tipo:f.tipo,periodo:f.periodo,provincia:prov,delito:del});
+        var a=r25.reduce(function(s,r){return s+(+r.Casos||0)},0);
+        var b=r26.reduce(function(s,r){return s+(+r.Casos||0)},0);
+        var dif=b-a, v=a?dif/a*100:(b?null:0);
+        return {Delito:del,A:a,B:b,Dif:dif,Var:v};
+      }).filter(function(x){return x.A||x.B}).sort(function(a,b){return Math.max(b.A,b.B)-Math.max(a.A,a.B)});
+
+      var box=document.getElementById('orsecDelitoComp');
+      if(box) box.classList.add('activo');
+      var outer=document.getElementById('orsecComparativoBox');
+      if(outer) outer.classList.add('activo');
+
+      var ctx=document.getElementById('orsecDelitoContexto');
+      if(ctx) ctx.textContent=f.tipo+' · '+labelPeriodo()+' · '+(prov==='TOTAL REGION'?'REGIÓN LA LIBERTAD':prov)+' · comparación 2025 vs 2026';
+
+      var body=document.getElementById('orsecDelitoBody');
+      if(body) body.innerHTML=window.ORSEC_DELITO_DATA.map(function(x){
+        var tend=x.Var==null?'BASE 0':x.Var>1?'▲ AUMENTO':x.Var<-1?'▼ REDUCCIÓN':'● ESTABLE';
+        var cls=x.Var==null?'orsec-comp-var-flat':x.Var>1?'orsec-comp-var-up':x.Var<-1?'orsec-comp-var-down':'orsec-comp-var-flat';
+        var pv=x.Var==null?'N/D':((x.Var>=0?'+':'')+x.Var.toFixed(1)+'%');
+        return '<tr><td><b>'+x.Delito+'</b></td><td>'+x.A.toLocaleString('es-PE')+'</td><td>'+x.B.toLocaleString('es-PE')+'</td><td>'+(x.Dif>=0?'+':'')+x.Dif.toLocaleString('es-PE')+'</td><td class="'+cls+'">'+pv+'</td><td class="'+cls+'">'+tend+'</td></tr>';
+      }).join('');
+
+      var max=Math.max.apply(null,[1].concat(window.ORSEC_DELITO_DATA.reduce(function(a,x){return a.concat([x.A,x.B])},[])));
+      var bars=document.getElementById('orsecDelitoBars');
+      if(bars) bars.innerHTML=window.ORSEC_DELITO_DATA.map(function(x){
+        return '<div class="orsec-delito-group">'+
+          '<div class="orsec-delito-bar y25" style="height:'+(x.A/max*100)+'%"><span class="orsec-delito-val">'+x.A.toLocaleString('es-PE')+'</span></div>'+
+          '<div class="orsec-delito-bar y26" style="height:'+(x.B/max*100)+'%"><span class="orsec-delito-val">'+x.B.toLocaleString('es-PE')+'</span></div>'+
+          '<div class="orsec-delito-label">'+x.Delito+'</div></div>';
+      }).join('');
+
+      if(box) setTimeout(function(){box.scrollIntoView({behavior:'smooth',block:'start'})},80);
+      return window.ORSEC_DELITO_DATA;
+    }catch(err){
+      console.error('ORSEC comparativo por delito',err);
+      alert('No se pudo generar el comparativo por delito. Actualice la página con Ctrl + F5 e intente nuevamente.');
+      return [];
+    }
+  };
+
+  function canvasDelitos(){
+    window.orsecGenerarComparativoDelitos();
+    var f=current(), arr=window.ORSEC_DELITO_DATA||[];
+    var canvas=document.createElement('canvas'); canvas.width=1800; canvas.height=1100;
+    var c=canvas.getContext('2d'); c.fillStyle='#fff'; c.fillRect(0,0,1800,1100);
+    c.fillStyle='#073e70'; c.font='bold 42px Arial'; c.fillText('COMPARATIVO POR DELITO ORSEC',70,70);
+    c.font='24px Arial'; c.fillStyle='#4e6d82';
+    var prov=(f.provincia==='TODAS'||f.provincia==='TOTAL REGION')?'REGIÓN LA LIBERTAD':f.provincia;
+    c.fillText(f.tipo+' · '+labelPeriodo()+' · '+prov+' · 2025 vs 2026',70,112);
+
+    var vals=[1]; arr.forEach(function(x){vals.push(x.A,x.B)});
+    var max=Math.max.apply(null,vals), n=Math.max(1,arr.length);
+    var x0=90,y0=190,x1=1720,y1=900,slot=(x1-x0)/n;
+    c.strokeStyle='#d6e0e7'; c.lineWidth=1;
+    for(var i=0;i<6;i++){var gy=y1-i*(y1-y0)/5;c.beginPath();c.moveTo(x0,gy);c.lineTo(x1,gy);c.stroke();}
+    arr.forEach(function(x,i){
+      var cx=x0+slot*(i+.5),bw=Math.min(30,slot*.22),h25=x.A/max*(y1-y0),h26=x.B/max*(y1-y0);
+      c.fillStyle='#1d65ad';c.fillRect(cx-bw-3,y1-h25,bw,h25);
+      c.fillStyle='#ef4135';c.fillRect(cx+3,y1-h26,bw,h26);
+      c.fillStyle='#17364c';c.font='bold 15px Arial';c.textAlign='center';
+      c.fillText(String(x.A),cx-bw/2-3,y1-h25-8);c.fillText(String(x.B),cx+bw/2+3,y1-h26-8);
+      c.save();c.translate(cx,y1+25);c.rotate(-Math.PI/5);c.fillText(x.Delito,0,0);c.restore();
+    });
+    c.textAlign='left'; c.fillStyle='#1d65ad';c.fillRect(1150,135,24,24);c.fillStyle='#17364c';c.font='bold 18px Arial';c.fillText('2025',1185,155);
+    c.fillStyle='#ef4135';c.fillRect(1300,135,24,24);c.fillStyle='#17364c';c.fillText('2026',1335,155);
+    c.fillStyle='#687f91';c.font='16px Arial';c.fillText('Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC / GRDN / GORELL',70,1060);
+    return canvas;
+  }
+
+  window.orsecDescargarGraficoDelitos=function(){
+    try{
+      var canvas=canvasDelitos(), f=current();
+      canvas.toBlob(function(blob){
+        if(!blob){alert('No se pudo crear el archivo PNG.');return;}
+        var url=URL.createObjectURL(blob), a=document.createElement('a');
+        a.href=url; a.download='ORSEC_Comparativo_por_Delito_'+seguro(f.tipo)+'_'+seguro(f.periodo)+'.png';
+        document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){URL.revokeObjectURL(url)},1500);
+      },'image/png');
+    }catch(err){console.error(err);alert('No se pudo descargar el gráfico PNG.');}
+  };
+
+  window.orsecDescargarPDFDelitos=async function(){
+    try{
+      var canvas=canvasDelitos();
+      await cargaScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',function(){return !!(window.jspdf&&window.jspdf.jsPDF)});
+      var jsPDF=window.jspdf.jsPDF, doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+      doc.addImage(canvas.toDataURL('image/jpeg',.94),'JPEG',8,8,281,171);
+      var f=current(); doc.save('ORSEC_Comparativo_por_Delito_'+seguro(f.tipo)+'_'+seguro(f.periodo)+'.pdf');
+    }catch(err){console.error(err);alert('No se pudo descargar el PDF. Pruebe el botón PNG.');}
+  };
+})();
+</script>
+
+</html>`);
   w.document.close();
 }
 
