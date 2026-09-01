@@ -2498,7 +2498,7 @@ let ORSEC_DELITO_DATA=[];
 function orsecGenerarComparativoDelitos(){
  const f=current();
  const prov=(f.provincia==='TODAS'||f.provincia==='TOTAL REGION')?'TOTAL REGION':f.provincia;
- const dels=(typeof META!=='undefined'&&META.delitos?META.delitos:[])
+ const dels=((typeof META!=='undefined'&&META.delitos)?META.delitos:[])
    .filter(d=>d&&d!=='TOTAL');
  ORSEC_DELITO_DATA=dels.map(d=>{
    const r25=registros({anio:2025,tipo:f.tipo,periodo:f.periodo,provincia:prov,delito:d});
@@ -2586,7 +2586,8 @@ async function orsecDescargarPDFDelitos(){
     try{
       var f=current();
       var prov=(f.provincia==='TODAS'||f.provincia==='TOTAL REGION')?'TOTAL REGION':f.provincia;
-      var dels=(window.META && META.delitos ? META.delitos : []).filter(function(d){return d && d!=='TOTAL';});
+      var dels=((typeof META!=='undefined' && META.delitos) ? META.delitos : []).filter(function(d){return d && d!=='TOTAL';});
+      if(!dels.length){console.error('ORSEC: META.delitos vacío o no disponible', typeof META!=='undefined'?META:null); alert('No se encontró el catálogo de delitos. Actualice con Ctrl + F5.'); return [];}
       window.ORSEC_DELITO_DATA=dels.map(function(del){
         var r25=registros({anio:2025,tipo:f.tipo,periodo:f.periodo,provincia:prov,delito:del});
         var r26=registros({anio:2026,tipo:f.tipo,periodo:f.periodo,provincia:prov,delito:del});
