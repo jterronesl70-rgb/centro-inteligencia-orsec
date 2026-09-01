@@ -481,8 +481,9 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
   </div>
   <div class="orsec-bi-actions">
     <button class="orsec-bi-btn" onclick="orsecGenerarBI()">ACTUALIZAR ANÁLISIS INTELIGENTE</button>
-    <button class="orsec-bi-btn alt" onclick="orsecCopiarBI()">COPIAR ANÁLISIS ORSEC</button>
-    <button class="orsec-bi-btn pdf" onclick="orsecVistaBI()">VISTA PREVIA / PDF</button>
+    <button class="orsec-bi-btn alt" onclick="orsecDescargarTextoBI()">DESCARGAR TEXTO</button>
+    <button class="orsec-bi-btn alt" onclick="orsecVistaBI()">VISTA PREVIA</button>
+    <button class="orsec-bi-btn pdf" onclick="orsecDescargarPDFBI()">DESCARGAR PDF</button>
   </div>
   <div class="orsec-bi-review">Producto automático preliminar. Debe ser revisado por el analista ORSEC antes de su uso institucional.</div>
 </div>
@@ -2203,6 +2204,69 @@ if(lv)lv.innerHTML=document.getElementById('orsecBiLectura')?.innerHTML||'';
 if(ccv&&cv){ccv.style.display=card?.style.display||'none';cv.innerHTML=document.getElementById('orsecBiCon')?.innerHTML||'';}
 }
 function orsecTextoBI(){return`BOLETÍN EJECUTIVO AUTOMÁTICO ORSEC\n\nSITUACIÓN ESTADÍSTICA\n${document.getElementById('orsecBiEstadistica')?.innerText||''}\n\nLECTURA ORSEC\n${document.getElementById('orsecBiLectura')?.innerText||''}${document.getElementById('orsecBiConCard')?.style.display!=='none'?`\n\nCONTEXTO DE CONNOTACIÓN · NO ESTADÍSTICO\n${document.getElementById('orsecBiCon')?.innerText||''}`:''}\n\nProducto automático preliminar. Requiere revisión del analista ORSEC.`}
+
+function orsecNombreArchivoBI(ext){
+  const f=current();
+  const p=(f.provincia==='TODAS'||f.provincia==='TOTAL REGION')?'REGION_LA_LIBERTAD':String(f.provincia||'ORSEC').replace(/\s+/g,'_');
+  const d=(f.delito==='TODOS')?'TODOS_LOS_DELITOS':String(f.delito||'DELITO').replace(/\s+/g,'_');
+  return `ORSEC_Boletin_${p}_${d}_2026.${ext}`;
+}
+function orsecDescargarTextoBI(){
+  orsecGenerarBI();
+  const blob=new Blob([orsecTextoBI()],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=orsecNombreArchivoBI('txt');
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1200);
+}
+function orsecCargarHtml2Pdf(){
+  return new Promise((resolve,reject)=>{
+    if(window.html2pdf)return resolve();
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+    s.onload=resolve;s.onerror=reject;document.head.appendChild(s);
+  });
+}
+async function orsecDescargarPDFBI(){
+  orsecGenerarBI();
+  const wrap=document.createElement('div');
+  wrap.style.cssText='position:fixed;left:-10000px;top:0;width:760px;background:white;padding:34px;font-family:Arial,sans-serif;color:#18354a';
+  const conVisible=document.getElementById('orsecBiConCardVisible')?.style.display!=='none';
+  wrap.innerHTML=`
+    <div style="border-bottom:4px solid #f3b400;padding-bottom:12px;margin-bottom:18px">
+      <div style="font-size:24px;font-weight:900;color:#073e70">BOLETÍN EJECUTIVO AUTOMÁTICO ORSEC</div>
+      <div style="font-size:11px;color:#617c91;margin-top:5px">Centro de Inteligencia · Región La Libertad</div>
+    </div>
+    <div style="border:1px solid #cbdde9;border-radius:10px;padding:15px;margin:12px 0">
+      <div style="font-size:11px;font-weight:900;color:#073e70;margin-bottom:8px">SITUACIÓN ESTADÍSTICA</div>
+      <div style="font-size:13px;line-height:1.55">${document.getElementById('orsecBiEstadisticaVisible')?.innerHTML||''}</div>
+    </div>
+    <div style="border:1px solid #cbdde9;border-left:5px solid #f3b400;border-radius:10px;padding:15px;margin:12px 0">
+      <div style="font-size:11px;font-weight:900;color:#073e70;margin-bottom:8px">LECTURA ORSEC · INTERPRETACIÓN PONDERADA</div>
+      <div style="font-size:13px;line-height:1.55">${document.getElementById('orsecBiLecturaVisible')?.innerHTML||''}</div>
+    </div>
+    ${conVisible?`<div style="border:1px solid #e7c3be;border-left:5px solid #c44735;border-radius:10px;padding:15px;margin:12px 0">
+      <div style="font-size:11px;font-weight:900;color:#9a3024;margin-bottom:8px">CONTEXTO DE CONNOTACIÓN · NO ESTADÍSTICO</div>
+      <div style="font-size:13px;line-height:1.55">${document.getElementById('orsecBiConVisible')?.innerHTML||''}</div>
+    </div>`:''}
+    <div style="font-size:9px;color:#687f91;margin-top:20px;border-top:1px solid #d8e3ea;padding-top:10px">
+      Producto automático preliminar. Requiere revisión del analista ORSEC antes de su uso institucional.<br>
+      Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC / GRDN / GORELL
+    </div>`;
+  document.body.appendChild(wrap);
+  try{
+    await orsecCargarHtml2Pdf();
+    await html2pdf().set({
+      margin:[10,10,10,10],
+      filename:orsecNombreArchivoBI('pdf'),
+      image:{type:'jpeg',quality:.98},
+      html2canvas:{scale:2,useCORS:true},
+      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+    }).from(wrap).save();
+  }catch(e){
+    alert('No se pudo generar el PDF automáticamente. Usa VISTA PREVIA y luego Imprimir → Guardar como PDF.');
+    console.error(e);
+  }finally{wrap.remove();}
+}
+
 function orsecCopiarBI(){navigator.clipboard?.writeText(orsecTextoBI()).then(()=>alert('Boletín copiado.'))}
 function orsecVistaBI(){orsecGenerarBI();const w=window.open('','_blank','width=900,height=1100');if(!w)return;w.document.write(`<!doctype html><meta charset="utf-8"><title>Boletín ORSEC</title><style>body{font-family:Arial;color:#18354a;margin:42px}h1,h3{color:#073e70}.box{border:1px solid #ccdce7;border-radius:10px;padding:16px;margin:16px 0}.con{border-left:5px solid #c44735}.foot{font-size:10px;color:#6b8293;margin-top:24px}</style><h1>BOLETÍN EJECUTIVO AUTOMÁTICO ORSEC</h1><div class="box"><h3>SITUACIÓN ESTADÍSTICA</h3>${document.getElementById('orsecBiEstadistica').innerHTML}</div><div class="box"><h3>LECTURA ORSEC · INTERPRETACIÓN PONDERADA</h3>${document.getElementById('orsecBiLectura').innerHTML}</div>${document.getElementById('orsecBiConCard').style.display!=='none'?`<div class="box con"><h3>CONTEXTO DE CONNOTACIÓN · NO ESTADÍSTICO</h3>${document.getElementById('orsecBiCon').innerHTML}</div>`:''}<div class="foot">Producto automático preliminar · Requiere revisión del analista ORSEC.<br>Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC / GRDN / GORELL</div><p><button onclick="print()">IMPRIMIR / GUARDAR COMO PDF</button></p>`);w.document.close()}
 setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.target?.tagName==='SELECT')setTimeout(orsecGenerarBI,100)});

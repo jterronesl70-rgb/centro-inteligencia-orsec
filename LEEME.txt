@@ -1,16 +1,9 @@
-ORSEC 2.4.1 – BOLETÍN INTELIGENTE VISIBLE
+ORSEC 2.4.2 – DESCARGAS DEL BOLETÍN
 
-Corrección:
-La mejora 2.4 había sido insertada en un bloque operativo secundario del HTML,
-no en la sección visible "Boletín Automático". Esta versión la coloca
-directamente dentro del módulo visible.
+Corrección de botones:
+- DESCARGAR TEXTO: descarga un archivo .txt real.
+- VISTA PREVIA: abre el boletín limpio para revisión.
+- DESCARGAR PDF: genera y descarga un PDF A4 desde el navegador.
+- Si el navegador bloquea la librería de PDF, la vista previa permite Imprimir → Guardar como PDF.
 
-Ahora deben verse, debajo de "Top delictivo del período":
-- SITUACIÓN ESTADÍSTICA
-- LECTURA ORSEC · INTERPRETACIÓN PONDERADA
-- CONTEXTO DE CONNOTACIÓN · NO ESTADÍSTICO (solo si corresponde)
-- ACTUALIZAR ANÁLISIS INTELIGENTE
-- COPIAR ANÁLISIS ORSEC
-- VISTA PREVIA / PDF
-
-Para instalar: reemplazar únicamente index.html en GitHub.
+Instalación: reemplazar únicamente index.html en GitHub.
