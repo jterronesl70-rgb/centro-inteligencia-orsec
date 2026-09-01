@@ -1,8 +1,9 @@
-ORSEC 2.6.2 · DOS INFOGRAFÍAS
-- Ejecutiva Institucional: se conserva exactamente el diseño original que agradó al usuario (corte 22 agosto).
-- Analítica ORSEC: cierre oficial 31 agosto 2026.
-- Ambas se abren desde el mismo botón de Infografía Regional.
-- Cada una tiene Vista Previa y Descargar PNG.
+ORSEC 2.6.3 · BOTONES DE INFOGRAFÍA CORREGIDOS
+Corrección:
+- Vista Previa activa para ambas infografías.
+- Descargar PNG usa Blob/ObjectURL para evitar bloqueos del navegador con data URI.
+- Los manejadores se registran inmediatamente después del modal, evitando que errores de scripts posteriores dejen los botones sin función.
 
-Para GitHub: reemplazar index.html y datos.json.
-Las dos imágenes están embebidas dentro de index.html.
+Para GitHub:
+1. Reemplazar index.html.
+2. datos.json es el mismo de 2.6.2; puede conservarlo si ya lo subió.
