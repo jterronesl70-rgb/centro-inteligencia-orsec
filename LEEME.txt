@@ -1,18 +1,9 @@
-ORSEC 2.7.3 · COMPARATIVO POR DELITO CORREGIDO
-
-CAUSA IDENTIFICADA:
-El catálogo de delitos META está declarado con `let META={}` dentro del motor principal.
-Por ello NO está disponible como `window.META`.
-El módulo 2.7.2 consultaba `window.META`, recibía una lista vacía y por eso aparecían
-la tabla y el gráfico, pero sin datos.
-
-CORRECCIÓN:
-- El comparativo ahora lee directamente `META.delitos`.
-- Mantiene los filtros de tipo de período, período y provincia.
-- La tabla se llena con los delitos.
-- El gráfico comparativo 2025 vs 2026 se genera con los mismos datos.
-- Los botones PNG y PDF permanecen activos.
-
-PARA GITHUB:
-Reemplazar únicamente index.html.
-Después del despliegue, usar Ctrl + F5 una vez.
+ORSEC 2.7.4
+- Comparativo por delito ordenado por connotación/prioridad de lectura:
+  Homicidios, Extorsión, Detonaciones, Violación Sexual, Robo de Vehículos,
+  Violencia Familiar, Hurtos, Robos, Secuestro al Paso, Lesiones, Estafa,
+  Apropiación Ilícita y Usurpación.
+- El PDF del comparativo por delito ahora incluye CUADRO + GRÁFICO en la misma hoja.
+- Tipografías ampliadas para lectura e impresión.
+- Respeta filtros de período y provincia.
+Para GitHub: reemplazar únicamente index.html.
