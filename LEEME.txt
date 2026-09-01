@@ -1,13 +1,14 @@
-ORSEC 2.4.4 – TOTAL Y PDF CORREGIDOS
+ORSEC 2.4.5 – MOTOR JAVASCRIPT CORREGIDO
 
-Se corrigen dos incidencias:
-1. El Boletín Inteligente ya no depende de orsecTop() para el total.
-   Calcula directamente desde registros(), respetando:
-   - TOTAL REGION = solo filas TOTAL REGION (sin duplicar provincias)
-   - Provincia específica = solo esa provincia
-   - TODOS = suma todos los delitos existentes del contexto
-   - Delito específico = solo ese delito
-2. La descarga PDF ya no usa html2canvas/html2pdf.
-   Ahora genera el PDF directamente con jsPDF, evitando páginas en blanco.
+Causa exacta encontrada:
+En la versión 2.4.4 quedó escrita accidentalmente la declaración:
+    async async function orsecDescargarPDFBI()
+Eso provoca un error de sintaxis y detiene TODO el bloque JavaScript del Boletín,
+por lo que los cuadros permanecían en "Actualizando..." y los botones no podían operar.
 
-Instalación: reemplazar únicamente index.html en GitHub.
+Corrección:
+    async function orsecDescargarPDFBI()
+
+Instalación:
+Reemplazar únicamente index.html en GitHub.
+Luego esperar despliegue de Vercel y hacer Ctrl+F5.
