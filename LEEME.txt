@@ -1,5 +1,8 @@
-ORSEC 2.5 – COMPARATIVO TERRITORIAL
-Ubicación: Incidencia Delictiva, inmediatamente debajo de los filtros.
-Incluye: vista comparativa provincial, Excel XLSX, gráfico PNG, PDF A4 horizontal y lectura automática.
-Funciona con MENSUAL o ACUMULADO y con TODOS o un delito específico.
-Instalación: reemplazar únicamente index.html en GitHub.
+ORSEC 2.6.2 · DOS INFOGRAFÍAS
+- Ejecutiva Institucional: se conserva exactamente el diseño original que agradó al usuario (corte 22 agosto).
+- Analítica ORSEC: cierre oficial 31 agosto 2026.
+- Ambas se abren desde el mismo botón de Infografía Regional.
+- Cada una tiene Vista Previa y Descargar PNG.
+
+Para GitHub: reemplazar index.html y datos.json.
+Las dos imágenes están embebidas dentro de index.html.
