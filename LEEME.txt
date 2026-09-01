@@ -1,15 +1,13 @@
-ORSEC 2.4.3 – BOTONES ACTIVOS
+ORSEC 2.4.4 – TOTAL Y PDF CORREGIDOS
 
-Causa corregida:
-El motor del boletín intentaba escribir primero en elementos antiguos que ya no existían.
-Eso detenía JavaScript antes de actualizar los cuadros y antes de ejecutar las descargas.
-
-Esta versión trabaja exclusivamente con los elementos visibles:
-- Situación Estadística
-- Lectura ORSEC
-- Contexto de Connotación
-- Descargar Texto
-- Vista Previa
-- Descargar PDF
+Se corrigen dos incidencias:
+1. El Boletín Inteligente ya no depende de orsecTop() para el total.
+   Calcula directamente desde registros(), respetando:
+   - TOTAL REGION = solo filas TOTAL REGION (sin duplicar provincias)
+   - Provincia específica = solo esa provincia
+   - TODOS = suma todos los delitos existentes del contexto
+   - Delito específico = solo ese delito
+2. La descarga PDF ya no usa html2canvas/html2pdf.
+   Ahora genera el PDF directamente con jsPDF, evitando páginas en blanco.
 
 Instalación: reemplazar únicamente index.html en GitHub.
