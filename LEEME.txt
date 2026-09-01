@@ -1,14 +1,5 @@
-ORSEC 2.4.5 – MOTOR JAVASCRIPT CORREGIDO
-
-Causa exacta encontrada:
-En la versión 2.4.4 quedó escrita accidentalmente la declaración:
-    async async function orsecDescargarPDFBI()
-Eso provoca un error de sintaxis y detiene TODO el bloque JavaScript del Boletín,
-por lo que los cuadros permanecían en "Actualizando..." y los botones no podían operar.
-
-Corrección:
-    async function orsecDescargarPDFBI()
-
-Instalación:
-Reemplazar únicamente index.html en GitHub.
-Luego esperar despliegue de Vercel y hacer Ctrl+F5.
+ORSEC 2.5 – COMPARATIVO TERRITORIAL
+Ubicación: Incidencia Delictiva, inmediatamente debajo de los filtros.
+Incluye: vista comparativa provincial, Excel XLSX, gráfico PNG, PDF A4 horizontal y lectura automática.
+Funciona con MENSUAL o ACUMULADO y con TODOS o un delito específico.
+Instalación: reemplazar únicamente index.html en GitHub.
