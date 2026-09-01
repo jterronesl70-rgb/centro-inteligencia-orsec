@@ -1,9 +1,9 @@
-ORSEC 2.6.3 · BOTONES DE INFOGRAFÍA CORREGIDOS
-Corrección:
-- Vista Previa activa para ambas infografías.
-- Descargar PNG usa Blob/ObjectURL para evitar bloqueos del navegador con data URI.
-- Los manejadores se registran inmediatamente después del modal, evitando que errores de scripts posteriores dejen los botones sin función.
-
-Para GitHub:
-1. Reemplazar index.html.
-2. datos.json es el mismo de 2.6.2; puede conservarlo si ya lo subió.
+ORSEC 2.6.4 · INFOGRAFÍA EJECUTIVA ACTUALIZADA
+- La primera infografía conserva el estilo ejecutivo institucional, pero ahora trabaja con cierre oficial al 31 de agosto de 2026.
+- Homicidios: 160 vs 191 (-16,2%)
+- Extorsión: 1.326 vs 2.332 (-43,1%)
+- Detonaciones: 138 vs 230 (-40,0%)
+- Robo de vehículos: 444 vs 909 (-51,2%)
+- Total 2026: 12.882
+- Ambas infografías quedan actualizadas al 31 de agosto.
+Para GitHub: reemplazar únicamente index.html. datos.json no cambia respecto a 2.6.3.
