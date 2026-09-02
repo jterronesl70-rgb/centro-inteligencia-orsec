@@ -2796,7 +2796,14 @@ orsecLoadDetalle();
 <script id="orsecMapaDelitoJS">
 let ORSEC_MAP=null,ORSEC_MAP_GEO=null,ORSEC_MAP_LAYER=null;
 const ORSEC_GEO_URL="https://geoservidorperu.minam.gob.pe/arcgis/rest/services/ServicioBase/MapServer/12/query?where=NOMBDEP%3D%27LA%20LIBERTAD%27&outFields=IDDIST,NOMBDIST,NOMBPROV,NOMBDEP&returnGeometry=true&outSR=4326&f=geojson";
-function orsecNorm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim()}
+function orsecNorm(s){
+ let n=String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();
+ const alias={
+  'VICTOR LARCO':'VICTOR LARCO HERRERA',
+  'FLORENCIA DE MORA':'FLORENCIA DE MORA'
+ };
+ return alias[n]||n;
+}
 async function orsecInitMapa(){
  if(!ORSEC_DETALLE) await orsecLoadDetalle();
  if(!ORSEC_MAP_GEO){try{const r=await fetch(ORSEC_GEO_URL);ORSEC_MAP_GEO=await r.json()}catch(e){document.getElementById('orsecMapaDelito').innerHTML='<div style="padding:30px">No fue posible cargar la cartografía distrital oficial. Verifique conexión a internet.</div>';return}}
@@ -3261,7 +3268,14 @@ orsecLoadDetalle();
 <script id="orsecMapaDelitoJS">
 let ORSEC_MAP=null,ORSEC_MAP_GEO=null,ORSEC_MAP_LAYER=null;
 const ORSEC_GEO_URL="https://geoservidorperu.minam.gob.pe/arcgis/rest/services/ServicioBase/MapServer/12/query?where=NOMBDEP%3D%27LA%20LIBERTAD%27&outFields=IDDIST,NOMBDIST,NOMBPROV,NOMBDEP&returnGeometry=true&outSR=4326&f=geojson";
-function orsecNorm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim()}
+function orsecNorm(s){
+ let n=String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();
+ const alias={
+  'VICTOR LARCO':'VICTOR LARCO HERRERA',
+  'FLORENCIA DE MORA':'FLORENCIA DE MORA'
+ };
+ return alias[n]||n;
+}
 async function orsecInitMapa(){
  if(!ORSEC_DETALLE) await orsecLoadDetalle();
  if(!ORSEC_MAP_GEO){try{const r=await fetch(ORSEC_GEO_URL);ORSEC_MAP_GEO=await r.json()}catch(e){document.getElementById('orsecMapaDelito').innerHTML='<div style="padding:30px">No fue posible cargar la cartografía distrital oficial. Verifique conexión a internet.</div>';return}}

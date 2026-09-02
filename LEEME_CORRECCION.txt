@@ -1,0 +1,20 @@
+ORSEC · MAPA DELICTIVO DISTRITAL V1 · CORRECCIÓN CARTOGRÁFICA
+
+Corrección aplicada:
+VICTOR LARCO (base ORSEC) → VICTOR LARCO HERRERA (cartografía oficial).
+
+Esto permite que los registros de homicidios/detonaciones asociados a VÍCTOR LARCO
+se contabilicen correctamente dentro del polígono VÍCTOR LARCO HERRERA.
+
+Se mantienen:
+- 160 homicidios
+- 138 detonaciones
+- análisis acumulado y mensual
+- filtros horarios
+- análisis detallado
+- base principal con extorsiones acumuladas 1,328
+
+Subir juntos a la raíz de GitHub:
+index.html
+datos.json
+detalle_alto_impacto.json
