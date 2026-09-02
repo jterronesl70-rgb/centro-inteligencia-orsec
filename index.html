@@ -470,6 +470,32 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 .orsec-delito-launcher button:hover{filter:brightness(1.04);transform:translateY(-1px)}
 @media(max-width:760px){.orsec-delito-launcher{flex-direction:column;align-items:stretch}.orsec-delito-launcher button{width:100%}}
 </style>
+
+<style id="orsecDetalleImpactoCSS">
+.orsec-detail-launch{margin:16px 0;padding:18px;border:1px solid #1d5f96;border-radius:16px;background:linear-gradient(135deg,#062b4b,#0b4978);color:#fff;box-shadow:0 10px 24px #001b3030}
+.orsec-detail-launch .row{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.orsec-detail-launch h3{margin:0;font-size:18px}.orsec-detail-launch p{margin:5px 0 0;color:#d7ebfb;font-size:13px}
+.orsec-detail-btn{border:0;border-radius:10px;padding:11px 15px;font-weight:900;cursor:pointer;background:#f4b400;color:#062b4b}
+.orsec-detail-panel{display:none;margin-top:14px;background:#fff;color:#15364f;border-radius:14px;padding:16px}
+.orsec-detail-panel.on{display:block}
+.orsec-detail-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.orsec-detail-controls select,.orsec-detail-controls button{padding:9px 10px;border:1px solid #aac4d8;border-radius:8px;background:#fff;font-weight:700;color:#123e60}
+.orsec-detail-controls button{cursor:pointer;background:#0b5f91;color:#fff;border-color:#0b5f91}
+.orsec-detail-kpis{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px;margin:10px 0}
+.orsec-detail-kpi{border:1px solid #d5e2ec;border-radius:11px;padding:11px;background:#f8fbfd}.orsec-detail-kpi small{display:block;color:#668399;font-weight:800}.orsec-detail-kpi b{font-size:20px;color:#073e70}
+.orsec-detail-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+.orsec-detail-card{border:1px solid #d7e3ec;border-radius:12px;padding:13px;background:#fff}
+.orsec-detail-card h4{margin:0 0 10px;color:#073e70}
+.orsec-hour-bars{display:flex;align-items:end;height:175px;gap:3px;border-bottom:1px solid #b9ccda;padding:0 4px}
+.orsec-hour-col{flex:1;min-width:5px;background:#2d83b8;border-radius:4px 4px 0 0;position:relative}
+.orsec-hour-col:hover:after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#062b4b;color:#fff;padding:4px 6px;border-radius:5px;font-size:10px;white-space:nowrap;z-index:5}
+.orsec-hour-axis{display:flex;justify-content:space-between;font-size:10px;color:#6a8396;margin-top:5px}
+.orsec-mini-bars{display:grid;gap:7px}.orsec-mini-row{display:grid;grid-template-columns:110px 1fr 42px;gap:7px;align-items:center;font-size:12px}.orsec-mini-track{height:11px;background:#eaf1f6;border-radius:8px;overflow:hidden}.orsec-mini-fill{height:100%;background:#1976a8;border-radius:8px}
+.orsec-detail-reading{margin-top:12px;padding:12px;border-left:4px solid #f4b400;background:#fff8df;border-radius:8px;font-size:13px;line-height:1.45}
+.orsec-detail-tablewrap{max-height:330px;overflow:auto;margin-top:12px;border:1px solid #d9e5ed;border-radius:10px}.orsec-detail-table{width:100%;border-collapse:collapse;font-size:11px}.orsec-detail-table th{position:sticky;top:0;background:#073e70;color:#fff;padding:8px}.orsec-detail-table td{padding:7px;border-bottom:1px solid #e5edf3;vertical-align:top}
+@media(max-width:850px){.orsec-detail-grid{grid-template-columns:1fr}.orsec-detail-kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+
 </head>
 <body>
 
@@ -569,6 +595,39 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 
   </div>
  </div>
+
+<div class="orsec-detail-launch" id="orsecDetalleLauncher">
+ <div class="row">
+  <div><h3>🔎 ANÁLISIS DETALLADO DE ALTO IMPACTO</h3><p>Homicidios y detonaciones · lectura acumulada/mensual · territorio · modalidad · patrón horario.</p></div>
+  <button class="orsec-detail-btn" onclick="orsecToggleDetalle()">ABRIR ANÁLISIS</button>
+ </div>
+ <div class="orsec-detail-panel" id="orsecDetallePanel">
+  <div class="orsec-detail-controls">
+   <select id="orsecDetDelito" onchange="orsecRenderDetalle()"><option>HOMICIDIOS</option><option>DETONACIONES</option></select>
+   <select id="orsecDetPeriodo" onchange="orsecRenderDetalle()">
+    <option value="0">ACUMULADO ENE–AGO 2026</option><option value="1">ENERO 2026</option><option value="2">FEBRERO 2026</option><option value="3">MARZO 2026</option><option value="4">ABRIL 2026</option><option value="5">MAYO 2026</option><option value="6">JUNIO 2026</option><option value="7">JULIO 2026</option><option value="8">AGOSTO 2026</option>
+   </select>
+   <select id="orsecDetProvincia" onchange="orsecRenderDetalle()"><option value="TODAS">TODAS LAS PROVINCIAS</option></select>
+   <button onclick="orsecDescargarDetalleCSV()">DESCARGAR CUADRO CSV</button>
+   <button onclick="orsecDescargarDetallePNG()">DESCARGAR GRÁFICA PNG</button>
+  </div>
+  <div class="orsec-detail-kpis">
+   <div class="orsec-detail-kpi"><small>CASOS SELECCIONADOS</small><b id="orsecDetTotal">—</b></div>
+   <div class="orsec-detail-kpi"><small>FRANJA DE MAYOR INCIDENCIA</small><b id="orsecDetFranja">—</b></div>
+   <div class="orsec-detail-kpi"><small>HORA PICO</small><b id="orsecDetHora">—</b></div>
+   <div class="orsec-detail-kpi"><small>PROVINCIA PRINCIPAL</small><b id="orsecDetProvTop">—</b></div>
+  </div>
+  <div class="orsec-detail-grid">
+   <div class="orsec-detail-card"><h4>Distribución por hora · 00–23 h</h4><div id="orsecDetHoras"></div></div>
+   <div class="orsec-detail-card"><h4>Distribución por franja horaria</h4><div class="orsec-mini-bars" id="orsecDetFranjas"></div></div>
+   <div class="orsec-detail-card"><h4>Concentración territorial</h4><div class="orsec-mini-bars" id="orsecDetProvincias"></div></div>
+   <div class="orsec-detail-card"><h4 id="orsecDetModalidadTitulo">Modalidad / medio empleado</h4><div class="orsec-mini-bars" id="orsecDetModalidades"></div></div>
+  </div>
+  <div class="orsec-detail-reading" id="orsecDetLectura">Seleccione un delito y período para generar la lectura.</div>
+  <div class="orsec-detail-tablewrap"><table class="orsec-detail-table"><thead id="orsecDetHead"></thead><tbody id="orsecDetBody"></tbody></table></div>
+ </div>
+</div>
+
  <div class="kpis"><div class="kpi"><small>Total seleccionado</small><b id="kTotal">--</b></div><div class="kpi"><small>Delito principal</small><b id="kDelito" style="font-size:17px">--</b></div><div class="kpi"><small>Provincia líder</small><b id="kProvincia" style="font-size:17px">--</b></div><div class="kpi"><small>Variación comparable</small><b id="kVariacion">--</b></div></div>
  <div id="tablaWrap" class="loading">Cargando información…</div>
  <div class="chart-shell"><div class="chart-head"><h3>Gráfico dinámico · principales delitos</h3><span class="badge">DATOS EXCEL</span></div><div class="orsec-bars" id="barrasDelitos"></div></div>
@@ -2485,7 +2544,33 @@ function orsecVistaBI(){
   const con=document.getElementById('orsecBiConCardVisible')?.style.display!=='none';
   w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Boletín ORSEC</title><style>
   body{font-family:Arial;color:#18354a;margin:42px}h1,h3{color:#073e70}.box{border:1px solid #ccdce7;border-radius:10px;padding:16px;margin:16px 0}.con{border-left:5px solid #c44735}.foot{font-size:10px;color:#6b8293;margin-top:24px}@media print{button{display:none}}
-  </style></head><body><h1>BOLETÍN EJECUTIVO AUTOMÁTICO ORSEC</h1>
+  </style>
+<style id="orsecDetalleImpactoCSS">
+.orsec-detail-launch{margin:16px 0;padding:18px;border:1px solid #1d5f96;border-radius:16px;background:linear-gradient(135deg,#062b4b,#0b4978);color:#fff;box-shadow:0 10px 24px #001b3030}
+.orsec-detail-launch .row{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.orsec-detail-launch h3{margin:0;font-size:18px}.orsec-detail-launch p{margin:5px 0 0;color:#d7ebfb;font-size:13px}
+.orsec-detail-btn{border:0;border-radius:10px;padding:11px 15px;font-weight:900;cursor:pointer;background:#f4b400;color:#062b4b}
+.orsec-detail-panel{display:none;margin-top:14px;background:#fff;color:#15364f;border-radius:14px;padding:16px}
+.orsec-detail-panel.on{display:block}
+.orsec-detail-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.orsec-detail-controls select,.orsec-detail-controls button{padding:9px 10px;border:1px solid #aac4d8;border-radius:8px;background:#fff;font-weight:700;color:#123e60}
+.orsec-detail-controls button{cursor:pointer;background:#0b5f91;color:#fff;border-color:#0b5f91}
+.orsec-detail-kpis{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px;margin:10px 0}
+.orsec-detail-kpi{border:1px solid #d5e2ec;border-radius:11px;padding:11px;background:#f8fbfd}.orsec-detail-kpi small{display:block;color:#668399;font-weight:800}.orsec-detail-kpi b{font-size:20px;color:#073e70}
+.orsec-detail-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+.orsec-detail-card{border:1px solid #d7e3ec;border-radius:12px;padding:13px;background:#fff}
+.orsec-detail-card h4{margin:0 0 10px;color:#073e70}
+.orsec-hour-bars{display:flex;align-items:end;height:175px;gap:3px;border-bottom:1px solid #b9ccda;padding:0 4px}
+.orsec-hour-col{flex:1;min-width:5px;background:#2d83b8;border-radius:4px 4px 0 0;position:relative}
+.orsec-hour-col:hover:after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#062b4b;color:#fff;padding:4px 6px;border-radius:5px;font-size:10px;white-space:nowrap;z-index:5}
+.orsec-hour-axis{display:flex;justify-content:space-between;font-size:10px;color:#6a8396;margin-top:5px}
+.orsec-mini-bars{display:grid;gap:7px}.orsec-mini-row{display:grid;grid-template-columns:110px 1fr 42px;gap:7px;align-items:center;font-size:12px}.orsec-mini-track{height:11px;background:#eaf1f6;border-radius:8px;overflow:hidden}.orsec-mini-fill{height:100%;background:#1976a8;border-radius:8px}
+.orsec-detail-reading{margin-top:12px;padding:12px;border-left:4px solid #f4b400;background:#fff8df;border-radius:8px;font-size:13px;line-height:1.45}
+.orsec-detail-tablewrap{max-height:330px;overflow:auto;margin-top:12px;border:1px solid #d9e5ed;border-radius:10px}.orsec-detail-table{width:100%;border-collapse:collapse;font-size:11px}.orsec-detail-table th{position:sticky;top:0;background:#073e70;color:#fff;padding:8px}.orsec-detail-table td{padding:7px;border-bottom:1px solid #e5edf3;vertical-align:top}
+@media(max-width:850px){.orsec-detail-grid{grid-template-columns:1fr}.orsec-detail-kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+</head><body><h1>BOLETÍN EJECUTIVO AUTOMÁTICO ORSEC</h1>
   <div class="box"><h3>SITUACIÓN ESTADÍSTICA</h3>${document.getElementById('orsecBiEstadisticaVisible')?.innerHTML||''}</div>
   <div class="box"><h3>LECTURA ORSEC · INTERPRETACIÓN PONDERADA</h3>${document.getElementById('orsecBiLecturaVisible')?.innerHTML||''}</div>
   ${con?`<div class="box con"><h3>CONTEXTO DE CONNOTACIÓN · NO ESTADÍSTICO</h3>${document.getElementById('orsecBiConVisible')?.innerHTML||''}</div>`:''}
@@ -2563,6 +2648,82 @@ async function orsecDescargarPDFDelitos(){
  }catch(e){console.error(e);alert('No se pudo generar el PDF. Puede descargar el gráfico PNG.');}
 }
 </script>
+
+<script id="orsecDetalleImpactoJS">
+let ORSEC_DETALLE=null, ORSEC_DET_FILTRADO=[];
+const ORSEC_MESES=['','ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO'];
+function orsecEsc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+async function orsecLoadDetalle(){
+ try{
+  const r=await fetch('detalle_alto_impacto.json',{cache:'no-store'}); if(!r.ok)throw 0;
+  ORSEC_DETALLE=await r.json();
+  const ps=[...new Set([...ORSEC_DETALLE.homicidios,...ORSEC_DETALLE.detonaciones].map(x=>x.provincia).filter(Boolean))].sort();
+  const sel=document.getElementById('orsecDetProvincia'); if(sel) ps.forEach(p=>sel.insertAdjacentHTML('beforeend',`<option>${orsecEsc(p)}</option>`));
+ }catch(e){console.warn('detalle_alto_impacto.json no disponible')}
+}
+function orsecToggleDetalle(){
+ const p=document.getElementById('orsecDetallePanel'); p.classList.toggle('on');
+ if(!ORSEC_DETALLE){orsecLoadDetalle().then(orsecRenderDetalle)} else orsecRenderDetalle();
+}
+function orsecCount(arr,key){const m={};arr.forEach(x=>{const k=(typeof key==='function'?key(x):x[key])||'SIN DATO';m[k]=(m[k]||0)+1});return m}
+function orsecTop(m){return Object.entries(m).sort((a,b)=>b[1]-a[1])[0]||['—',0]}
+function orsecMini(m,limit=8){
+ const a=Object.entries(m).sort((x,y)=>y[1]-x[1]).slice(0,limit),mx=Math.max(1,...a.map(x=>x[1]));
+ return a.map(([k,v])=>`<div class="orsec-mini-row"><span>${orsecEsc(k)}</span><div class="orsec-mini-track"><div class="orsec-mini-fill" style="width:${v/mx*100}%"></div></div><b>${v}</b></div>`).join('');
+}
+function orsecRenderDetalle(){
+ if(!ORSEC_DETALLE)return;
+ const delito=document.getElementById('orsecDetDelito').value;
+ const mes=+document.getElementById('orsecDetPeriodo').value;
+ const prov=document.getElementById('orsecDetProvincia').value;
+ let arr=(delito==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:ORSEC_DETALLE.detonaciones).filter(x=>(!mes||x.mes===mes)&&(prov==='TODAS'||x.provincia===prov));
+ ORSEC_DET_FILTRADO=arr;
+ const fran=orsecCount(arr,'franja'), pro=orsecCount(arr,'provincia'), horas=orsecCount(arr,x=>x.hora?x.hora.slice(0,2):'SIN HORA');
+ const ft=orsecTop(fran), pt=orsecTop(pro), ht=orsecTop(horas);
+ document.getElementById('orsecDetTotal').textContent=arr.length;
+ document.getElementById('orsecDetFranja').textContent=ft[0];
+ document.getElementById('orsecDetHora').textContent=ht[0]==='SIN HORA'?'SIN DATO':ht[0]+':00–'+ht[0]+':59';
+ document.getElementById('orsecDetProvTop').textContent=pt[0];
+ let hv=Array.from({length:24},(_,h)=>horas[String(h).padStart(2,'0')]||0), mx=Math.max(1,...hv);
+ document.getElementById('orsecDetHoras').innerHTML=`<div class="orsec-hour-bars">${hv.map((v,h)=>`<div class="orsec-hour-col" data-tip="${String(h).padStart(2,'0')}:00 · ${v} caso(s)" style="height:${Math.max(2,v/mx*100)}%"></div>`).join('')}</div><div class="orsec-hour-axis"><span>00h</span><span>06h</span><span>12h</span><span>18h</span><span>23h</span></div>`;
+ document.getElementById('orsecDetFranjas').innerHTML=orsecMini(fran,5);
+ document.getElementById('orsecDetProvincias').innerHTML=orsecMini(pro,8);
+ const mod=delito==='HOMICIDIOS'?orsecCount(arr,'medio'):orsecCount(arr,'artefacto');
+ document.getElementById('orsecDetModalidadTitulo').textContent=delito==='HOMICIDIOS'?'Medio empleado':'Tipo de artefacto';
+ document.getElementById('orsecDetModalidades').innerHTML=orsecMini(mod,8);
+ const pct=arr.length?Math.round(ft[1]/arr.length*1000)/10:0;
+ const per=mes?ORSEC_MESES[mes]+' 2026':'ENERO–AGOSTO 2026';
+ document.getElementById('orsecDetLectura').innerHTML=arr.length?`<b>Lectura ORSEC:</b> En ${per}, ${prov==='TODAS'?'la selección regional':orsecEsc(prov)} registra <b>${arr.length}</b> ${delito.toLowerCase()}. La franja con mayor concentración es <b>${orsecEsc(ft[0])}</b> (${ft[1]} casos; ${pct}%). La hora con mayor frecuencia es <b>${orsecEsc(ht[0])}:00</b>. Esta concentración constituye un <b>patrón temporal descriptivo</b>; por sí sola no acredita un modus operandi y debe contrastarse con territorio y modalidad.`:'No existen registros para la selección.';
+ if(delito==='HOMICIDIOS'){
+  document.getElementById('orsecDetHead').innerHTML='<tr><th>Fecha</th><th>Hora</th><th>Provincia</th><th>Distrito</th><th>Edad</th><th>Sexo</th><th>Medio empleado</th><th>Lugar</th></tr>';
+  document.getElementById('orsecDetBody').innerHTML=arr.map(x=>`<tr><td>${orsecEsc(x.fecha)}</td><td>${orsecEsc(x.hora)}</td><td>${orsecEsc(x.provincia)}</td><td>${orsecEsc(x.distrito)}</td><td>${orsecEsc(x.edad)}</td><td>${orsecEsc(x.sexo)}</td><td>${orsecEsc(x.medio)}</td><td>${orsecEsc(x.lugar)}</td></tr>`).join('');
+ }else{
+  document.getElementById('orsecDetHead').innerHTML='<tr><th>Fecha</th><th>Hora</th><th>Provincia</th><th>Distrito</th><th>Artefacto</th><th>Condición</th><th>CPNP</th><th>Dirección</th></tr>';
+  document.getElementById('orsecDetBody').innerHTML=arr.map(x=>`<tr><td>${orsecEsc(x.fecha)}</td><td>${orsecEsc(x.hora)}</td><td>${orsecEsc(x.provincia)}</td><td>${orsecEsc(x.distrito)}</td><td>${orsecEsc(x.artefacto)}</td><td>${orsecEsc(x.condicion)}</td><td>${orsecEsc(x.comisaria)}</td><td>${orsecEsc(x.direccion)}</td></tr>`).join('');
+ }
+}
+function orsecDownload(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+function orsecDescargarDetalleCSV(){
+ if(!ORSEC_DET_FILTRADO.length)return;
+ const d=document.getElementById('orsecDetDelito').value, keys=d==='HOMICIDIOS'?['fecha','hora','franja','provincia','distrito','edad','sexo','nacionalidad','medio','lugar']:['fecha','hora','franja','provincia','distrito','artefacto','condicion','comisaria','direccion'];
+ const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+ const csv=[keys.join(';'),...ORSEC_DET_FILTRADO.map(x=>keys.map(k=>q(x[k])).join(';'))].join('\n');
+ orsecDownload(`ORSEC_${d}_detalle.csv`,new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+}
+function orsecDescargarDetallePNG(){
+ if(!ORSEC_DET_FILTRADO.length)return;
+ const d=document.getElementById('orsecDetDelito').value, c=document.createElement('canvas');c.width=1400;c.height=760;const x=c.getContext('2d');
+ x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.fillStyle='#073e70';x.fillRect(0,0,c.width,95);x.fillStyle='#fff';x.font='bold 34px Arial';x.fillText(`ORSEC · ${d} · PATRÓN HORARIO`,45,58);
+ const horas=orsecCount(ORSEC_DET_FILTRADO,z=>z.hora?z.hora.slice(0,2):'SIN HORA'), vals=Array.from({length:24},(_,h)=>horas[String(h).padStart(2,'0')]||0),mx=Math.max(1,...vals);
+ x.fillStyle='#173d57';x.font='bold 20px Arial';x.fillText(`Casos seleccionados: ${ORSEC_DET_FILTRADO.length}`,50,145);
+ const left=70,top=190,w=1260,h=420,bw=w/24;
+ vals.forEach((v,i)=>{const bh=v/mx*h;x.fillStyle='#1976a8';x.fillRect(left+i*bw+4,top+h-bh,bw-8,bh);x.fillStyle='#526f83';x.font='12px Arial';x.fillText(String(i).padStart(2,'0'),left+i*bw+8,top+h+24);if(v){x.fillStyle='#173d57';x.fillText(v,left+i*bw+9,top+h-bh-7)}});
+ x.fillStyle='#6a8192';x.font='16px Arial';x.fillText('Distribución de hechos por hora (00–23 h). Fuente: archivos detallados ORSEC, enero–agosto 2026.',70,690);
+ c.toBlob(b=>orsecDownload(`ORSEC_${d}_patron_horario.png`,b),'image/png');
+}
+orsecLoadDetalle();
+</script>
+
 </body>
 <script id="orsec272fix">
 (function(){
@@ -2901,6 +3062,82 @@ function orsecCanvasComparativo(){orsecGenerarComparativo();const canvas=documen
 function orsecDescargarGraficoComparativo(){const canvas=orsecCanvasComparativo(),f=current(),a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=`ORSEC_Grafico_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}.png`;a.click()}
 async function orsecDescargarPDFComparativo(){const canvas=orsecCanvasComparativo();try{await orsecLoadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',()=>!!(window.jspdf&&window.jspdf.jsPDF));const{jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});doc.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',8,8,281,184);const f=current();doc.save(`ORSEC_Comparativo_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}.pdf`)}catch(e){console.error(e);alert('No se pudo generar el PDF. Puede descargar el gráfico PNG.')}}
 document.addEventListener('change',e=>{if(e.target&&['anio','tipoPeriodo','periodo','provincia','delito'].includes(e.target.id))document.getElementById('orsecComparativoBox')?.classList.remove('activo')});
+</script>
+
+
+<script id="orsecDetalleImpactoJS">
+let ORSEC_DETALLE=null, ORSEC_DET_FILTRADO=[];
+const ORSEC_MESES=['','ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO'];
+function orsecEsc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+async function orsecLoadDetalle(){
+ try{
+  const r=await fetch('detalle_alto_impacto.json',{cache:'no-store'}); if(!r.ok)throw 0;
+  ORSEC_DETALLE=await r.json();
+  const ps=[...new Set([...ORSEC_DETALLE.homicidios,...ORSEC_DETALLE.detonaciones].map(x=>x.provincia).filter(Boolean))].sort();
+  const sel=document.getElementById('orsecDetProvincia'); if(sel) ps.forEach(p=>sel.insertAdjacentHTML('beforeend',`<option>${orsecEsc(p)}</option>`));
+ }catch(e){console.warn('detalle_alto_impacto.json no disponible')}
+}
+function orsecToggleDetalle(){
+ const p=document.getElementById('orsecDetallePanel'); p.classList.toggle('on');
+ if(!ORSEC_DETALLE){orsecLoadDetalle().then(orsecRenderDetalle)} else orsecRenderDetalle();
+}
+function orsecCount(arr,key){const m={};arr.forEach(x=>{const k=(typeof key==='function'?key(x):x[key])||'SIN DATO';m[k]=(m[k]||0)+1});return m}
+function orsecTop(m){return Object.entries(m).sort((a,b)=>b[1]-a[1])[0]||['—',0]}
+function orsecMini(m,limit=8){
+ const a=Object.entries(m).sort((x,y)=>y[1]-x[1]).slice(0,limit),mx=Math.max(1,...a.map(x=>x[1]));
+ return a.map(([k,v])=>`<div class="orsec-mini-row"><span>${orsecEsc(k)}</span><div class="orsec-mini-track"><div class="orsec-mini-fill" style="width:${v/mx*100}%"></div></div><b>${v}</b></div>`).join('');
+}
+function orsecRenderDetalle(){
+ if(!ORSEC_DETALLE)return;
+ const delito=document.getElementById('orsecDetDelito').value;
+ const mes=+document.getElementById('orsecDetPeriodo').value;
+ const prov=document.getElementById('orsecDetProvincia').value;
+ let arr=(delito==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:ORSEC_DETALLE.detonaciones).filter(x=>(!mes||x.mes===mes)&&(prov==='TODAS'||x.provincia===prov));
+ ORSEC_DET_FILTRADO=arr;
+ const fran=orsecCount(arr,'franja'), pro=orsecCount(arr,'provincia'), horas=orsecCount(arr,x=>x.hora?x.hora.slice(0,2):'SIN HORA');
+ const ft=orsecTop(fran), pt=orsecTop(pro), ht=orsecTop(horas);
+ document.getElementById('orsecDetTotal').textContent=arr.length;
+ document.getElementById('orsecDetFranja').textContent=ft[0];
+ document.getElementById('orsecDetHora').textContent=ht[0]==='SIN HORA'?'SIN DATO':ht[0]+':00–'+ht[0]+':59';
+ document.getElementById('orsecDetProvTop').textContent=pt[0];
+ let hv=Array.from({length:24},(_,h)=>horas[String(h).padStart(2,'0')]||0), mx=Math.max(1,...hv);
+ document.getElementById('orsecDetHoras').innerHTML=`<div class="orsec-hour-bars">${hv.map((v,h)=>`<div class="orsec-hour-col" data-tip="${String(h).padStart(2,'0')}:00 · ${v} caso(s)" style="height:${Math.max(2,v/mx*100)}%"></div>`).join('')}</div><div class="orsec-hour-axis"><span>00h</span><span>06h</span><span>12h</span><span>18h</span><span>23h</span></div>`;
+ document.getElementById('orsecDetFranjas').innerHTML=orsecMini(fran,5);
+ document.getElementById('orsecDetProvincias').innerHTML=orsecMini(pro,8);
+ const mod=delito==='HOMICIDIOS'?orsecCount(arr,'medio'):orsecCount(arr,'artefacto');
+ document.getElementById('orsecDetModalidadTitulo').textContent=delito==='HOMICIDIOS'?'Medio empleado':'Tipo de artefacto';
+ document.getElementById('orsecDetModalidades').innerHTML=orsecMini(mod,8);
+ const pct=arr.length?Math.round(ft[1]/arr.length*1000)/10:0;
+ const per=mes?ORSEC_MESES[mes]+' 2026':'ENERO–AGOSTO 2026';
+ document.getElementById('orsecDetLectura').innerHTML=arr.length?`<b>Lectura ORSEC:</b> En ${per}, ${prov==='TODAS'?'la selección regional':orsecEsc(prov)} registra <b>${arr.length}</b> ${delito.toLowerCase()}. La franja con mayor concentración es <b>${orsecEsc(ft[0])}</b> (${ft[1]} casos; ${pct}%). La hora con mayor frecuencia es <b>${orsecEsc(ht[0])}:00</b>. Esta concentración constituye un <b>patrón temporal descriptivo</b>; por sí sola no acredita un modus operandi y debe contrastarse con territorio y modalidad.`:'No existen registros para la selección.';
+ if(delito==='HOMICIDIOS'){
+  document.getElementById('orsecDetHead').innerHTML='<tr><th>Fecha</th><th>Hora</th><th>Provincia</th><th>Distrito</th><th>Edad</th><th>Sexo</th><th>Medio empleado</th><th>Lugar</th></tr>';
+  document.getElementById('orsecDetBody').innerHTML=arr.map(x=>`<tr><td>${orsecEsc(x.fecha)}</td><td>${orsecEsc(x.hora)}</td><td>${orsecEsc(x.provincia)}</td><td>${orsecEsc(x.distrito)}</td><td>${orsecEsc(x.edad)}</td><td>${orsecEsc(x.sexo)}</td><td>${orsecEsc(x.medio)}</td><td>${orsecEsc(x.lugar)}</td></tr>`).join('');
+ }else{
+  document.getElementById('orsecDetHead').innerHTML='<tr><th>Fecha</th><th>Hora</th><th>Provincia</th><th>Distrito</th><th>Artefacto</th><th>Condición</th><th>CPNP</th><th>Dirección</th></tr>';
+  document.getElementById('orsecDetBody').innerHTML=arr.map(x=>`<tr><td>${orsecEsc(x.fecha)}</td><td>${orsecEsc(x.hora)}</td><td>${orsecEsc(x.provincia)}</td><td>${orsecEsc(x.distrito)}</td><td>${orsecEsc(x.artefacto)}</td><td>${orsecEsc(x.condicion)}</td><td>${orsecEsc(x.comisaria)}</td><td>${orsecEsc(x.direccion)}</td></tr>`).join('');
+ }
+}
+function orsecDownload(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+function orsecDescargarDetalleCSV(){
+ if(!ORSEC_DET_FILTRADO.length)return;
+ const d=document.getElementById('orsecDetDelito').value, keys=d==='HOMICIDIOS'?['fecha','hora','franja','provincia','distrito','edad','sexo','nacionalidad','medio','lugar']:['fecha','hora','franja','provincia','distrito','artefacto','condicion','comisaria','direccion'];
+ const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+ const csv=[keys.join(';'),...ORSEC_DET_FILTRADO.map(x=>keys.map(k=>q(x[k])).join(';'))].join('\n');
+ orsecDownload(`ORSEC_${d}_detalle.csv`,new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+}
+function orsecDescargarDetallePNG(){
+ if(!ORSEC_DET_FILTRADO.length)return;
+ const d=document.getElementById('orsecDetDelito').value, c=document.createElement('canvas');c.width=1400;c.height=760;const x=c.getContext('2d');
+ x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.fillStyle='#073e70';x.fillRect(0,0,c.width,95);x.fillStyle='#fff';x.font='bold 34px Arial';x.fillText(`ORSEC · ${d} · PATRÓN HORARIO`,45,58);
+ const horas=orsecCount(ORSEC_DET_FILTRADO,z=>z.hora?z.hora.slice(0,2):'SIN HORA'), vals=Array.from({length:24},(_,h)=>horas[String(h).padStart(2,'0')]||0),mx=Math.max(1,...vals);
+ x.fillStyle='#173d57';x.font='bold 20px Arial';x.fillText(`Casos seleccionados: ${ORSEC_DET_FILTRADO.length}`,50,145);
+ const left=70,top=190,w=1260,h=420,bw=w/24;
+ vals.forEach((v,i)=>{const bh=v/mx*h;x.fillStyle='#1976a8';x.fillRect(left+i*bw+4,top+h-bh,bw-8,bh);x.fillStyle='#526f83';x.font='12px Arial';x.fillText(String(i).padStart(2,'0'),left+i*bw+8,top+h+24);if(v){x.fillStyle='#173d57';x.fillText(v,left+i*bw+9,top+h-bh-7)}});
+ x.fillStyle='#6a8192';x.font='16px Arial';x.fillText('Distribución de hechos por hora (00–23 h). Fuente: archivos detallados ORSEC, enero–agosto 2026.',70,690);
+ c.toBlob(b=>orsecDownload(`ORSEC_${d}_patron_horario.png`,b),'image/png');
+}
+orsecLoadDetalle();
 </script>
 
 </body></html>

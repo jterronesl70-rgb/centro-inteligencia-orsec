@@ -1,9 +1,20 @@
-CENTRO DE INTELIGENCIA ORSEC – ACTUALIZACIÓN 31/08/2026
+ORSEC · ANÁLISIS DETALLADO DE ALTO IMPACTO · V1
+Archivos:
+- index.html
+- datos.json (base principal corregida: extorsión acumulada 1,328)
+- detalle_alto_impacto.json (160 homicidios + 138 detonaciones, ene-ago 2026)
 
-Corrección aplicada:
-- Extorsión agosto 2026 (mensual): 153 casos.
-- Extorsión acumulada enero–agosto 2026, Trujillo: 910 casos.
-- Extorsión acumulada enero–agosto 2026, Región La Libertad: 1,328 casos.
+Novedad:
+Incidencia Delictiva > ANÁLISIS DETALLADO DE ALTO IMPACTO
+- Acumulado y mensual
+- Provincia
+- Patrón horario 00–23 h
+- Franjas: madrugada, mañana, tarde, noche
+- Concentración territorial
+- Medio empleado / tipo de artefacto
+- Cuadro detallado
+- Descarga CSV
+- Descarga gráfica PNG
 
-Para GitHub: reemplace index.html y datos.json en la raíz del repositorio.
-Vercel actualizará el despliegue automáticamente si está conectado a GitHub.
+Nota: En homicidios se normalizaron Provincia/Distrito al integrar los datos.
+Subir los tres archivos principales juntos a la raíz de GitHub.
