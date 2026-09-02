@@ -1,0 +1,17 @@
+ORSEC · MAPA DELICTIVO DISTRITAL V1
+Incluye:
+- Homicidios, Detonaciones o ambos.
+- Acumulado enero-agosto y selección mensual.
+- Filtro por franja horaria.
+- Mapa coroplético por distrito.
+- Ficha emergente con total, homicidios y detonaciones.
+- Base detallada: 160 homicidios + 138 detonaciones.
+- Base principal conserva extorsiones acumuladas: 1,328.
+
+La cartografía distrital se consulta en línea desde el servicio oficial GeoServidor MINAM.
+El fondo utiliza OpenStreetMap, por lo que el mapa requiere conexión a internet.
+
+Subir juntos a la raíz de GitHub:
+index.html
+datos.json
+detalle_alto_impacto.json

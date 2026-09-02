@@ -496,6 +496,28 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 @media(max-width:850px){.orsec-detail-grid{grid-template-columns:1fr}.orsec-detail-kpis{grid-template-columns:repeat(2,1fr)}}
 </style>
 
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+
+<style id="orsecMapaDelitoCSS">
+.orsec-map-launch{margin:14px 0;padding:16px;border:1px solid #2773a5;border-radius:14px;background:linear-gradient(135deg,#052743,#0a416d);color:white}
+.orsec-map-launch .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.orsec-map-launch h3{margin:0;font-size:18px}.orsec-map-launch p{margin:5px 0 0;color:#d6eafa;font-size:12px}
+.orsec-map-panel{display:none;margin-top:14px;background:#f8fbfd;color:#173b54;border-radius:12px;padding:13px}.orsec-map-panel.on{display:block}
+.orsec-map-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.orsec-map-controls select,.orsec-map-controls button{padding:9px 10px;border-radius:8px;border:1px solid #a9c4d7;font-weight:800;background:#fff;color:#123e60}
+.orsec-map-controls button{background:#0b5f91;color:#fff;cursor:pointer;border-color:#0b5f91}
+#orsecMapaDelito{height:520px;border-radius:12px;border:1px solid #b9d0df;overflow:hidden}
+.orsec-map-legend{background:white;padding:9px 11px;border-radius:8px;box-shadow:0 1px 8px #0003;font-size:11px;line-height:1.55}
+.orsec-map-legend i{width:15px;height:10px;display:inline-block;margin-right:5px;border-radius:2px}
+.orsec-map-summary{display:grid;grid-template-columns:repeat(4,minmax(110px,1fr));gap:8px;margin:10px 0}
+.orsec-map-stat{background:#fff;border:1px solid #d4e2ec;border-radius:9px;padding:9px}.orsec-map-stat small{display:block;color:#6a8396;font-weight:800}.orsec-map-stat b{font-size:18px;color:#073e70}
+.orsec-map-note{font-size:11px;color:#5d778a;margin-top:8px}
+@media(max-width:800px){#orsecMapaDelito{height:430px}.orsec-map-summary{grid-template-columns:repeat(2,1fr)}}
+</style>
+
 </head>
 <body>
 
@@ -595,6 +617,30 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 
   </div>
  </div>
+
+
+<div class="orsec-map-launch" id="orsecMapaLauncher">
+ <div class="top">
+  <div><h3>🗺️ MAPA DELICTIVO DISTRITAL ORSEC V1</h3><p>Concentración distrital de homicidios y detonaciones · enero–agosto 2026.</p></div>
+  <button class="orsec-detail-btn" onclick="orsecToggleMapa()">ABRIR MAPA DEL DELITO</button>
+ </div>
+ <div class="orsec-map-panel" id="orsecMapaPanel">
+  <div class="orsec-map-controls">
+   <select id="orsecMapDelito" onchange="orsecRenderMapa()"><option value="AMBOS">HOMICIDIOS + DETONACIONES</option><option value="HOMICIDIOS">HOMICIDIOS</option><option value="DETONACIONES">DETONACIONES</option></select>
+   <select id="orsecMapMes" onchange="orsecRenderMapa()"><option value="0">ACUMULADO ENE–AGO</option><option value="1">ENERO</option><option value="2">FEBRERO</option><option value="3">MARZO</option><option value="4">ABRIL</option><option value="5">MAYO</option><option value="6">JUNIO</option><option value="7">JULIO</option><option value="8">AGOSTO</option></select>
+   <select id="orsecMapFranja" onchange="orsecRenderMapa()"><option value="TODAS">TODAS LAS FRANJAS</option><option>MADRUGADA</option><option>MAÑANA</option><option>TARDE</option><option>NOCHE</option></select>
+   <button onclick="orsecMapReset()">VER TODA LA REGIÓN</button>
+  </div>
+  <div class="orsec-map-summary">
+   <div class="orsec-map-stat"><small>HECHOS VISIBLES</small><b id="orsecMapTotal">—</b></div>
+   <div class="orsec-map-stat"><small>DISTRITOS CON HECHOS</small><b id="orsecMapDistritos">—</b></div>
+   <div class="orsec-map-stat"><small>DISTRITO DE MAYOR CONCENTRACIÓN</small><b id="orsecMapTop">—</b></div>
+   <div class="orsec-map-stat"><small>FRANJA SELECCIONADA</small><b id="orsecMapFranjaKpi">—</b></div>
+  </div>
+  <div id="orsecMapaDelito"></div>
+  <div class="orsec-map-note">Mapa coroplético distrital. La intensidad representa cantidad absoluta de hechos registrados, no una tasa poblacional. Fuente cartográfica: GeoServidor MINAM; datos delictivos: ORSEC.</div>
+ </div>
+</div>
 
 <div class="orsec-detail-launch" id="orsecDetalleLauncher">
  <div class="row">
@@ -2570,6 +2616,28 @@ function orsecVistaBI(){
 @media(max-width:850px){.orsec-detail-grid{grid-template-columns:1fr}.orsec-detail-kpis{grid-template-columns:repeat(2,1fr)}}
 </style>
 
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+
+<style id="orsecMapaDelitoCSS">
+.orsec-map-launch{margin:14px 0;padding:16px;border:1px solid #2773a5;border-radius:14px;background:linear-gradient(135deg,#052743,#0a416d);color:white}
+.orsec-map-launch .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.orsec-map-launch h3{margin:0;font-size:18px}.orsec-map-launch p{margin:5px 0 0;color:#d6eafa;font-size:12px}
+.orsec-map-panel{display:none;margin-top:14px;background:#f8fbfd;color:#173b54;border-radius:12px;padding:13px}.orsec-map-panel.on{display:block}
+.orsec-map-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.orsec-map-controls select,.orsec-map-controls button{padding:9px 10px;border-radius:8px;border:1px solid #a9c4d7;font-weight:800;background:#fff;color:#123e60}
+.orsec-map-controls button{background:#0b5f91;color:#fff;cursor:pointer;border-color:#0b5f91}
+#orsecMapaDelito{height:520px;border-radius:12px;border:1px solid #b9d0df;overflow:hidden}
+.orsec-map-legend{background:white;padding:9px 11px;border-radius:8px;box-shadow:0 1px 8px #0003;font-size:11px;line-height:1.55}
+.orsec-map-legend i{width:15px;height:10px;display:inline-block;margin-right:5px;border-radius:2px}
+.orsec-map-summary{display:grid;grid-template-columns:repeat(4,minmax(110px,1fr));gap:8px;margin:10px 0}
+.orsec-map-stat{background:#fff;border:1px solid #d4e2ec;border-radius:9px;padding:9px}.orsec-map-stat small{display:block;color:#6a8396;font-weight:800}.orsec-map-stat b{font-size:18px;color:#073e70}
+.orsec-map-note{font-size:11px;color:#5d778a;margin-top:8px}
+@media(max-width:800px){#orsecMapaDelito{height:430px}.orsec-map-summary{grid-template-columns:repeat(2,1fr)}}
+</style>
+
 </head><body><h1>BOLETÍN EJECUTIVO AUTOMÁTICO ORSEC</h1>
   <div class="box"><h3>SITUACIÓN ESTADÍSTICA</h3>${document.getElementById('orsecBiEstadisticaVisible')?.innerHTML||''}</div>
   <div class="box"><h3>LECTURA ORSEC · INTERPRETACIÓN PONDERADA</h3>${document.getElementById('orsecBiLecturaVisible')?.innerHTML||''}</div>
@@ -2722,6 +2790,55 @@ function orsecDescargarDetallePNG(){
  c.toBlob(b=>orsecDownload(`ORSEC_${d}_patron_horario.png`,b),'image/png');
 }
 orsecLoadDetalle();
+</script>
+
+
+<script id="orsecMapaDelitoJS">
+let ORSEC_MAP=null,ORSEC_MAP_GEO=null,ORSEC_MAP_LAYER=null;
+const ORSEC_GEO_URL="https://geoservidorperu.minam.gob.pe/arcgis/rest/services/ServicioBase/MapServer/12/query?where=NOMBDEP%3D%27LA%20LIBERTAD%27&outFields=IDDIST,NOMBDIST,NOMBPROV,NOMBDEP&returnGeometry=true&outSR=4326&f=geojson";
+function orsecNorm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim()}
+async function orsecInitMapa(){
+ if(!ORSEC_DETALLE) await orsecLoadDetalle();
+ if(!ORSEC_MAP_GEO){try{const r=await fetch(ORSEC_GEO_URL);ORSEC_MAP_GEO=await r.json()}catch(e){document.getElementById('orsecMapaDelito').innerHTML='<div style="padding:30px">No fue posible cargar la cartografía distrital oficial. Verifique conexión a internet.</div>';return}}
+ if(!ORSEC_MAP){
+   ORSEC_MAP=L.map('orsecMapaDelito',{zoomControl:true}).setView([-8.0,-78.5],7);
+   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap · Cartografía distrital: MINAM'}).addTo(ORSEC_MAP);
+ }
+ orsecRenderMapa();setTimeout(()=>ORSEC_MAP.invalidateSize(),150);
+}
+function orsecToggleMapa(){const p=document.getElementById('orsecMapaPanel');p.classList.toggle('on');if(p.classList.contains('on'))orsecInitMapa()}
+function orsecMapData(){
+ if(!ORSEC_DETALLE)return[];
+ const d=document.getElementById('orsecMapDelito').value,m=+document.getElementById('orsecMapMes').value,f=document.getElementById('orsecMapFranja').value;
+ let a=d==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:d==='DETONACIONES'?ORSEC_DETALLE.detonaciones:[...ORSEC_DETALLE.homicidios,...ORSEC_DETALLE.detonaciones];
+ return a.filter(x=>(!m||x.mes===m)&&(f==='TODAS'||x.franja===f));
+}
+function orsecMapColor(v,mx){if(!v)return '#e8eef2';let q=v/mx;return q>.75?'#8b1e1e':q>.5?'#d04432':q>.25?'#ed8b2c':'#f3c85b'}
+function orsecRenderMapa(){
+ if(!ORSEC_MAP||!ORSEC_MAP_GEO||!ORSEC_DETALLE)return;
+ const arr=orsecMapData(), cnt={}, hom={}, det={};
+ arr.forEach(x=>{let k=orsecNorm(x.distrito);cnt[k]=(cnt[k]||0)+1});
+ ORSEC_DETALLE.homicidios.filter(x=>arr.includes(x)).forEach(x=>{let k=orsecNorm(x.distrito);hom[k]=(hom[k]||0)+1});
+ ORSEC_DETALLE.detonaciones.filter(x=>arr.includes(x)).forEach(x=>{let k=orsecNorm(x.distrito);det[k]=(det[k]||0)+1});
+ const vals=Object.values(cnt),mx=Math.max(1,...vals),top=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0]||['—',0];
+ document.getElementById('orsecMapTotal').textContent=arr.length;
+ document.getElementById('orsecMapDistritos').textContent=Object.keys(cnt).length;
+ document.getElementById('orsecMapTop').textContent=top[0]+' · '+top[1];
+ document.getElementById('orsecMapFranjaKpi').textContent=document.getElementById('orsecMapFranja').value;
+ if(ORSEC_MAP_LAYER)ORSEC_MAP.removeLayer(ORSEC_MAP_LAYER);
+ ORSEC_MAP_LAYER=L.geoJSON(ORSEC_MAP_GEO,{
+  style:f=>{let v=cnt[orsecNorm(f.properties.NOMBDIST)]||0;return{color:'#31576e',weight:.8,fillColor:orsecMapColor(v,mx),fillOpacity:.78}},
+  onEachFeature:(f,l)=>{
+    let k=orsecNorm(f.properties.NOMBDIST),v=cnt[k]||0;
+    l.bindTooltip(`<b>${orsecEsc(f.properties.NOMBDIST)}</b><br>${orsecEsc(f.properties.NOMBPROV)}<br><b>${v}</b> hecho(s)`,{sticky:true});
+    l.bindPopup(`<b>${orsecEsc(f.properties.NOMBDIST)}</b><br>Provincia: ${orsecEsc(f.properties.NOMBPROV)}<hr style="border:.5px solid #ddd"><b>Total: ${v}</b><br>Homicidios: ${hom[k]||0}<br>Detonaciones: ${det[k]||0}`);
+  }
+ }).addTo(ORSEC_MAP);
+ if(!ORSEC_MAP._orsecLegend){
+   const lg=L.control({position:'bottomright'});lg.onAdd=()=>{const d=L.DomUtil.create('div','orsec-map-legend');d.innerHTML='<b>INTENSIDAD</b><br><i style="background:#e8eef2"></i>Sin hechos<br><i style="background:#f3c85b"></i>Baja<br><i style="background:#ed8b2c"></i>Media<br><i style="background:#d04432"></i>Alta<br><i style="background:#8b1e1e"></i>Muy alta';return d};lg.addTo(ORSEC_MAP);ORSEC_MAP._orsecLegend=lg;
+ }
+}
+function orsecMapReset(){if(ORSEC_MAP&&ORSEC_MAP_LAYER){ORSEC_MAP.fitBounds(ORSEC_MAP_LAYER.getBounds(),{padding:[10,10]})}}
 </script>
 
 </body>
@@ -3138,6 +3255,55 @@ function orsecDescargarDetallePNG(){
  c.toBlob(b=>orsecDownload(`ORSEC_${d}_patron_horario.png`,b),'image/png');
 }
 orsecLoadDetalle();
+</script>
+
+
+<script id="orsecMapaDelitoJS">
+let ORSEC_MAP=null,ORSEC_MAP_GEO=null,ORSEC_MAP_LAYER=null;
+const ORSEC_GEO_URL="https://geoservidorperu.minam.gob.pe/arcgis/rest/services/ServicioBase/MapServer/12/query?where=NOMBDEP%3D%27LA%20LIBERTAD%27&outFields=IDDIST,NOMBDIST,NOMBPROV,NOMBDEP&returnGeometry=true&outSR=4326&f=geojson";
+function orsecNorm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim()}
+async function orsecInitMapa(){
+ if(!ORSEC_DETALLE) await orsecLoadDetalle();
+ if(!ORSEC_MAP_GEO){try{const r=await fetch(ORSEC_GEO_URL);ORSEC_MAP_GEO=await r.json()}catch(e){document.getElementById('orsecMapaDelito').innerHTML='<div style="padding:30px">No fue posible cargar la cartografía distrital oficial. Verifique conexión a internet.</div>';return}}
+ if(!ORSEC_MAP){
+   ORSEC_MAP=L.map('orsecMapaDelito',{zoomControl:true}).setView([-8.0,-78.5],7);
+   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap · Cartografía distrital: MINAM'}).addTo(ORSEC_MAP);
+ }
+ orsecRenderMapa();setTimeout(()=>ORSEC_MAP.invalidateSize(),150);
+}
+function orsecToggleMapa(){const p=document.getElementById('orsecMapaPanel');p.classList.toggle('on');if(p.classList.contains('on'))orsecInitMapa()}
+function orsecMapData(){
+ if(!ORSEC_DETALLE)return[];
+ const d=document.getElementById('orsecMapDelito').value,m=+document.getElementById('orsecMapMes').value,f=document.getElementById('orsecMapFranja').value;
+ let a=d==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:d==='DETONACIONES'?ORSEC_DETALLE.detonaciones:[...ORSEC_DETALLE.homicidios,...ORSEC_DETALLE.detonaciones];
+ return a.filter(x=>(!m||x.mes===m)&&(f==='TODAS'||x.franja===f));
+}
+function orsecMapColor(v,mx){if(!v)return '#e8eef2';let q=v/mx;return q>.75?'#8b1e1e':q>.5?'#d04432':q>.25?'#ed8b2c':'#f3c85b'}
+function orsecRenderMapa(){
+ if(!ORSEC_MAP||!ORSEC_MAP_GEO||!ORSEC_DETALLE)return;
+ const arr=orsecMapData(), cnt={}, hom={}, det={};
+ arr.forEach(x=>{let k=orsecNorm(x.distrito);cnt[k]=(cnt[k]||0)+1});
+ ORSEC_DETALLE.homicidios.filter(x=>arr.includes(x)).forEach(x=>{let k=orsecNorm(x.distrito);hom[k]=(hom[k]||0)+1});
+ ORSEC_DETALLE.detonaciones.filter(x=>arr.includes(x)).forEach(x=>{let k=orsecNorm(x.distrito);det[k]=(det[k]||0)+1});
+ const vals=Object.values(cnt),mx=Math.max(1,...vals),top=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0]||['—',0];
+ document.getElementById('orsecMapTotal').textContent=arr.length;
+ document.getElementById('orsecMapDistritos').textContent=Object.keys(cnt).length;
+ document.getElementById('orsecMapTop').textContent=top[0]+' · '+top[1];
+ document.getElementById('orsecMapFranjaKpi').textContent=document.getElementById('orsecMapFranja').value;
+ if(ORSEC_MAP_LAYER)ORSEC_MAP.removeLayer(ORSEC_MAP_LAYER);
+ ORSEC_MAP_LAYER=L.geoJSON(ORSEC_MAP_GEO,{
+  style:f=>{let v=cnt[orsecNorm(f.properties.NOMBDIST)]||0;return{color:'#31576e',weight:.8,fillColor:orsecMapColor(v,mx),fillOpacity:.78}},
+  onEachFeature:(f,l)=>{
+    let k=orsecNorm(f.properties.NOMBDIST),v=cnt[k]||0;
+    l.bindTooltip(`<b>${orsecEsc(f.properties.NOMBDIST)}</b><br>${orsecEsc(f.properties.NOMBPROV)}<br><b>${v}</b> hecho(s)`,{sticky:true});
+    l.bindPopup(`<b>${orsecEsc(f.properties.NOMBDIST)}</b><br>Provincia: ${orsecEsc(f.properties.NOMBPROV)}<hr style="border:.5px solid #ddd"><b>Total: ${v}</b><br>Homicidios: ${hom[k]||0}<br>Detonaciones: ${det[k]||0}`);
+  }
+ }).addTo(ORSEC_MAP);
+ if(!ORSEC_MAP._orsecLegend){
+   const lg=L.control({position:'bottomright'});lg.onAdd=()=>{const d=L.DomUtil.create('div','orsec-map-legend');d.innerHTML='<b>INTENSIDAD</b><br><i style="background:#e8eef2"></i>Sin hechos<br><i style="background:#f3c85b"></i>Baja<br><i style="background:#ed8b2c"></i>Media<br><i style="background:#d04432"></i>Alta<br><i style="background:#8b1e1e"></i>Muy alta';return d};lg.addTo(ORSEC_MAP);ORSEC_MAP._orsecLegend=lg;
+ }
+}
+function orsecMapReset(){if(ORSEC_MAP&&ORSEC_MAP_LAYER){ORSEC_MAP.fitBounds(ORSEC_MAP_LAYER.getBounds(),{padding:[10,10]})}}
 </script>
 
 </body></html>
