@@ -1,0 +1,17 @@
+ORSEC · INFOGRAFÍA VISUAL V8
+
+La infografía se rediseñó en formato ejecutivo 16:9 (1920x1080), similar al estilo
+visual del panel ORSEC.
+
+Incluye:
+- encabezado institucional;
+- panel lateral de filtros/selección;
+- mapa distrital real dibujado desde la cartografía oficial MINAM;
+- intensidad por distrito;
+- top 5 distritos;
+- distribución por franja horaria;
+- medio empleado / tipo de artefacto;
+- resumen de KPI;
+- pie institucional.
+
+Se genera dinámicamente según delito, período y provincia seleccionados.
