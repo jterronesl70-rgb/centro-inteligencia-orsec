@@ -1,0 +1,22 @@
+ORSEC · INFOGRAFÍA DE ALTO IMPACTO · V7
+
+Nueva función:
+DESCARGAR INFOGRAFÍA PNG
+
+La infografía se genera dinámicamente según la selección activa:
+- Homicidios o Detonaciones
+- Acumulado o mes
+- Provincia seleccionada
+
+Incluye:
+- total de casos
+- franja horaria principal
+- hora pico
+- distrito principal
+- distribución por hora
+- top 5 distritos
+- medio empleado / tipo de artefacto
+- evolución mensual
+- lectura ejecutiva ORSEC
+
+La descarga se genera en una sola imagen PNG vertical, lista para presentación o envío.

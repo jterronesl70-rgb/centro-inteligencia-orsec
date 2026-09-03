@@ -660,6 +660,7 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
    <button onclick="orsecDescargarDetalleCSV()">DESCARGAR CUADRO CSV</button>
    <button onclick="orsecDescargarRelacionPNG()" style="background:#1479a8;color:#fff">RELACIÓN COMPLETA PNG</button>
    <button onclick="orsecDescargarRelacionPDF()" style="background:#b3261e;color:#fff">RELACIÓN PDF</button>
+   <button onclick="orsecDescargarInfografia()" style="background:#f4b400;color:#073e70;font-weight:900">DESCARGAR INFOGRAFÍA PNG</button>
    <button onclick="orsecDescargarDetallePNG()">DESCARGAR GRÁFICA PNG</button>
   </div>
   <div class="orsec-detail-kpis">
@@ -2682,6 +2683,127 @@ function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style
 
 
 
+
+<script id="orsecInfografiaAltoImpactoJS">
+function orsecInfografiaTop(m,limit=5){
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,limit);
+}
+function orsecInfografiaWrap(ctx,text,maxWidth){
+  const words=String(text||'').split(/\s+/), lines=[]; let line='';
+  for(const w of words){
+    const test=line?line+' '+w:w;
+    if(ctx.measureText(test).width>maxWidth && line){lines.push(line);line=w}
+    else line=test;
+  }
+  if(line)lines.push(line);
+  return lines;
+}
+function orsecDescargarInfografia(){
+  if(!ORSEC_DETALLE || !ORSEC_DET_FILTRADO || !ORSEC_DET_FILTRADO.length){
+    alert('No hay registros para la selección actual.');
+    return;
+  }
+  const delito=document.getElementById('orsecDetDelito').value;
+  const periodo=document.getElementById('orsecDetPeriodo').selectedOptions[0].textContent;
+  const provincia=document.getElementById('orsecDetProvincia').value;
+  const arr=ORSEC_DET_FILTRADO;
+  const W=1600,H=2100,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+
+  const azul='#073e70', azul2='#0b5f91', claro='#f6fbfe', gris='#627f92', amarillo='#f4b400', rojo='#b3261e';
+  x.fillStyle=claro;x.fillRect(0,0,W,H);
+  x.fillStyle=azul;x.fillRect(0,0,W,190);
+  x.fillStyle='#fff';x.font='bold 54px Arial';x.fillText('ORSEC',70,75);
+  x.font='bold 28px Arial';x.fillText('INFOGRAFÍA · ANÁLISIS DETALLADO DE ALTO IMPACTO',70,125);
+  x.font='20px Arial';x.fillText(`${delito} · ${periodo}${provincia==='TODAS'?'':' · '+provincia}`,70,162);
+
+  const fran=orsecCount(arr,'franja'), prov=orsecCount(arr,'provincia'), dist=orsecCount(arr,'distrito');
+  const horas=orsecCount(arr,z=>z.hora?z.hora.slice(0,2):'SIN HORA');
+  const modalidad=delito==='HOMICIDIOS'?orsecCount(arr,'medio'):orsecCount(arr,'artefacto');
+  const ft=orsecTop(fran), pt=orsecTop(prov), dt=orsecTop(dist), ht=orsecTop(horas);
+
+  // KPI cards
+  const cards=[
+    ['CASOS SELECCIONADOS',String(arr.length)],
+    ['FRANJA PRINCIPAL',ft[0]],
+    ['HORA PICO',ht[0]==='SIN HORA'?'SIN DATO':ht[0]+':00'],
+    ['DISTRITO PRINCIPAL',dt[0]]
+  ];
+  const cy=235,cw=345,ch=135,gap=20;
+  cards.forEach((a,i)=>{
+    const xx=70+i*(cw+gap);
+    x.fillStyle='#fff';x.strokeStyle='#bdd2df';x.lineWidth=2;x.fillRect(xx,cy,cw,ch);x.strokeRect(xx,cy,cw,ch);
+    x.fillStyle=gris;x.font='bold 17px Arial';x.fillText(a[0],xx+18,cy+34);
+    x.fillStyle=azul;x.font='bold 34px Arial';x.fillText(a[1].length>22?a[1].slice(0,22)+'…':a[1],xx+18,cy+85);
+  });
+
+  // Hour chart
+  let y=430;
+  x.fillStyle=azul;x.font='bold 28px Arial';x.fillText('DISTRIBUCIÓN POR HORA · 00–23 h',70,y);
+  y+=35;
+  const vals=Array.from({length:24},(_,h)=>horas[String(h).padStart(2,'0')]||0), maxH=Math.max(1,...vals);
+  const chartX=90,chartY=y,chartW=1420,chartH=360,bw=chartW/24;
+  x.strokeStyle='#b9cbd7';x.beginPath();x.moveTo(chartX,chartY+chartH);x.lineTo(chartX+chartW,chartY+chartH);x.stroke();
+  vals.forEach((v,i)=>{
+    const bh=v/maxH*chartH;
+    x.fillStyle=azul2;x.fillRect(chartX+i*bw+4,chartY+chartH-bh,bw-8,bh);
+    x.fillStyle=gris;x.font='13px Arial';x.fillText(String(i).padStart(2,'0'),chartX+i*bw+8,chartY+chartH+22);
+    if(v){x.fillStyle=azul;x.font='bold 13px Arial';x.fillText(String(v),chartX+i*bw+9,chartY+chartH-bh-7);}
+  });
+  y=chartY+chartH+75;
+
+  // Two ranked panels
+  function panel(title,data,px,py,pw,ph){
+    x.fillStyle='#fff';x.strokeStyle='#c9d9e4';x.fillRect(px,py,pw,ph);x.strokeRect(px,py,pw,ph);
+    x.fillStyle=azul;x.font='bold 24px Arial';x.fillText(title,px+22,py+38);
+    const top=orsecInfografiaTop(data,5), mx=Math.max(1,...top.map(z=>z[1]));
+    top.forEach(([k,v],i)=>{
+      const yy=py+78+i*55;
+      x.fillStyle=gris;x.font='17px Arial';x.fillText((k||'SIN DATO').slice(0,28),px+22,yy);
+      x.fillStyle='#e8f0f5';x.fillRect(px+270,yy-17,pw-350,18);
+      x.fillStyle=azul2;x.fillRect(px+270,yy-17,(pw-350)*(v/mx),18);
+      x.fillStyle=azul;x.font='bold 17px Arial';x.fillText(String(v),px+pw-55,yy);
+    });
+  }
+  panel('TOP DISTRITOS',dist,70,y,710,390);
+  panel(delito==='HOMICIDIOS'?'MEDIO EMPLEADO':'TIPO DE ARTEFACTO',modalidad,820,y,710,390);
+  y+=440;
+
+  // Monthly evolution
+  x.fillStyle=azul;x.font='bold 28px Arial';x.fillText('EVOLUCIÓN MENSUAL',70,y);
+  y+=35;
+  const base=(delito==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:ORSEC_DETALLE.detonaciones)
+      .filter(z=>provincia==='TODAS'||z.provincia===provincia);
+  const meses=[1,2,3,4,5,6,7,8].map(m=>base.filter(z=>z.mes===m).length);
+  const mm=Math.max(1,...meses), mNames=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO'];
+  const mx0=120,my0=y,mw=1360,mh=300,step=mw/8;
+  x.strokeStyle='#b9cbd7';x.beginPath();x.moveTo(mx0,my0+mh);x.lineTo(mx0+mw,my0+mh);x.stroke();
+  x.strokeStyle=rojo;x.lineWidth=5;x.beginPath();
+  meses.forEach((v,i)=>{
+    const px=mx0+i*step+step/2, py=my0+mh-(v/mm*mh);
+    if(i===0)x.moveTo(px,py);else x.lineTo(px,py);
+    x.fillStyle=rojo;x.beginPath();x.arc(px,py,7,0,Math.PI*2);x.fill();
+    x.fillStyle=azul;x.font='bold 16px Arial';x.fillText(String(v),px-7,py-14);
+    x.fillStyle=gris;x.font='16px Arial';x.fillText(mNames[i],px-16,my0+mh+28);
+  });x.stroke();
+  y=my0+mh+90;
+
+  // Reading
+  x.fillStyle='#fff5d6';x.strokeStyle=amarillo;x.lineWidth=3;x.fillRect(70,y,1460,250);x.strokeRect(70,y,1460,250);
+  x.fillStyle=azul;x.font='bold 24px Arial';x.fillText('LECTURA ORSEC',95,y+42);
+  const pct=arr.length?Math.round(ft[1]/arr.length*1000)/10:0;
+  const lectura=`La selección registra ${arr.length} ${delito.toLowerCase()}. La mayor concentración temporal corresponde a ${ft[0]} (${ft[1]} casos; ${pct}%). La hora con mayor frecuencia es ${ht[0]==='SIN HORA'?'sin dato':ht[0]+':00'}. El distrito con mayor concentración es ${dt[0]} (${dt[1]} casos). Este patrón es descriptivo y debe contrastarse con territorio, modalidad y evolución temporal antes de inferir un modus operandi.`;
+  x.fillStyle='#17384f';x.font='20px Arial';
+  orsecInfografiaWrap(x,lectura,1390).slice(0,7).forEach((ln,i)=>x.fillText(ln,95,y+82+i*30));
+
+  // Footer
+  x.fillStyle=azul;x.fillRect(0,H-95,W,95);
+  x.fillStyle='#fff';x.font='17px Arial';x.fillText('ORSEC · Centro de Inteligencia · Región La Libertad',70,H-55);
+  x.font='15px Arial';x.fillText('Fuente: registros detallados de homicidios y detonaciones · Enero–Agosto 2026',70,H-28);
+
+  c.toBlob(b=>orsecDownload(`ORSEC_${delito}_infografia_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
+}
+</script>
+
 </body>
 <script id="orsec272fix">
 (function(){
@@ -3218,7 +3340,128 @@ function orsecDescargarRelacionPDF(){
  w.document.write('<table><thead><tr>'+encabezado+'</tr></thead><tbody>'+filas+'</tbody></table>');
  w.document.write('<div class="foot">Relación completa generada desde ORSEC. Use “Guardar como PDF” en el cuadro de impresión del navegador.</div>');
  w.document.write('<div class="no-print"><button onclick="window.print()">GUARDAR COMO PDF / IMPRIMIR</button></div></div>');
- w.document.write('</body></html>');
+ w.document.write('
+<script id="orsecInfografiaAltoImpactoJS">
+function orsecInfografiaTop(m,limit=5){
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,limit);
+}
+function orsecInfografiaWrap(ctx,text,maxWidth){
+  const words=String(text||'').split(/\s+/), lines=[]; let line='';
+  for(const w of words){
+    const test=line?line+' '+w:w;
+    if(ctx.measureText(test).width>maxWidth && line){lines.push(line);line=w}
+    else line=test;
+  }
+  if(line)lines.push(line);
+  return lines;
+}
+function orsecDescargarInfografia(){
+  if(!ORSEC_DETALLE || !ORSEC_DET_FILTRADO || !ORSEC_DET_FILTRADO.length){
+    alert('No hay registros para la selección actual.');
+    return;
+  }
+  const delito=document.getElementById('orsecDetDelito').value;
+  const periodo=document.getElementById('orsecDetPeriodo').selectedOptions[0].textContent;
+  const provincia=document.getElementById('orsecDetProvincia').value;
+  const arr=ORSEC_DET_FILTRADO;
+  const W=1600,H=2100,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+
+  const azul='#073e70', azul2='#0b5f91', claro='#f6fbfe', gris='#627f92', amarillo='#f4b400', rojo='#b3261e';
+  x.fillStyle=claro;x.fillRect(0,0,W,H);
+  x.fillStyle=azul;x.fillRect(0,0,W,190);
+  x.fillStyle='#fff';x.font='bold 54px Arial';x.fillText('ORSEC',70,75);
+  x.font='bold 28px Arial';x.fillText('INFOGRAFÍA · ANÁLISIS DETALLADO DE ALTO IMPACTO',70,125);
+  x.font='20px Arial';x.fillText(`${delito} · ${periodo}${provincia==='TODAS'?'':' · '+provincia}`,70,162);
+
+  const fran=orsecCount(arr,'franja'), prov=orsecCount(arr,'provincia'), dist=orsecCount(arr,'distrito');
+  const horas=orsecCount(arr,z=>z.hora?z.hora.slice(0,2):'SIN HORA');
+  const modalidad=delito==='HOMICIDIOS'?orsecCount(arr,'medio'):orsecCount(arr,'artefacto');
+  const ft=orsecTop(fran), pt=orsecTop(prov), dt=orsecTop(dist), ht=orsecTop(horas);
+
+  // KPI cards
+  const cards=[
+    ['CASOS SELECCIONADOS',String(arr.length)],
+    ['FRANJA PRINCIPAL',ft[0]],
+    ['HORA PICO',ht[0]==='SIN HORA'?'SIN DATO':ht[0]+':00'],
+    ['DISTRITO PRINCIPAL',dt[0]]
+  ];
+  const cy=235,cw=345,ch=135,gap=20;
+  cards.forEach((a,i)=>{
+    const xx=70+i*(cw+gap);
+    x.fillStyle='#fff';x.strokeStyle='#bdd2df';x.lineWidth=2;x.fillRect(xx,cy,cw,ch);x.strokeRect(xx,cy,cw,ch);
+    x.fillStyle=gris;x.font='bold 17px Arial';x.fillText(a[0],xx+18,cy+34);
+    x.fillStyle=azul;x.font='bold 34px Arial';x.fillText(a[1].length>22?a[1].slice(0,22)+'…':a[1],xx+18,cy+85);
+  });
+
+  // Hour chart
+  let y=430;
+  x.fillStyle=azul;x.font='bold 28px Arial';x.fillText('DISTRIBUCIÓN POR HORA · 00–23 h',70,y);
+  y+=35;
+  const vals=Array.from({length:24},(_,h)=>horas[String(h).padStart(2,'0')]||0), maxH=Math.max(1,...vals);
+  const chartX=90,chartY=y,chartW=1420,chartH=360,bw=chartW/24;
+  x.strokeStyle='#b9cbd7';x.beginPath();x.moveTo(chartX,chartY+chartH);x.lineTo(chartX+chartW,chartY+chartH);x.stroke();
+  vals.forEach((v,i)=>{
+    const bh=v/maxH*chartH;
+    x.fillStyle=azul2;x.fillRect(chartX+i*bw+4,chartY+chartH-bh,bw-8,bh);
+    x.fillStyle=gris;x.font='13px Arial';x.fillText(String(i).padStart(2,'0'),chartX+i*bw+8,chartY+chartH+22);
+    if(v){x.fillStyle=azul;x.font='bold 13px Arial';x.fillText(String(v),chartX+i*bw+9,chartY+chartH-bh-7);}
+  });
+  y=chartY+chartH+75;
+
+  // Two ranked panels
+  function panel(title,data,px,py,pw,ph){
+    x.fillStyle='#fff';x.strokeStyle='#c9d9e4';x.fillRect(px,py,pw,ph);x.strokeRect(px,py,pw,ph);
+    x.fillStyle=azul;x.font='bold 24px Arial';x.fillText(title,px+22,py+38);
+    const top=orsecInfografiaTop(data,5), mx=Math.max(1,...top.map(z=>z[1]));
+    top.forEach(([k,v],i)=>{
+      const yy=py+78+i*55;
+      x.fillStyle=gris;x.font='17px Arial';x.fillText((k||'SIN DATO').slice(0,28),px+22,yy);
+      x.fillStyle='#e8f0f5';x.fillRect(px+270,yy-17,pw-350,18);
+      x.fillStyle=azul2;x.fillRect(px+270,yy-17,(pw-350)*(v/mx),18);
+      x.fillStyle=azul;x.font='bold 17px Arial';x.fillText(String(v),px+pw-55,yy);
+    });
+  }
+  panel('TOP DISTRITOS',dist,70,y,710,390);
+  panel(delito==='HOMICIDIOS'?'MEDIO EMPLEADO':'TIPO DE ARTEFACTO',modalidad,820,y,710,390);
+  y+=440;
+
+  // Monthly evolution
+  x.fillStyle=azul;x.font='bold 28px Arial';x.fillText('EVOLUCIÓN MENSUAL',70,y);
+  y+=35;
+  const base=(delito==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:ORSEC_DETALLE.detonaciones)
+      .filter(z=>provincia==='TODAS'||z.provincia===provincia);
+  const meses=[1,2,3,4,5,6,7,8].map(m=>base.filter(z=>z.mes===m).length);
+  const mm=Math.max(1,...meses), mNames=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO'];
+  const mx0=120,my0=y,mw=1360,mh=300,step=mw/8;
+  x.strokeStyle='#b9cbd7';x.beginPath();x.moveTo(mx0,my0+mh);x.lineTo(mx0+mw,my0+mh);x.stroke();
+  x.strokeStyle=rojo;x.lineWidth=5;x.beginPath();
+  meses.forEach((v,i)=>{
+    const px=mx0+i*step+step/2, py=my0+mh-(v/mm*mh);
+    if(i===0)x.moveTo(px,py);else x.lineTo(px,py);
+    x.fillStyle=rojo;x.beginPath();x.arc(px,py,7,0,Math.PI*2);x.fill();
+    x.fillStyle=azul;x.font='bold 16px Arial';x.fillText(String(v),px-7,py-14);
+    x.fillStyle=gris;x.font='16px Arial';x.fillText(mNames[i],px-16,my0+mh+28);
+  });x.stroke();
+  y=my0+mh+90;
+
+  // Reading
+  x.fillStyle='#fff5d6';x.strokeStyle=amarillo;x.lineWidth=3;x.fillRect(70,y,1460,250);x.strokeRect(70,y,1460,250);
+  x.fillStyle=azul;x.font='bold 24px Arial';x.fillText('LECTURA ORSEC',95,y+42);
+  const pct=arr.length?Math.round(ft[1]/arr.length*1000)/10:0;
+  const lectura=`La selección registra ${arr.length} ${delito.toLowerCase()}. La mayor concentración temporal corresponde a ${ft[0]} (${ft[1]} casos; ${pct}%). La hora con mayor frecuencia es ${ht[0]==='SIN HORA'?'sin dato':ht[0]+':00'}. El distrito con mayor concentración es ${dt[0]} (${dt[1]} casos). Este patrón es descriptivo y debe contrastarse con territorio, modalidad y evolución temporal antes de inferir un modus operandi.`;
+  x.fillStyle='#17384f';x.font='20px Arial';
+  orsecInfografiaWrap(x,lectura,1390).slice(0,7).forEach((ln,i)=>x.fillText(ln,95,y+82+i*30));
+
+  // Footer
+  x.fillStyle=azul;x.fillRect(0,H-95,W,95);
+  x.fillStyle='#fff';x.font='17px Arial';x.fillText('ORSEC · Centro de Inteligencia · Región La Libertad',70,H-55);
+  x.font='15px Arial';x.fillText('Fuente: registros detallados de homicidios y detonaciones · Enero–Agosto 2026',70,H-28);
+
+  c.toBlob(b=>orsecDownload(`ORSEC_${delito}_infografia_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
+}
+</script>
+
+</body></html>');
  w.document.close();
  setTimeout(()=>{w.focus();w.print();},300);
 }
@@ -3300,6 +3543,127 @@ function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style
  setTimeout(colocarNota002,500);
  new MutationObserver(colocarNota002).observe(document.documentElement,{childList:true,subtree:true});
 })();
+</script>
+
+
+<script id="orsecInfografiaAltoImpactoJS">
+function orsecInfografiaTop(m,limit=5){
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,limit);
+}
+function orsecInfografiaWrap(ctx,text,maxWidth){
+  const words=String(text||'').split(/\s+/), lines=[]; let line='';
+  for(const w of words){
+    const test=line?line+' '+w:w;
+    if(ctx.measureText(test).width>maxWidth && line){lines.push(line);line=w}
+    else line=test;
+  }
+  if(line)lines.push(line);
+  return lines;
+}
+function orsecDescargarInfografia(){
+  if(!ORSEC_DETALLE || !ORSEC_DET_FILTRADO || !ORSEC_DET_FILTRADO.length){
+    alert('No hay registros para la selección actual.');
+    return;
+  }
+  const delito=document.getElementById('orsecDetDelito').value;
+  const periodo=document.getElementById('orsecDetPeriodo').selectedOptions[0].textContent;
+  const provincia=document.getElementById('orsecDetProvincia').value;
+  const arr=ORSEC_DET_FILTRADO;
+  const W=1600,H=2100,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+
+  const azul='#073e70', azul2='#0b5f91', claro='#f6fbfe', gris='#627f92', amarillo='#f4b400', rojo='#b3261e';
+  x.fillStyle=claro;x.fillRect(0,0,W,H);
+  x.fillStyle=azul;x.fillRect(0,0,W,190);
+  x.fillStyle='#fff';x.font='bold 54px Arial';x.fillText('ORSEC',70,75);
+  x.font='bold 28px Arial';x.fillText('INFOGRAFÍA · ANÁLISIS DETALLADO DE ALTO IMPACTO',70,125);
+  x.font='20px Arial';x.fillText(`${delito} · ${periodo}${provincia==='TODAS'?'':' · '+provincia}`,70,162);
+
+  const fran=orsecCount(arr,'franja'), prov=orsecCount(arr,'provincia'), dist=orsecCount(arr,'distrito');
+  const horas=orsecCount(arr,z=>z.hora?z.hora.slice(0,2):'SIN HORA');
+  const modalidad=delito==='HOMICIDIOS'?orsecCount(arr,'medio'):orsecCount(arr,'artefacto');
+  const ft=orsecTop(fran), pt=orsecTop(prov), dt=orsecTop(dist), ht=orsecTop(horas);
+
+  // KPI cards
+  const cards=[
+    ['CASOS SELECCIONADOS',String(arr.length)],
+    ['FRANJA PRINCIPAL',ft[0]],
+    ['HORA PICO',ht[0]==='SIN HORA'?'SIN DATO':ht[0]+':00'],
+    ['DISTRITO PRINCIPAL',dt[0]]
+  ];
+  const cy=235,cw=345,ch=135,gap=20;
+  cards.forEach((a,i)=>{
+    const xx=70+i*(cw+gap);
+    x.fillStyle='#fff';x.strokeStyle='#bdd2df';x.lineWidth=2;x.fillRect(xx,cy,cw,ch);x.strokeRect(xx,cy,cw,ch);
+    x.fillStyle=gris;x.font='bold 17px Arial';x.fillText(a[0],xx+18,cy+34);
+    x.fillStyle=azul;x.font='bold 34px Arial';x.fillText(a[1].length>22?a[1].slice(0,22)+'…':a[1],xx+18,cy+85);
+  });
+
+  // Hour chart
+  let y=430;
+  x.fillStyle=azul;x.font='bold 28px Arial';x.fillText('DISTRIBUCIÓN POR HORA · 00–23 h',70,y);
+  y+=35;
+  const vals=Array.from({length:24},(_,h)=>horas[String(h).padStart(2,'0')]||0), maxH=Math.max(1,...vals);
+  const chartX=90,chartY=y,chartW=1420,chartH=360,bw=chartW/24;
+  x.strokeStyle='#b9cbd7';x.beginPath();x.moveTo(chartX,chartY+chartH);x.lineTo(chartX+chartW,chartY+chartH);x.stroke();
+  vals.forEach((v,i)=>{
+    const bh=v/maxH*chartH;
+    x.fillStyle=azul2;x.fillRect(chartX+i*bw+4,chartY+chartH-bh,bw-8,bh);
+    x.fillStyle=gris;x.font='13px Arial';x.fillText(String(i).padStart(2,'0'),chartX+i*bw+8,chartY+chartH+22);
+    if(v){x.fillStyle=azul;x.font='bold 13px Arial';x.fillText(String(v),chartX+i*bw+9,chartY+chartH-bh-7);}
+  });
+  y=chartY+chartH+75;
+
+  // Two ranked panels
+  function panel(title,data,px,py,pw,ph){
+    x.fillStyle='#fff';x.strokeStyle='#c9d9e4';x.fillRect(px,py,pw,ph);x.strokeRect(px,py,pw,ph);
+    x.fillStyle=azul;x.font='bold 24px Arial';x.fillText(title,px+22,py+38);
+    const top=orsecInfografiaTop(data,5), mx=Math.max(1,...top.map(z=>z[1]));
+    top.forEach(([k,v],i)=>{
+      const yy=py+78+i*55;
+      x.fillStyle=gris;x.font='17px Arial';x.fillText((k||'SIN DATO').slice(0,28),px+22,yy);
+      x.fillStyle='#e8f0f5';x.fillRect(px+270,yy-17,pw-350,18);
+      x.fillStyle=azul2;x.fillRect(px+270,yy-17,(pw-350)*(v/mx),18);
+      x.fillStyle=azul;x.font='bold 17px Arial';x.fillText(String(v),px+pw-55,yy);
+    });
+  }
+  panel('TOP DISTRITOS',dist,70,y,710,390);
+  panel(delito==='HOMICIDIOS'?'MEDIO EMPLEADO':'TIPO DE ARTEFACTO',modalidad,820,y,710,390);
+  y+=440;
+
+  // Monthly evolution
+  x.fillStyle=azul;x.font='bold 28px Arial';x.fillText('EVOLUCIÓN MENSUAL',70,y);
+  y+=35;
+  const base=(delito==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:ORSEC_DETALLE.detonaciones)
+      .filter(z=>provincia==='TODAS'||z.provincia===provincia);
+  const meses=[1,2,3,4,5,6,7,8].map(m=>base.filter(z=>z.mes===m).length);
+  const mm=Math.max(1,...meses), mNames=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO'];
+  const mx0=120,my0=y,mw=1360,mh=300,step=mw/8;
+  x.strokeStyle='#b9cbd7';x.beginPath();x.moveTo(mx0,my0+mh);x.lineTo(mx0+mw,my0+mh);x.stroke();
+  x.strokeStyle=rojo;x.lineWidth=5;x.beginPath();
+  meses.forEach((v,i)=>{
+    const px=mx0+i*step+step/2, py=my0+mh-(v/mm*mh);
+    if(i===0)x.moveTo(px,py);else x.lineTo(px,py);
+    x.fillStyle=rojo;x.beginPath();x.arc(px,py,7,0,Math.PI*2);x.fill();
+    x.fillStyle=azul;x.font='bold 16px Arial';x.fillText(String(v),px-7,py-14);
+    x.fillStyle=gris;x.font='16px Arial';x.fillText(mNames[i],px-16,my0+mh+28);
+  });x.stroke();
+  y=my0+mh+90;
+
+  // Reading
+  x.fillStyle='#fff5d6';x.strokeStyle=amarillo;x.lineWidth=3;x.fillRect(70,y,1460,250);x.strokeRect(70,y,1460,250);
+  x.fillStyle=azul;x.font='bold 24px Arial';x.fillText('LECTURA ORSEC',95,y+42);
+  const pct=arr.length?Math.round(ft[1]/arr.length*1000)/10:0;
+  const lectura=`La selección registra ${arr.length} ${delito.toLowerCase()}. La mayor concentración temporal corresponde a ${ft[0]} (${ft[1]} casos; ${pct}%). La hora con mayor frecuencia es ${ht[0]==='SIN HORA'?'sin dato':ht[0]+':00'}. El distrito con mayor concentración es ${dt[0]} (${dt[1]} casos). Este patrón es descriptivo y debe contrastarse con territorio, modalidad y evolución temporal antes de inferir un modus operandi.`;
+  x.fillStyle='#17384f';x.font='20px Arial';
+  orsecInfografiaWrap(x,lectura,1390).slice(0,7).forEach((ln,i)=>x.fillText(ln,95,y+82+i*30));
+
+  // Footer
+  x.fillStyle=azul;x.fillRect(0,H-95,W,95);
+  x.fillStyle='#fff';x.font='17px Arial';x.fillText('ORSEC · Centro de Inteligencia · Región La Libertad',70,H-55);
+  x.font='15px Arial';x.fillText('Fuente: registros detallados de homicidios y detonaciones · Enero–Agosto 2026',70,H-28);
+
+  c.toBlob(b=>orsecDownload(`ORSEC_${delito}_infografia_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
+}
 </script>
 
 </body></html>
