@@ -2792,7 +2792,7 @@ async function orsecDescargarInfografia(){
  // Map
  const mx=430,my=152,mw=960,mh=763;
  box(mx,my,mw,mh);
- txt('DISTRIBUCIÓN POR DISTRITO',mx+18,my+34,19,true,C.navy2);
+ txt('DISTRIBUCIÓN TERRITORIAL POR DISTRITO',mx+18,my+34,19,true,C.navy2);
  txt('Incidencia según la selección activa',mx+18,my+58,14,false,C.muted);
  const mapX=mx+18,mapY=my+78,mapW=mw-36,mapH=mh-100;
  x.fillStyle='#dceff7';x.fillRect(mapX,mapY,mapW,mapH);
@@ -2809,12 +2809,12 @@ async function orsecDescargarInfografia(){
  if(geo&&geo.features){
    let minX=999,maxX=-999,minY=999,maxY=-999;
    geo.features.forEach(f=>each(f.geometry,p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1])}));
-   // V12: reserve a dedicated ocean-side gutter for metropolitan callouts.
-   // The geographic polygons begin to the right of this gutter, so labels can never cover them.
-   const calloutGutter=250;
-   const geoX=mapX+calloutGutter, geoW=mapW-calloutGutter;
-   const sc=Math.min(geoW/(maxX-minX),mapH/(maxY-minY))*.94;
-   const ox=geoX+(geoW-(maxX-minX)*sc)/2,oy=mapY+(mapH-(maxY-minY)*sc)/2;
+   // V15: mapa regional protagonista. Se aprovecha casi todo el panel cartográfico.
+   const mapPad=28;
+   const geoX=mapX+mapPad, geoW=mapW-mapPad*2;
+   const geoY=mapY+72, geoH=mapH-92;
+   const sc=Math.min(geoW/(maxX-minX),geoH/(maxY-minY))*.98;
+   const ox=geoX+(geoW-(maxX-minX)*sc)/2,oy=geoY+(geoH-(maxY-minY)*sc)/2;
    const pr=p=>[ox+(p[0]-minX)*sc,oy+(maxY-p[1])*sc];
    geo.features.forEach(f=>{
      const name=norm(f.properties.NOMBDIST),v=dcounts[name]||0;
@@ -2834,32 +2834,65 @@ async function orsecDescargarInfografia(){
    });
    labs.filter(o=>!o.metro).forEach(o=>{txt(trunc(o.name,17),o.cx,o.cy-2,12,true,C.navy,'center');txt(o.v,o.cx,o.cy+14,12,true,C.navy,'center')});
 
-   // Metropolitan callout rail on LEFT side of map, separated and non-overlapping.
-   const ml=labs.filter(o=>o.metro).sort((a,b)=>a.cy-b.cy);
-   // Rail metropolitano definitivo: etiquetas en el margen oceánico,
-   // separadas del territorio y distribuidas verticalmente sin superposición.
-   // V13 master callout model: boxes entirely inside the reserved gutter.
-   const labelW=205, labelH=29;
-   const railX=mapX+8;
-   const startY=mapY+125, endY=mapY+mapH-88;
-   const step=ml.length>1?(endY-startY)/(ml.length-1):0;
-   ml.forEach((o,i)=>{
-     const cy=startY+i*step, bx=railX, by=cy-labelH/2;
-     const lineStartX=bx+labelW+8, elbowX=mapX+calloutGutter-8;
-     x.strokeStyle='#365b73';x.lineWidth=1.25;
-     x.beginPath();x.moveTo(lineStartX,cy);x.lineTo(elbowX,cy);x.lineTo(o.cx,o.cy);x.stroke();
-     x.fillStyle='#111';x.beginPath();x.arc(lineStartX,cy,3,0,Math.PI*2);x.fill();
-     box(bx,by,labelW,labelH,'#ffffff','#8fa9ba',5);
-     txt(trunc(o.name,19),bx+10,cy+4,10,true,C.navy);
-     txt(o.v,bx+labelW-10,cy+4,12,true,C.red,'right');
-     x.fillStyle=C.red;x.beginPath();x.arc(o.cx,o.cy,3.5,0,Math.PI*2);x.fill();
-   });
+   // V15 · DETALLE METROPOLITANO AMPLIADO PARA IMPRESIÓN
+   // El mapa regional queda limpio; Trujillo metropolitano se amplía en un recuadro independiente.
+   const ml=labs.filter(o=>o.metro);
+   if(ml.length){
+     const insetX=mapX+24, insetY=mapY+mapH-292, insetW=350, insetH=250;
+     box(insetX,insetY,insetW,insetH,'#ffffffee','#9fb5c4',8);
+     txt('DETALLE METROPOLITANO',insetX+16,insetY+27,12,true,C.navy2);
+     txt('Trujillo y distritos próximos',insetX+16,insetY+46,10,false,C.muted);
+
+     const metroNames=new Set(ml.map(o=>o.name));
+     const metroFeatures=geo.features.filter(f=>metroNames.has(norm(f.properties.NOMBDIST)));
+     let mnX=999,mxX=-999,mnY=999,mxY=-999;
+     metroFeatures.forEach(f=>each(f.geometry,p=>{
+       mnX=Math.min(mnX,p[0]);mxX=Math.max(mxX,p[0]);mnY=Math.min(mnY,p[1]);mxY=Math.max(mxY,p[1]);
+     }));
+
+     const listW=150;
+     const miniX=insetX+listW+12, miniY=insetY+58, miniW=insetW-listW-24, miniH=insetH-72;
+     const msc=Math.min(miniW/(mxX-mnX),miniH/(mxY-mnY))*.90;
+     const mox=miniX+(miniW-(mxX-mnX)*msc)/2;
+     const moy=miniY+(miniH-(mxY-mnY)*msc)/2;
+     const mpr=p=>[mox+(p[0]-mnX)*msc,moy+(mxY-p[1])*msc];
+
+     metroFeatures.forEach(f=>{
+       const name=norm(f.properties.NOMBDIST),v=dcounts[name]||0;
+       x.beginPath();
+       const mring=r=>{r.forEach((p,i)=>{const q=mpr(p);i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1])});x.closePath()};
+       f.geometry.type==='Polygon'?f.geometry.coordinates.forEach(mring):f.geometry.coordinates.forEach(p=>p.forEach(mring));
+       x.fillStyle=col(v);x.fill();x.strokeStyle='#ffffff';x.lineWidth=1.2;x.stroke();
+     });
+
+     const ordered=ml.slice().sort((u,v)=>v.v-u.v);
+     const maxRows=Math.min(7,ordered.length);
+     const rowStep=24;
+     ordered.slice(0,maxRows).forEach((o,i)=>{
+       const yy=insetY+72+i*rowStep;
+       txt(trunc(o.name,17),insetX+14,yy,9,true,C.navy);
+       txt(o.v,insetX+listW-8,yy,10,true,C.red,'right');
+
+       const f=metroFeatures.find(ff=>norm(ff.properties.NOMBDIST)===o.name);
+       if(f){
+         const pts=[];each(f.geometry,p=>pts.push(mpr(p)));
+         if(pts.length){
+           const cx=pts.reduce((s,p)=>s+p[0],0)/pts.length;
+           const cy=pts.reduce((s,p)=>s+p[1],0)/pts.length;
+           x.strokeStyle='#627f92';x.lineWidth=.8;
+           x.beginPath();x.moveTo(insetX+listW,yy-4);x.lineTo(cx,cy);x.stroke();
+           x.fillStyle=C.red;x.beginPath();x.arc(cx,cy,2.5,0,Math.PI*2);x.fill();
+         }
+       }
+     });
+   }
 
    // legend
-   box(mapX+mapW-170,mapY+mapH-135,150,115,'#fffffff2','#bacbd6',7);
-   txt('INTENSIDAD',mapX+mapW-158,mapY+mapH-112,11,true,C.navy2);
+   box(mapX+mapW-166,mapY+82,146,112,'#fffffff2','#bacbd6',7);
+   txt('INTENSIDAD',mapX+mapW-154,mapY+105,11,true,C.navy2);
    [['#edf2f5','0'],['#f5cf64','Baja'],['#f58a24','Media'],['#d94b22','Alta'],['#8f1717','Muy alta']].forEach((q,i)=>{
-     x.fillStyle=q[0];x.fillRect(mapX+mapW-158,mapY+mapH-94+i*16,12,9);txt(q[1],mapX+mapW-140,mapY+mapH-85+i*16,9,false,C.text);
+     x.fillStyle=q[0];x.fillRect(mapX+mapW-154,mapY+122+i*16,12,9);
+     txt(q[1],mapX+mapW-136,mapY+131+i*16,9,false,C.text);
    });
  }
 
@@ -3549,7 +3582,7 @@ async function orsecDescargarInfografia(){
  // Map
  const mx=430,my=152,mw=960,mh=763;
  box(mx,my,mw,mh);
- txt('DISTRIBUCIÓN POR DISTRITO',mx+18,my+34,19,true,C.navy2);
+ txt('DISTRIBUCIÓN TERRITORIAL POR DISTRITO',mx+18,my+34,19,true,C.navy2);
  txt('Incidencia según la selección activa',mx+18,my+58,14,false,C.muted);
  const mapX=mx+18,mapY=my+78,mapW=mw-36,mapH=mh-100;
  x.fillStyle='#dceff7';x.fillRect(mapX,mapY,mapW,mapH);

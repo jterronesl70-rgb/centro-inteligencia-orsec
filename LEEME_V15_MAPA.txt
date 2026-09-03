@@ -1,0 +1,12 @@
+ORSEC · V15 · MAPA OPTIMIZADO PARA INFOGRAFÍA E IMPRESIÓN
+
+Mejoras:
+- El mapa regional vuelve a ocupar casi todo el panel cartográfico.
+- Se elimina la larga columna de etiquetas que comprimía el mapa.
+- Se incorpora un recuadro independiente "DETALLE METROPOLITANO".
+- El detalle amplía Trujillo y distritos próximos para mejorar su lectura al imprimir.
+- El mapa regional conserva el contexto completo de La Libertad, incluido Pataz.
+- La leyenda se traslada a la parte superior derecha.
+- Se mantienen los datos dinámicos y todas las funciones anteriores.
+
+La mejora afecta solo la presentación del mapa dentro de la infografía.
