@@ -2749,7 +2749,7 @@ async function orsecDescargarInfografia(){
  txt('▥  PANEL EJECUTIVO',W-35,119,12,true,C.white,'right');
 
  // Left executive panel
- const lx=20,ly=152,lw=390;
+ const lx=18,ly=152,lw=345;
  box(lx,ly,lw,790);
  txt('MAPA DELICTIVO DISTRITAL ORSEC V1',lx+18,ly+34,20,true,C.navy2);
  txt(periodo,lx+18,ly+58,14,false,C.muted);
@@ -2790,7 +2790,7 @@ async function orsecDescargarInfografia(){
  lines.forEach((s,i)=>txt(s,lx+34,ky+580+i*25,13,i<2,C.text));
 
  // Map
- const mx=430,my=152,mw=960,mh=763;
+ const mx=380,my=152,mw=1085,mh=763;
  box(mx,my,mw,mh);
  txt('DISTRIBUCIÓN TERRITORIAL POR DISTRITO',mx+18,my+34,19,true,C.navy2);
  txt('Incidencia según la selección activa',mx+18,my+58,14,false,C.muted);
@@ -2834,70 +2834,87 @@ async function orsecDescargarInfografia(){
    });
    labs.filter(o=>!o.metro).forEach(o=>{txt(trunc(o.name,17),o.cx,o.cy-2,12,true,C.navy,'center');txt(o.v,o.cx,o.cy+14,12,true,C.navy,'center')});
 
-   // V15 · DETALLE METROPOLITANO AMPLIADO PARA IMPRESIÓN
-   // El mapa regional queda limpio; Trujillo metropolitano se amplía en un recuadro independiente.
+   // V16 · MODELO DE REFERENCIA APROBADO
+   // Los rectángulos metropolitanos ocupan una franja exclusiva a la izquierda
+   // del mapa. El área geográfica comienza después de esa franja.
    const ml=labs.filter(o=>o.metro);
    if(ml.length){
-     const insetX=mapX+24, insetY=mapY+mapH-292, insetW=350, insetH=250;
-     box(insetX,insetY,insetW,insetH,'#ffffffee','#9fb5c4',8);
-     txt('DETALLE METROPOLITANO',insetX+16,insetY+27,12,true,C.navy2);
-     txt('Trujillo y distritos próximos',insetX+16,insetY+46,10,false,C.muted);
+     const railW=225;
+     const railX=mapX+12;
+     const plotBoundary=mapX+railW+28;
 
-     const metroNames=new Set(ml.map(o=>o.name));
-     const metroFeatures=geo.features.filter(f=>metroNames.has(norm(f.properties.NOMBDIST)));
-     let mnX=999,mxX=-999,mnY=999,mxY=-999;
-     metroFeatures.forEach(f=>each(f.geometry,p=>{
-       mnX=Math.min(mnX,p[0]);mxX=Math.max(mxX,p[0]);mnY=Math.min(mnY,p[1]);mxY=Math.max(mxY,p[1]);
+     // Recalcular una proyección secundaria del mapa regional usando el espacio restante,
+     // para que ningún rectángulo se superponga con los polígonos.
+     let rMinX=999,rMaxX=-999,rMinY=999,rMaxY=-999;
+     geo.features.forEach(f=>each(f.geometry,p=>{
+       rMinX=Math.min(rMinX,p[0]);rMaxX=Math.max(rMaxX,p[0]);rMinY=Math.min(rMinY,p[1]);rMaxY=Math.max(rMaxY,p[1]);
      }));
+     const regionX=plotBoundary, regionY=mapY+72;
+     const regionW=mapW-(plotBoundary-mapX)-22, regionH=mapH-92;
+     const rsc=Math.min(regionW/(rMaxX-rMinX),regionH/(rMaxY-rMinY))*.98;
+     const rox=regionX+(regionW-(rMaxX-rMinX)*rsc)/2;
+     const roy=regionY+(regionH-(rMaxY-rMinY)*rsc)/2;
+     const rpr=p=>[rox+(p[0]-rMinX)*rsc,roy+(rMaxY-p[1])*rsc];
 
-     const listW=150;
-     const miniX=insetX+listW+12, miniY=insetY+58, miniW=insetW-listW-24, miniH=insetH-72;
-     const msc=Math.min(miniW/(mxX-mnX),miniH/(mxY-mnY))*.90;
-     const mox=miniX+(miniW-(mxX-mnX)*msc)/2;
-     const moy=miniY+(miniH-(mxY-mnY)*msc)/2;
-     const mpr=p=>[mox+(p[0]-mnX)*msc,moy+(mxY-p[1])*msc];
-
-     metroFeatures.forEach(f=>{
+     // Redibujar sobre el mapa existente con la geometría ya desplazada a la derecha.
+     x.fillStyle='#dceff7';x.fillRect(mapX+10,mapY+64,mapW-20,mapH-76);
+     geo.features.forEach(f=>{
        const name=norm(f.properties.NOMBDIST),v=dcounts[name]||0;
        x.beginPath();
-       const mring=r=>{r.forEach((p,i)=>{const q=mpr(p);i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1])});x.closePath()};
-       f.geometry.type==='Polygon'?f.geometry.coordinates.forEach(mring):f.geometry.coordinates.forEach(p=>p.forEach(mring));
-       x.fillStyle=col(v);x.fill();x.strokeStyle='#ffffff';x.lineWidth=1.2;x.stroke();
+       const rr=r=>{r.forEach((p,i)=>{const q=rpr(p);i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1])});x.closePath()};
+       f.geometry.type==='Polygon'?f.geometry.coordinates.forEach(rr):f.geometry.coordinates.forEach(poly=>poly.forEach(rr));
+       x.fillStyle=col(v);x.fill();x.strokeStyle='#fff';x.lineWidth=1.15;x.stroke();
      });
 
-     const ordered=ml.slice().sort((u,v)=>v.v-u.v);
-     const maxRows=Math.min(7,ordered.length);
-     const rowStep=24;
-     ordered.slice(0,maxRows).forEach((o,i)=>{
-       const yy=insetY+72+i*rowStep;
-       txt(trunc(o.name,17),insetX+14,yy,9,true,C.navy);
-       txt(o.v,insetX+listW-8,yy,10,true,C.red,'right');
+     // Recalcular centroides con la nueva proyección.
+     const newLabs=[];
+     topN(dcounts,18).forEach(([name,v])=>{
+       const f=geo.features.find(z=>norm(z.properties.NOMBDIST)===name);if(!f)return;
+       const pts=[];each(f.geometry,p=>pts.push(rpr(p)));if(!pts.length)return;
+       const cx=pts.reduce((s,p)=>s+p[0],0)/pts.length;
+       const cy=pts.reduce((s,p)=>s+p[1],0)/pts.length;
+       newLabs.push({name,v,cx,cy,metro:metro.has(name)});
+     });
 
-       const f=metroFeatures.find(ff=>norm(ff.properties.NOMBDIST)===o.name);
-       if(f){
-         const pts=[];each(f.geometry,p=>pts.push(mpr(p)));
-         if(pts.length){
-           const cx=pts.reduce((s,p)=>s+p[0],0)/pts.length;
-           const cy=pts.reduce((s,p)=>s+p[1],0)/pts.length;
-           x.strokeStyle='#627f92';x.lineWidth=.8;
-           x.beginPath();x.moveTo(insetX+listW,yy-4);x.lineTo(cx,cy);x.stroke();
-           x.fillStyle=C.red;x.beginPath();x.arc(cx,cy,2.5,0,Math.PI*2);x.fill();
-         }
-       }
+     // Rotular distritos no metropolitanos dentro del mapa.
+     newLabs.filter(o=>!o.metro).forEach(o=>{
+       txt(trunc(o.name,16),o.cx,o.cy-2,10,true,C.navy,'center');
+       txt(o.v,o.cx,o.cy+12,10,true,C.navy,'center');
+     });
+
+     // Orden fijo visual, como la referencia aprobada.
+     const order=['HUANCHACO','EL PORVENIR','TRUJILLO','LA ESPERANZA','FLORENCIA DE MORA',
+                  'VICTOR LARCO HERRERA','MOCHE','SALAVERRY','LAREDO'];
+     const metroLabs=order.map(n=>newLabs.find(o=>o.name===n)).filter(Boolean);
+     const topY=mapY+200, bottomY=mapY+mapH-95;
+     const gap=metroLabs.length>1?(bottomY-topY)/(metroLabs.length-1):0;
+     const bw=200,bh=31;
+
+     metroLabs.forEach((o,i)=>{
+       const cy=topY+i*gap, bx=railX, by=cy-bh/2;
+       const dotX=bx+bw+10;
+       x.strokeStyle='#49697e';x.lineWidth=1.1;
+       x.beginPath();x.moveTo(dotX,cy);x.lineTo(plotBoundary-8,cy);x.lineTo(o.cx,o.cy);x.stroke();
+       x.fillStyle='#111';x.beginPath();x.arc(dotX,cy,3.2,0,Math.PI*2);x.fill();
+       box(bx,by,bw,bh,'#fff','#93aabd',5);
+       const nm=o.name==='VICTOR LARCO HERRERA'?'VÍCTOR LARCO H.':o.name;
+       txt(trunc(nm,20),bx+10,cy+4,10,true,C.navy);
+       txt(o.v,bx+bw-10,cy+4,12,true,C.red,'right');
+       x.fillStyle=C.red;x.beginPath();x.arc(o.cx,o.cy,3.2,0,Math.PI*2);x.fill();
      });
    }
 
    // legend
-   box(mapX+mapW-166,mapY+82,146,112,'#fffffff2','#bacbd6',7);
-   txt('INTENSIDAD',mapX+mapW-154,mapY+105,11,true,C.navy2);
+   box(mapX+mapW-160,mapY+mapH-140,140,120,'#fffffff2','#bacbd6',7);
+   txt('INTENSIDAD',mapX+mapW-148,mapY+mapH-116,11,true,C.navy2);
    [['#edf2f5','0'],['#f5cf64','Baja'],['#f58a24','Media'],['#d94b22','Alta'],['#8f1717','Muy alta']].forEach((q,i)=>{
-     x.fillStyle=q[0];x.fillRect(mapX+mapW-154,mapY+122+i*16,12,9);
-     txt(q[1],mapX+mapW-136,mapY+131+i*16,9,false,C.text);
+     x.fillStyle=q[0];x.fillRect(mapX+mapW-148,mapY+mapH-99+i*17,12,9);
+     txt(q[1],mapX+mapW-130,mapY+mapH-90+i*17,9,false,C.text);
    });
  }
 
  // Right analytics
- const rx=1410,rw=490;
+ const rx=1480,rw=422;
  rankPanel('TOP 5 DISTRITOS',distC,rx,152,rw,250,5);
  rankPanel('DISTRIBUCIÓN POR FRANJA',franC,rx,420,rw,215,4);
  rankPanel(delito==='HOMICIDIOS'?'MEDIO EMPLEADO':'TIPO DE ARTEFACTO',modeC,rx,653,rw,262,4);
@@ -2908,7 +2925,7 @@ async function orsecDescargarInfografia(){
  ks.forEach((q,i)=>{const px=20+i*(bw+24);box(px,by,bw,100);txt(q[0],px+16,by+29,12,true,C.muted);txt(trunc(q[1],24),px+16,by+68,24,true,C.navy2)});
  x.fillStyle=C.navy;x.fillRect(0,H-25,W,25);
  txt('ORSEC · Centro de Inteligencia · Observatorio Regional de Seguridad Ciudadana · La Libertad',22,H-8,11,false,C.white);
- txt('Versión ejecutiva ORSEC · diseño maestro aprobado V13',W-22,H-8,11,false,C.white,'right');
+ txt('Versión ejecutiva ORSEC · mapa de referencia V16',W-22,H-8,11,false,C.white,'right');
 
  c.toBlob(b=>orsecDownload(`ORSEC_${delito}_INFOGRAFIA_MODELO_MAESTRO_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
 }
@@ -3653,7 +3670,7 @@ async function orsecDescargarInfografia(){
  ks.forEach((q,i)=>{const px=20+i*(bw+24);box(px,by,bw,100);txt(q[0],px+16,by+29,12,true,C.muted);txt(trunc(q[1],24),px+16,by+68,24,true,C.navy2)});
  x.fillStyle=C.navy;x.fillRect(0,H-25,W,25);
  txt('ORSEC · Centro de Inteligencia · Observatorio Regional de Seguridad Ciudadana · La Libertad',22,H-8,11,false,C.white);
- txt('Versión ejecutiva ORSEC · diseño maestro aprobado V13',W-22,H-8,11,false,C.white,'right');
+ txt('Versión ejecutiva ORSEC · mapa de referencia V16',W-22,H-8,11,false,C.white,'right');
 
  c.toBlob(b=>orsecDownload(`ORSEC_${delito}_INFOGRAFIA_MODELO_MAESTRO_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
 }

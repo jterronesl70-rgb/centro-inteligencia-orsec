@@ -1,0 +1,13 @@
+ORSEC · V16 · DISTRIBUCIÓN VISUAL DEL MAPA SEGÚN REFERENCIA APROBADA
+
+Corrección:
+- Se ensanchó el panel central del mapa.
+- Se redujeron ligeramente los paneles laterales para ganar espacio cartográfico.
+- Se creó una franja exclusiva a la izquierda del mapa para los rectángulos metropolitanos.
+- Los rectángulos nunca se dibujan encima de los polígonos.
+- Las líneas guía salen de la franja y llegan al distrito correspondiente.
+- Los distritos no metropolitanos mantienen rótulos dentro del mapa.
+- La leyenda se ubica en la esquina inferior derecha.
+- Se mantiene el resto de ORSEC y sus datos dinámicos.
+
+Objetivo: reproducir visualmente la composición aprobada por el usuario.
