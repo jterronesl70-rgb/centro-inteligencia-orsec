@@ -3173,7 +3173,55 @@ function orsecCrearPaginasRelacion(){
  }return pages
 }
 function orsecDescargarRelacionPNG(){const p=orsecCrearPaginasRelacion();if(!p.length)return;const m=orsecRelacionMeta();p.forEach((c,i)=>c.toBlob(b=>orsecDownload(`ORSEC_${m.delito}_relacion_${String(i+1).padStart(2,'0')}.png`,b),'image/png'))}
-function orsecDescargarRelacionPDF(){const p=orsecCrearPaginasRelacion();if(!p.length)return;if(!window.jspdf){alert('No se pudo cargar el generador PDF. Verifique su conexión.');return}const{jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});p.forEach((c,i)=>{if(i)pdf.addPage('a4','landscape');pdf.addImage(c.toDataURL('image/jpeg',.92),'JPEG',18,18,806,504)});pdf.save(`ORSEC_${orsecRelacionMeta().delito}_relacion.pdf`)}
+
+function orsecDescargarRelacionPDF(){
+ const m=orsecRelacionMeta(),a=ORSEC_DET_FILTRADO||[];
+ if(!a.length)return;
+ const h=m.delito==='HOMICIDIOS';
+ const cols=h
+ ?[['fecha','Fecha'],['hora','Hora'],['provincia','Provincia'],['distrito','Distrito'],['edad','Edad'],['sexo','Sexo'],['medio','Medio empleado'],['lugar','Lugar']]
+ :[['fecha','Fecha'],['hora','Hora'],['provincia','Provincia'],['distrito','Distrito'],['artefacto','Artefacto'],['condicion','Condición'],['comisaria','CPNP'],['direccion','Dirección']];
+
+ const esc=v=>String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+ const filas=a.map(r=>'<tr>'+cols.map(c=>'<td>'+esc(r[c[0]])+'</td>').join('')+'</tr>').join('');
+ const encabezado=cols.map(c=>'<th>'+c[1]+'</th>').join('');
+ const provincia=m.provincia==='TODAS'?'Todas las provincias':m.provincia;
+ const titulo='ORSEC · RELACIÓN DETALLADA · '+m.delito;
+ const w=window.open('','_blank','width=1200,height=900');
+ if(!w){alert('El navegador bloqueó la ventana de generación PDF. Permita ventanas emergentes para ORSEC e intente nuevamente.');return;}
+
+ const css=`
+  @page{size:A4 landscape;margin:10mm;}
+  *{box-sizing:border-box}
+  body{font-family:Arial,Helvetica,sans-serif;color:#17384f;margin:0;background:#fff}
+  .wrap{padding:0}
+  .head{background:#073e70;color:#fff;padding:16px 18px;margin-bottom:12px}
+  .head h1{font-size:18pt;margin:0 0 5px}
+  .head .sub{font-size:9.5pt}
+  .meta{display:flex;gap:18px;flex-wrap:wrap;margin:0 0 10px;font-size:9.5pt}
+  .meta b{color:#073e70}
+  table{width:100%;border-collapse:collapse;font-size:7.8pt;table-layout:fixed}
+  thead{display:table-header-group}
+  th{background:#0b4f7c;color:#fff;padding:6px 5px;border:1px solid #d5e1e9;text-align:left}
+  td{padding:5px;border:1px solid #dfe8ee;vertical-align:top;word-wrap:break-word;overflow-wrap:anywhere}
+  tbody tr:nth-child(even){background:#f7fafc}
+  tr{page-break-inside:avoid}
+  .foot{margin-top:10px;font-size:8pt;color:#667f90}
+  .no-print{margin:12px 0}
+  .no-print button{padding:10px 14px;background:#0b5f91;color:#fff;border:0;border-radius:7px;font-weight:800;cursor:pointer}
+  @media print{.no-print{display:none!important}}
+ `;
+ w.document.open();
+ w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(titulo)+'</title><style>'+css+'</style></head><body>');
+ w.document.write('<div class="wrap"><div class="head"><h1>'+esc(titulo)+'</h1><div class="sub">'+esc(m.periodo)+' · '+esc(provincia)+'</div></div>');
+ w.document.write('<div class="meta"><div><b>Total seleccionado:</b> '+a.length+' registro(s)</div><div><b>Fuente:</b> ORSEC</div></div>');
+ w.document.write('<table><thead><tr>'+encabezado+'</tr></thead><tbody>'+filas+'</tbody></table>');
+ w.document.write('<div class="foot">Relación completa generada desde ORSEC. Use “Guardar como PDF” en el cuadro de impresión del navegador.</div>');
+ w.document.write('<div class="no-print"><button onclick="window.print()">GUARDAR COMO PDF / IMPRIMIR</button></div></div>');
+ w.document.write('</body></html>');
+ w.document.close();
+ setTimeout(()=>{w.focus();w.print();},300);
+}
 </script>
 
 

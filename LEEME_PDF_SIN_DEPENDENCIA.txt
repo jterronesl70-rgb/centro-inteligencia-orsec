@@ -1,0 +1,12 @@
+ORSEC · RELACIÓN PDF SIN DEPENDENCIA EXTERNA · V6
+
+Corrección:
+- Se eliminó la dependencia externa de jsPDF.
+- El botón RELACIÓN PDF ya no necesita cargar una librería desde Internet.
+- Al pulsarlo, ORSEC abre una ventana aislada con SOLO la relación filtrada.
+- Esa ventana lanza el diálogo del navegador para Guardar como PDF / Imprimir.
+- Incluye todos los registros de la selección activa, no solo los visibles por scroll.
+- Formato A4 horizontal, con encabezado repetido en cada página.
+
+Ejemplo:
+HOMICIDIOS + ENE–AGO 2026 + TODAS LAS PROVINCIAS = 160 registros completos.
