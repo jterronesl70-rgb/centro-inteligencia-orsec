@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ORSEC | Centro de Inteligencia</title>
@@ -660,7 +663,7 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
    <button onclick="orsecDescargarDetalleCSV()">DESCARGAR CUADRO CSV</button>
    <button onclick="orsecDescargarRelacionPNG()" style="background:#1479a8;color:#fff">RELACIÓN COMPLETA PNG</button>
    <button onclick="orsecDescargarRelacionPDF()" style="background:#b3261e;color:#fff">RELACIÓN PDF</button>
-   <button onclick="orsecDescargarInfografia()" style="background:#f4b400;color:#073e70;font-weight:900">DESCARGAR INFOGRAFÍA EJECUTIVA PNG</button>
+   <button onclick="orsecDescargarInfografiaV20()" style="background:#f4b400;color:#073e70;font-weight:900">DESCARGAR INFOGRAFÍA EJECUTIVA PNG</button>
    <button onclick="orsecDescargarDetallePNG()">DESCARGAR GRÁFICA PNG</button>
   </div>
   <div class="orsec-detail-kpis">
@@ -2691,14 +2694,7 @@ function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style
 
 
 <script id="orsecInfografiaAltoImpactoJS">
-async function orsecDescargarInfografia(){
-  const a=document.createElement('a');
-  a.href='ORSEC_INFOGRAFIA_PANEL_EJECUTIVO.png';
-  a.download='ORSEC_INFOGRAFIA_PANEL_EJECUTIVO.png';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-}
+
 </script>
 
 </body>
@@ -3268,182 +3264,7 @@ function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style
 
 
 <script id="orsecInfografiaAltoImpactoJS">
-async function orsecDescargarInfografia(){
- if(!ORSEC_DETALLE || !ORSEC_DET_FILTRADO || !ORSEC_DET_FILTRADO.length){
-   alert('No hay registros para la selección actual.'); return;
- }
- const delito=document.getElementById('orsecDetDelito').value;
- const periodo=document.getElementById('orsecDetPeriodo').selectedOptions[0].textContent;
- const provincia=document.getElementById('orsecDetProvincia').value;
- const arr=ORSEC_DET_FILTRADO;
- const all=(delito==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:ORSEC_DETALLE.detonaciones)||[];
 
- const W=1920,H=1080,c=document.createElement('canvas'); c.width=W;c.height=H; const x=c.getContext('2d');
- const C={navy:'#031d36',navy2:'#073e70',blue:'#0d5f9b',blue2:'#2f88c0',white:'#fff',bg:'#f5f8fb',
-          text:'#16364e',muted:'#6a8293',gold:'#f4b400',red:'#b51f1f',orange:'#f47721',
-          yellow:'#f7c84b',pale:'#e9f0f5',green:'#17834b'};
- function box(px,py,pw,ph,fill=C.white,stroke='#d2dee7',r=10){
-   x.fillStyle=fill;x.strokeStyle=stroke;x.lineWidth=1.5;x.beginPath();x.roundRect(px,py,pw,ph,r);x.fill();x.stroke();
- }
- function txt(s,px,py,sz=16,b=false,col=C.text,al='left'){
-   x.fillStyle=col;x.font=(b?'bold ':'')+sz+'px Arial';x.textAlign=al;x.fillText(String(s??''),px,py);
- }
- function norm(s){return orsecNorm(String(s||''))}
- function cnt(a,k){const m={};a.forEach(r=>{let q=typeof k==='function'?k(r):r[k];q=q||'SIN DATO';m[q]=(m[q]||0)+1});return m}
- function topN(m,n=5){return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,n)}
- function top(m){return topN(m,1)[0]||['—',0]}
- function trunc(s,n){s=String(s||'');return s.length>n?s.slice(0,n-1)+'…':s}
- function rankPanel(title,data,px,py,pw,ph,n=5){
-   box(px,py,pw,ph);
-   txt(title,px+18,py+30,18,true,C.navy2);
-   const a=topN(data,n),mx=Math.max(1,...a.map(q=>q[1]));
-   a.forEach(([k,v],i)=>{
-     const yy=py+66+i*42;
-     txt(String(i+1),px+20,yy,13,true,C.orange);
-     txt(trunc(k,21),px+48,yy,14,true,C.text);
-     x.fillStyle=C.pale;x.fillRect(px+245,yy-12,pw-315,13);
-     x.fillStyle=i===0?C.red:(i===1?C.orange:C.gold);
-     x.fillRect(px+245,yy-12,(pw-315)*(v/mx),13);
-     txt(v,px+pw-22,yy,14,true,C.navy2,'right');
-   });
- }
-
- x.fillStyle=C.bg;x.fillRect(0,0,W,H);
- // Header
- x.fillStyle=C.navy;x.fillRect(0,0,W,92);
- txt('GOBIERNO REGIONAL',30,31,14,true,C.white);txt('LA LIBERTAD',30,53,14,true,C.white);
- txt('ORSEC',W/2,36,34,true,C.white,'center');
- txt('Centro de Inteligencia · Región La Libertad',W/2,60,15,false,C.white,'center');
- txt('“Cada dato tiene una ubicación. Cada ubicación tiene un riesgo. Cada riesgo debe convertirse en una decisión.”',
-     W/2,82,12,false,C.gold,'center');
- txt('OBSERVATORIO REGIONAL',W-30,31,13,true,C.white,'right');
- txt('DE SEGURIDAD CIUDADANA',W-30,52,13,true,C.white,'right');
- // Navigation strip: visual language of the approved ORSEC dashboard.
- x.fillStyle='#062a4b';x.fillRect(0,92,W,42);
- const nav=['⌂  INICIO','▥  INCIDENCIA DELICTIVA','⚠  ALERTAS','▣  BOLETINES','◉  SALA DE SITUACIÓN'];
- nav.forEach((s,i)=>{const nx=34+i*250; if(i===1){x.fillStyle='#075da0';x.fillRect(nx-12,92,238,42);}
-   txt(s,nx,119,12,true,C.white);});
- txt('▥  PANEL EJECUTIVO',W-35,119,12,true,C.white,'right');
-
- // Left executive panel
- const lx=20,ly=152,lw=390;
- box(lx,ly,lw,790);
- txt('MAPA DELICTIVO DISTRITAL ORSEC V1',lx+18,ly+34,20,true,C.navy2);
- txt(periodo,lx+18,ly+58,14,false,C.muted);
-
- const provC=cnt(arr,'provincia'),distC=cnt(arr,'distrito'),franC=cnt(arr,'franja'),
-       hourC=cnt(arr,r=>r.hora?r.hora.slice(0,2):'SIN HORA'),
-       modeC=cnt(arr,delito==='HOMICIDIOS'?'medio':'artefacto');
- const ft=top(franC),ht=top(hourC),dt=top(distC),mt=top(modeC);
-
- const ky=ly+82, kw=110;
- [['TOTAL',arr.length,C.blue],['DISTRITOS',Object.keys(distC).length,C.red],['PROVINCIAS',Object.keys(provC).length,C.orange]].forEach((q,i)=>{
-   box(lx+18+i*(kw+10),ky,kw,92,'#fff');
-   txt(q[0],lx+28+i*(kw+10),ky+25,12,true,C.muted);
-   txt(q[1],lx+28+i*(kw+10),ky+63,28,true,q[2]);
- });
- txt('SELECCIÓN',lx+18,ky+125,13,true,C.navy2);
- box(lx+18,ky+140,lw-36,54,'#f9fbfd');txt(delito+' · '+(provincia==='TODAS'?'REGIÓN':provincia),lx+34,ky+174,15,true,C.text);
-
- txt('PATRÓN TEMPORAL',lx+18,ky+225,13,true,C.navy2);
- box(lx+18,ky+240,165,105,'#f9fbfd');
- txt('FRANJA PRINCIPAL',lx+32,ky+266,11,true,C.muted);txt(ft[0],lx+32,ky+300,20,true,C.navy2);txt(ft[1]+' casos',lx+32,ky+326,13,false,C.text);
- box(lx+201,ky+240,171,105,'#f9fbfd');
- txt('HORA PICO',lx+215,ky+266,11,true,C.muted);txt(ht[0]==='SIN HORA'?'—':ht[0]+':00',lx+215,ky+300,20,true,C.navy2);txt(ht[1]+' casos',lx+215,ky+326,13,false,C.text);
-
- txt(delito==='HOMICIDIOS'?'MEDIO EMPLEADO':'ARTEFACTO PREDOMINANTE',lx+18,ky+385,13,true,C.navy2);
- box(lx+18,ky+400,lw-36,94,'#f9fbfd');
- txt(trunc(mt[0],29),lx+34,ky+435,18,true,C.navy2);txt(mt[1]+' casos · '+(arr.length?(mt[1]/arr.length*100).toFixed(1):0)+'%',lx+34,ky+466,14,false,C.text);
-
- txt('LECTURA ORSEC',lx+18,ky+535,13,true,C.navy2);
- box(lx+18,ky+550,lw-36,155,'#fff8dc','#f0c34c');
- const lines=[
-   `${arr.length} casos seleccionados.`,
-   `${dt[0]} lidera con ${dt[1]} casos.`,
-   `${ft[0]} concentra ${ft[1]} hechos.`,
-   `Hora pico: ${ht[0]==='SIN HORA'?'sin dato':ht[0]+':00'}.`,
-   `Patrón descriptivo; requiere contraste territorial.`
- ];
- lines.forEach((s,i)=>txt(s,lx+34,ky+580+i*25,13,i<2,C.text));
-
- // Map
- const mx=430,my=152,mw=960,mh=763;
- box(mx,my,mw,mh);
- txt('DISTRIBUCIÓN TERRITORIAL POR DISTRITO',mx+18,my+34,19,true,C.navy2);
- txt('Incidencia según la selección activa',mx+18,my+58,14,false,C.muted);
- const mapX=mx+18,mapY=my+78,mapW=mw-36,mapH=mh-100;
- x.fillStyle='#dceff7';x.fillRect(mapX,mapY,mapW,mapH);
-
- let geo=null;
- try{
-   if(window.ORSEC_MAP_GEO)geo=window.ORSEC_MAP_GEO;
-   if(!geo){const r=await fetch(ORSEC_GEO_URL,{cache:'no-store'});geo=await r.json();}
- }catch(e){}
- const dcounts={};arr.forEach(r=>{const k=norm(r.distrito);dcounts[k]=(dcounts[k]||0)+1});
- const maxD=Math.max(1,...Object.values(dcounts));
- function col(v){if(!v)return '#edf2f5';let q=v/maxD;return q>.75?'#8f1717':q>.5?'#d94b22':q>.25?'#f58a24':'#f5cf64'}
- function each(g,fn){if(g.type==='Polygon')g.coordinates.forEach(r=>r.forEach(fn));else if(g.type==='MultiPolygon')g.coordinates.forEach(p=>p.forEach(r=>r.forEach(fn)))}
- if(geo&&geo.features){
-   let minX=999,maxX=-999,minY=999,maxY=-999;
-   geo.features.forEach(f=>each(f.geometry,p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1])}));
-   const sc=Math.min(mapW/(maxX-minX),mapH/(maxY-minY))*.94;
-   const ox=mapX+(mapW-(maxX-minX)*sc)/2,oy=mapY+(mapH-(maxY-minY)*sc)/2;
-   const pr=p=>[ox+(p[0]-minX)*sc,oy+(maxY-p[1])*sc];
-   geo.features.forEach(f=>{
-     const name=norm(f.properties.NOMBDIST),v=dcounts[name]||0;
-     x.beginPath();
-     const ring=r=>{r.forEach((p,i)=>{const q=pr(p);i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1])});x.closePath()};
-     f.geometry.type==='Polygon'?f.geometry.coordinates.forEach(ring):f.geometry.coordinates.forEach(p=>p.forEach(ring));
-     x.fillStyle=col(v);x.fill();x.strokeStyle='#fff';x.lineWidth=1.3;x.stroke();
-   });
-
-   const metro=new Set(['TRUJILLO','LA ESPERANZA','EL PORVENIR','FLORENCIA DE MORA','VICTOR LARCO HERRERA','HUANCHACO','MOCHE','SALAVERRY','LAREDO']);
-   const labs=[];
-   topN(dcounts,16).forEach(([name,v])=>{
-     const f=geo.features.find(z=>norm(z.properties.NOMBDIST)===name);if(!f)return;
-     const pts=[];each(f.geometry,p=>pts.push(pr(p)));if(!pts.length)return;
-     const cx=pts.reduce((s,p)=>s+p[0],0)/pts.length,cy=pts.reduce((s,p)=>s+p[1],0)/pts.length;
-     labs.push({name,v,cx,cy,metro:metro.has(name)});
-   });
-   labs.filter(o=>!o.metro).forEach(o=>{txt(trunc(o.name,17),o.cx,o.cy-2,12,true,C.navy,'center');txt(o.v,o.cx,o.cy+14,12,true,C.navy,'center')});
-
-   // Metropolitan callout rail on LEFT side of map, separated and non-overlapping.
-   const ml=labs.filter(o=>o.metro).sort((a,b)=>a.cy-b.cy);
-   const railX=mapX+20, labelW=185, startY=mapY+155, endY=mapY+mapH-120;
-   const step=ml.length>1?(endY-startY)/(ml.length-1):0;
-   ml.forEach((o,i)=>{
-     const cy=startY+i*step, bx=railX, by=cy-17;
-     x.strokeStyle='#46687d';x.lineWidth=1.5;x.beginPath();x.moveTo(o.cx,o.cy);x.lineTo(bx+labelW+8,cy);x.stroke();
-     box(bx,by,labelW,34,'#fff','#9db3c2',5);
-     txt(trunc(o.name,18),bx+10,cy+5,11,true,C.navy);
-     txt(o.v,bx+labelW-10,cy+5,12,true,C.red,'right');
-     x.fillStyle=C.red;x.beginPath();x.arc(o.cx,o.cy,4,0,Math.PI*2);x.fill();
-   });
-
-   // legend
-   box(mapX+mapW-170,mapY+mapH-135,150,115,'#fffffff2','#bacbd6',7);
-   txt('INTENSIDAD',mapX+mapW-158,mapY+mapH-112,11,true,C.navy2);
-   [['#edf2f5','0'],['#f5cf64','Baja'],['#f58a24','Media'],['#d94b22','Alta'],['#8f1717','Muy alta']].forEach((q,i)=>{
-     x.fillStyle=q[0];x.fillRect(mapX+mapW-158,mapY+mapH-94+i*16,12,9);txt(q[1],mapX+mapW-140,mapY+mapH-85+i*16,9,false,C.text);
-   });
- }
-
- // Right analytics
- const rx=1410,rw=490;
- rankPanel('TOP 5 DISTRITOS',distC,rx,152,rw,250,5);
- rankPanel('DISTRIBUCIÓN POR FRANJA',franC,rx,420,rw,215,4);
- rankPanel(delito==='HOMICIDIOS'?'MEDIO EMPLEADO':'TIPO DE ARTEFACTO',modeC,rx,653,rw,262,4);
-
- // Bottom KPI strip
- const by=932,bw=355;
- const ks=[['CASOS',arr.length],['DISTRITOS CON HECHOS',Object.keys(distC).length],['PROVINCIA PRINCIPAL',top(provC)[0]],['FRANJA PRINCIPAL',ft[0]],['HORA PICO',ht[0]==='SIN HORA'?'—':ht[0]+':00']];
- ks.forEach((q,i)=>{const px=20+i*(bw+24);box(px,by,bw,100);txt(q[0],px+16,by+29,12,true,C.muted);txt(trunc(q[1],24),px+16,by+68,24,true,C.navy2)});
- x.fillStyle=C.navy;x.fillRect(0,H-25,W,25);
- txt('ORSEC · Centro de Inteligencia · Observatorio Regional de Seguridad Ciudadana · La Libertad',22,H-8,11,false,C.white);
- txt('Versión ejecutiva ORSEC · mapa de referencia V16',W-22,H-8,11,false,C.white,'right');
-
- c.toBlob(b=>orsecDownload(`ORSEC_${delito}_INFOGRAFIA_MODELO_MAESTRO_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
-}
 </script>
 
 <script id="orsecRelacionExportJS">
@@ -3582,4 +3403,27 @@ function orsecDescargarRelacionPDF(){
   setTimeout(function(){ win.focus(); win.print(); }, 350);
 }
 </script>
+
+<script id="orsecInfografiaV20Exacta">
+function orsecDescargarInfografiaV20(){
+  const url='ORSEC_PANEL_EJECUTIVO_APROBADO_V20.png?v=20';
+  fetch(url,{cache:'no-store'})
+    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.blob();})
+    .then(blob=>{
+      const obj=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=obj;
+      a.download='ORSEC_PANEL_EJECUTIVO_APROBADO_V20.png';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(obj),1500);
+    })
+    .catch(err=>{
+      console.error(err);
+      alert('No se pudo descargar la infografía V20. Actualice con Ctrl+F5 y vuelva a intentar.');
+    });
+}
+</script>
+
 </body></html>

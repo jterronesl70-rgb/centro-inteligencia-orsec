@@ -1,0 +1,22 @@
+ORSEC V20 · ÚLTIMO INTENTO · DESCARGA INFOGRAFÍA EXACTA
+
+Diagnóstico:
+Había más de una definición/versión acumulada del generador de infografía y el navegador
+podía seguir ejecutando una versión anterior. Además, Vercel/navegador podían conservar
+recursos en caché.
+
+Corrección V20:
+- Se eliminaron TODAS las definiciones antiguas de orsecDescargarInfografia.
+- El botón usa una función nueva y única: orsecDescargarInfografiaV20().
+- La imagen aprobada tiene un nombre NUEVO:
+  ORSEC_PANEL_EJECUTIVO_APROBADO_V20.png
+- Se descarga mediante fetch(cache:'no-store') para evitar caché.
+- Se agregaron metadatos no-cache al HTML.
+
+DESPLIEGUE:
+1. Subir/reemplazar TODOS los archivos del ZIP.
+2. Esperar el nuevo deployment de Vercel.
+3. Abrir la web y pulsar Ctrl+F5 una vez.
+4. Probar DESCARGAR INFOGRAFÍA.
+El nombre descargado debe ser:
+ORSEC_PANEL_EJECUTIVO_APROBADO_V20.png
