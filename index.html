@@ -655,6 +655,8 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
    </select>
    <select id="orsecDetProvincia" onchange="orsecRenderDetalle()"><option value="TODAS">TODAS LAS PROVINCIAS</option></select>
    <button onclick="orsecDescargarDetalleCSV()">DESCARGAR CUADRO CSV</button>
+   <button onclick="orsecDescargarRelacionPNG()" style="background:#1479a8;color:#fff">RELACIÓN PNG</button>
+   <button onclick="orsecDescargarRelacionPDF()" style="background:#b3261e;color:#fff">RELACIÓN PDF</button>
    <button onclick="orsecDescargarDetallePNG()">DESCARGAR GRÁFICA PNG</button>
   </div>
   <div class="orsec-detail-kpis">
@@ -670,7 +672,18 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
    <div class="orsec-detail-card"><h4 id="orsecDetModalidadTitulo">Modalidad / medio empleado</h4><div class="orsec-mini-bars" id="orsecDetModalidades"></div></div>
   </div>
   <div class="orsec-detail-reading" id="orsecDetLectura">Seleccione un delito y período para generar la lectura.</div>
-  <div class="orsec-detail-tablewrap"><table class="orsec-detail-table"><thead id="orsecDetHead"></thead><tbody id="orsecDetBody"></tbody></table></div>
+  
+<div id="orsecRelacionDescargasVisibles" style="
+ display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+ margin:12px 0 10px;padding:10px 12px;
+ background:#eef6fb;border:1px solid #b9d2e3;border-radius:10px;">
+ <strong style="color:#073e70;margin-right:4px;">DESCARGAR RELACIÓN:</strong>
+ <button onclick="orsecDescargarDetalleCSV()" style="padding:9px 12px;border:0;border-radius:8px;background:#0b5f91;color:white;font-weight:800;cursor:pointer;">CSV</button>
+ <button onclick="orsecDescargarRelacionPNG()" style="padding:9px 12px;border:0;border-radius:8px;background:#1479a8;color:white;font-weight:800;cursor:pointer;">IMAGEN PNG</button>
+ <button onclick="orsecDescargarRelacionPDF()" style="padding:9px 12px;border:0;border-radius:8px;background:#b3261e;color:white;font-weight:800;cursor:pointer;">PDF</button>
+</div>
+
+<div class="orsec-detail-tablewrap"><table class="orsec-detail-table"><thead id="orsecDetHead"></thead><tbody id="orsecDetBody"></tbody></table></div>
  </div>
 </div>
 
@@ -2850,6 +2863,26 @@ function orsecRenderMapa(){
 function orsecMapReset(){if(ORSEC_MAP&&ORSEC_MAP_LAYER){ORSEC_MAP.fitBounds(ORSEC_MAP_LAYER.getBounds(),{padding:[10,10]})}}
 </script>
 
+
+<script id="orsecRelacionExportJS">
+function orsecRelacionMeta(){return{delito:document.getElementById('orsecDetDelito').value,periodo:document.getElementById('orsecDetPeriodo').selectedOptions[0].textContent,provincia:document.getElementById('orsecDetProvincia').value}}
+function orsecCrearPaginasRelacion(){
+ const m=orsecRelacionMeta(),a=ORSEC_DET_FILTRADO||[];if(!a.length)return[];
+ const h=m.delito==='HOMICIDIOS';
+ const cs=h?[['fecha','Fecha',110],['hora','Hora',70],['provincia','Provincia',120],['distrito','Distrito',125],['edad','Edad',55],['sexo','Sexo',50],['medio','Medio empleado',180],['lugar','Lugar',500]]:[['fecha','Fecha',110],['hora','Hora',70],['provincia','Provincia',115],['distrito','Distrito',120],['artefacto','Artefacto',180],['condicion','Condición',210],['comisaria','CPNP',125],['direccion','Dirección',390]];
+ const W=1600,H=1000,M=45,Y=175,R=38,T=W-M*2,S=T/cs.reduce((s,c)=>s+c[2],0),n=Math.floor((H-Y-70)/R),pages=[];
+ for(let st=0;st<a.length;st+=n){
+  const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  x.fillStyle='#fff';x.fillRect(0,0,W,H);x.fillStyle='#073e70';x.fillRect(0,0,W,105);x.fillStyle='#fff';x.font='bold 34px Arial';x.fillText('ORSEC · RELACIÓN DETALLADA',M,48);x.font='20px Arial';x.fillText(`${m.delito} · ${m.periodo}${m.provincia==='TODAS'?'':' · '+m.provincia}`,M,82);x.fillStyle='#173d57';x.font='bold 18px Arial';x.fillText(`Total seleccionado: ${a.length} registro(s)`,M,138);
+  x.fillStyle='#073e70';x.fillRect(M,Y,T,R);let q=M;x.fillStyle='#fff';x.font='bold 13px Arial';cs.forEach(z=>{x.fillText(z[1],q+5,Y+24);q+=z[2]*S});
+  a.slice(st,st+n).forEach((r,i)=>{let y=Y+R*(i+1);x.fillStyle=i%2?'#f7fafc':'#fff';x.fillRect(M,y,T,R);q=M;x.fillStyle='#173d57';x.font='12px Arial';cs.forEach(z=>{let v=String(r[z[0]]??''),mw=z[2]*S-10;while(x.measureText(v).width>mw&&v.length>4)v=v.slice(0,-1);if(String(r[z[0]]??'').length>v.length)v=v.slice(0,-1)+'…';x.fillText(v,q+5,y+24);q+=z[2]*S})});
+  x.fillStyle='#687f90';x.font='12px Arial';x.fillText(`Fuente: ORSEC · Enero–Agosto 2026 · Página ${pages.length+1} de ${Math.ceil(a.length/n)}`,M,H-25);pages.push(c)
+ }return pages
+}
+function orsecDescargarRelacionPNG(){const p=orsecCrearPaginasRelacion();if(!p.length)return;const m=orsecRelacionMeta();p.forEach((c,i)=>c.toBlob(b=>orsecDownload(`ORSEC_${m.delito}_relacion_${String(i+1).padStart(2,'0')}.png`,b),'image/png'))}
+function orsecDescargarRelacionPDF(){const p=orsecCrearPaginasRelacion();if(!p.length)return;if(!window.jspdf){alert('No se pudo cargar el generador PDF. Verifique su conexión.');return}const{jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});p.forEach((c,i)=>{if(i)pdf.addPage('a4','landscape');pdf.addImage(c.toDataURL('image/jpeg',.92),'JPEG',18,18,806,504)});pdf.save(`ORSEC_${orsecRelacionMeta().delito}_relacion.pdf`)}
+</script>
+
 </body>
 <script id="orsec272fix">
 (function(){
@@ -3322,6 +3355,26 @@ function orsecRenderMapa(){
  }
 }
 function orsecMapReset(){if(ORSEC_MAP&&ORSEC_MAP_LAYER){ORSEC_MAP.fitBounds(ORSEC_MAP_LAYER.getBounds(),{padding:[10,10]})}}
+</script>
+
+
+<script id="orsecRelacionExportJS">
+function orsecRelacionMeta(){return{delito:document.getElementById('orsecDetDelito').value,periodo:document.getElementById('orsecDetPeriodo').selectedOptions[0].textContent,provincia:document.getElementById('orsecDetProvincia').value}}
+function orsecCrearPaginasRelacion(){
+ const m=orsecRelacionMeta(),a=ORSEC_DET_FILTRADO||[];if(!a.length)return[];
+ const h=m.delito==='HOMICIDIOS';
+ const cs=h?[['fecha','Fecha',110],['hora','Hora',70],['provincia','Provincia',120],['distrito','Distrito',125],['edad','Edad',55],['sexo','Sexo',50],['medio','Medio empleado',180],['lugar','Lugar',500]]:[['fecha','Fecha',110],['hora','Hora',70],['provincia','Provincia',115],['distrito','Distrito',120],['artefacto','Artefacto',180],['condicion','Condición',210],['comisaria','CPNP',125],['direccion','Dirección',390]];
+ const W=1600,H=1000,M=45,Y=175,R=38,T=W-M*2,S=T/cs.reduce((s,c)=>s+c[2],0),n=Math.floor((H-Y-70)/R),pages=[];
+ for(let st=0;st<a.length;st+=n){
+  const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  x.fillStyle='#fff';x.fillRect(0,0,W,H);x.fillStyle='#073e70';x.fillRect(0,0,W,105);x.fillStyle='#fff';x.font='bold 34px Arial';x.fillText('ORSEC · RELACIÓN DETALLADA',M,48);x.font='20px Arial';x.fillText(`${m.delito} · ${m.periodo}${m.provincia==='TODAS'?'':' · '+m.provincia}`,M,82);x.fillStyle='#173d57';x.font='bold 18px Arial';x.fillText(`Total seleccionado: ${a.length} registro(s)`,M,138);
+  x.fillStyle='#073e70';x.fillRect(M,Y,T,R);let q=M;x.fillStyle='#fff';x.font='bold 13px Arial';cs.forEach(z=>{x.fillText(z[1],q+5,Y+24);q+=z[2]*S});
+  a.slice(st,st+n).forEach((r,i)=>{let y=Y+R*(i+1);x.fillStyle=i%2?'#f7fafc':'#fff';x.fillRect(M,y,T,R);q=M;x.fillStyle='#173d57';x.font='12px Arial';cs.forEach(z=>{let v=String(r[z[0]]??''),mw=z[2]*S-10;while(x.measureText(v).width>mw&&v.length>4)v=v.slice(0,-1);if(String(r[z[0]]??'').length>v.length)v=v.slice(0,-1)+'…';x.fillText(v,q+5,y+24);q+=z[2]*S})});
+  x.fillStyle='#687f90';x.font='12px Arial';x.fillText(`Fuente: ORSEC · Enero–Agosto 2026 · Página ${pages.length+1} de ${Math.ceil(a.length/n)}`,M,H-25);pages.push(c)
+ }return pages
+}
+function orsecDescargarRelacionPNG(){const p=orsecCrearPaginasRelacion();if(!p.length)return;const m=orsecRelacionMeta();p.forEach((c,i)=>c.toBlob(b=>orsecDownload(`ORSEC_${m.delito}_relacion_${String(i+1).padStart(2,'0')}.png`,b),'image/png'))}
+function orsecDescargarRelacionPDF(){const p=orsecCrearPaginasRelacion();if(!p.length)return;if(!window.jspdf){alert('No se pudo cargar el generador PDF. Verifique su conexión.');return}const{jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});p.forEach((c,i)=>{if(i)pdf.addPage('a4','landscape');pdf.addImage(c.toDataURL('image/jpeg',.92),'JPEG',18,18,806,504)});pdf.save(`ORSEC_${orsecRelacionMeta().delito}_relacion.pdf`)}
 </script>
 
 </body></html>

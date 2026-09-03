@@ -1,0 +1,12 @@
+ORSEC · DESCARGAS VISIBLES V2
+
+Se incorporó una barra de descarga inmediatamente encima de la tabla detallada:
+- CSV
+- IMAGEN PNG
+- PDF
+
+La barra permanece dentro del panel de Análisis Detallado de Alto Impacto y aparece
+junto a la relación que se desea exportar, evitando que los botones queden fuera
+de la vista por el desplazamiento de la página.
+
+La descarga respeta delito, período y provincia seleccionados.

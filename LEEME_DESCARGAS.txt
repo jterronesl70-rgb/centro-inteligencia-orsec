@@ -1,0 +1,1 @@
+ORSEC V1: incorpora descarga de la relación completa filtrada en PNG multipágina y PDF multipágina, además de CSV y gráfica PNG. Mantiene correcciones Víctor Larco y Florencia de Mora.
