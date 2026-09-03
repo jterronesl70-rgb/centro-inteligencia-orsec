@@ -1,0 +1,14 @@
+ORSEC · MAPA DELICTIVO DISTRITAL V1 · CORRECCIÓN CARTOGRÁFICA 2
+
+Normalizaciones:
+VICTOR LARCO → VICTOR LARCO HERRERA
+FCIA. DE MORA / FCIA DE MORA → FLORENCIA DE MORA
+
+Esta corrección permite que la detonación registrada en agosto como
+"FCIA. DE MORA" se asocie al polígono oficial "FLORENCIA DE MORA".
+
+Se conserva toda la plataforma anterior y la base principal corregida.
+Para GitHub/Vercel subir juntos:
+index.html
+datos.json
+detalle_alto_impacto.json

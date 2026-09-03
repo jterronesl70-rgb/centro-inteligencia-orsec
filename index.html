@@ -2800,6 +2800,8 @@ function orsecNorm(s){
  let n=String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();
  const alias={
   'VICTOR LARCO':'VICTOR LARCO HERRERA',
+  'FCIA. DE MORA':'FLORENCIA DE MORA',
+  'FCIA DE MORA':'FLORENCIA DE MORA',
   'FLORENCIA DE MORA':'FLORENCIA DE MORA'
  };
  return alias[n]||n;
@@ -3272,6 +3274,8 @@ function orsecNorm(s){
  let n=String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();
  const alias={
   'VICTOR LARCO':'VICTOR LARCO HERRERA',
+  'FCIA. DE MORA':'FLORENCIA DE MORA',
+  'FCIA DE MORA':'FLORENCIA DE MORA',
   'FLORENCIA DE MORA':'FLORENCIA DE MORA'
  };
  return alias[n]||n;
