@@ -2826,15 +2826,21 @@ async function orsecDescargarInfografia(){
 
    // Metropolitan callout rail on LEFT side of map, separated and non-overlapping.
    const ml=labs.filter(o=>o.metro).sort((a,b)=>a.cy-b.cy);
-   const railX=mapX+20, labelW=185, startY=mapY+155, endY=mapY+mapH-120;
+   // Rail metropolitano definitivo: etiquetas en el margen oceánico,
+   // separadas del territorio y distribuidas verticalmente sin superposición.
+   const labelW=205, labelH=32;
+   const railX=mapX+8;
+   const startY=mapY+145, endY=mapY+mapH-105;
    const step=ml.length>1?(endY-startY)/(ml.length-1):0;
    ml.forEach((o,i)=>{
-     const cy=startY+i*step, bx=railX, by=cy-17;
-     x.strokeStyle='#46687d';x.lineWidth=1.5;x.beginPath();x.moveTo(o.cx,o.cy);x.lineTo(bx+labelW+8,cy);x.stroke();
-     box(bx,by,labelW,34,'#fff','#9db3c2',5);
-     txt(trunc(o.name,18),bx+10,cy+5,11,true,C.navy);
-     txt(o.v,bx+labelW-10,cy+5,12,true,C.red,'right');
-     x.fillStyle=C.red;x.beginPath();x.arc(o.cx,o.cy,4,0,Math.PI*2);x.fill();
+     const cy=startY+i*step, bx=railX, by=cy-labelH/2;
+     const elbowX=bx+labelW+18;
+     x.strokeStyle='#365b73';x.lineWidth=1.4;
+     x.beginPath();x.moveTo(o.cx,o.cy);x.lineTo(elbowX+42,cy);x.lineTo(elbowX,cy);x.stroke();
+     box(bx,by,labelW,labelH,'#ffffff','#8fa9ba',5);
+     txt(trunc(o.name,19),bx+12,cy+5,10,true,C.navy);
+     txt(o.v,bx+labelW-12,cy+5,12,true,C.red,'right');
+     x.fillStyle=C.red;x.beginPath();x.arc(o.cx,o.cy,3.5,0,Math.PI*2);x.fill();
    });
 
    // legend
@@ -2857,7 +2863,7 @@ async function orsecDescargarInfografia(){
  ks.forEach((q,i)=>{const px=20+i*(bw+24);box(px,by,bw,100);txt(q[0],px+16,by+29,12,true,C.muted);txt(trunc(q[1],24),px+16,by+68,24,true,C.navy2)});
  x.fillStyle=C.navy;x.fillRect(0,H-25,W,25);
  txt('ORSEC · Centro de Inteligencia · Observatorio Regional de Seguridad Ciudadana · La Libertad',22,H-8,11,false,C.white);
- txt('Infografía ejecutiva dinámica',W-22,H-8,11,false,C.white,'right');
+ txt('Infografía ejecutiva dinámica · V11',W-22,H-8,11,false,C.white,'right');
 
  c.toBlob(b=>orsecDownload(`ORSEC_${delito}_INFOGRAFIA_EJECUTIVA_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
 }
@@ -3573,7 +3579,7 @@ async function orsecDescargarInfografia(){
  ks.forEach((q,i)=>{const px=20+i*(bw+24);box(px,by,bw,100);txt(q[0],px+16,by+29,12,true,C.muted);txt(trunc(q[1],24),px+16,by+68,24,true,C.navy2)});
  x.fillStyle=C.navy;x.fillRect(0,H-25,W,25);
  txt('ORSEC · Centro de Inteligencia · Observatorio Regional de Seguridad Ciudadana · La Libertad',22,H-8,11,false,C.white);
- txt('Infografía ejecutiva dinámica',W-22,H-8,11,false,C.white,'right');
+ txt('Infografía ejecutiva dinámica · V11',W-22,H-8,11,false,C.white,'right');
 
  c.toBlob(b=>orsecDownload(`ORSEC_${delito}_INFOGRAFIA_EJECUTIVA_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
 }
@@ -3837,7 +3843,7 @@ async function orsecDescargarInfografia(){
  ks.forEach((q,i)=>{const px=20+i*(bw+24);box(px,by,bw,100);txt(q[0],px+16,by+29,12,true,C.muted);txt(trunc(q[1],24),px+16,by+68,24,true,C.navy2)});
  x.fillStyle=C.navy;x.fillRect(0,H-25,W,25);
  txt('ORSEC · Centro de Inteligencia · Observatorio Regional de Seguridad Ciudadana · La Libertad',22,H-8,11,false,C.white);
- txt('Infografía ejecutiva dinámica',W-22,H-8,11,false,C.white,'right');
+ txt('Infografía ejecutiva dinámica · V11',W-22,H-8,11,false,C.white,'right');
 
  c.toBlob(b=>orsecDownload(`ORSEC_${delito}_INFOGRAFIA_EJECUTIVA_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
 }

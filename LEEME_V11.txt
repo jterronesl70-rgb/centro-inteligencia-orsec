@@ -1,0 +1,8 @@
+ORSEC · INFOGRAFÍA EJECUTIVA FINAL V11
+
+Ajuste solicitado:
+- Los recuadros metropolitanos se ubican en el margen oceánico del mapa.
+- No cubren los polígonos distritales ni sus rótulos.
+- Líneas guía conectan cada distrito con su etiqueta.
+- Distribución vertical automática para evitar superposición.
+- Se conserva el diseño ejecutivo 16:9 aprobado y todos los datos dinámicos.
