@@ -1,0 +1,16 @@
+ORSEC · V14 · CORRECCIÓN DE DESCARGAS
+
+Se corrigió de raíz el módulo de descarga de la relación detallada.
+
+IMAGEN COMPLETA PNG:
+- Genera una sola imagen larga.
+- Incluye todos los registros de la selección activa.
+- No depende de librerías externas.
+
+PDF:
+- Abre una ventana aislada con únicamente la relación filtrada.
+- Incluye todos los registros.
+- Usa el diálogo del navegador para Guardar como PDF / Imprimir.
+- No depende de jsPDF.
+
+Se validó sintácticamente el JavaScript del módulo antes de empaquetar.
