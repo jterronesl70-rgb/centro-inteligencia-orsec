@@ -1,0 +1,1 @@
+ORSEC V18. El botón DESCARGAR INFOGRAFÍA entrega exactamente la infografía visual aprobada (mapa central, etiquetas laterales, paneles derecho/izquierdo y KPIs inferiores). Subir todos los archivos juntos a GitHub/Vercel.
