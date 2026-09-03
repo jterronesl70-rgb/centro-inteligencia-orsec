@@ -1,0 +1,14 @@
+ORSEC · CORRECCIÓN DE IMPRESIÓN NOTA 002
+
+Problema corregido:
+El botón IMPRIMIR / GUARDAR PDF ejecutaba window.print() sobre toda la plataforma,
+por eso el navegador mostraba varias páginas adicionales y páginas en blanco.
+
+Nueva conducta:
+- Al pulsar IMPRIMIR / GUARDAR PDF se imprime únicamente la Nota de Inteligencia N.° 002-2026.
+- Se oculta el resto de ORSEC durante la impresión.
+- Formato A4 vertical.
+- Se eliminan botones y elementos de navegación del documento impreso.
+- La nota conserva sus títulos, secciones y contenido completo.
+
+En la vista previa de impresión ya no debe aparecer el resto de la plataforma.

@@ -518,6 +518,43 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 @media(max-width:800px){#orsecMapaDelito{height:430px}.orsec-map-summary{grid-template-columns:repeat(2,1fr)}}
 </style>
 
+
+<style id="orsecNota002PrintCSS">
+@media print{
+  body *{visibility:hidden !important;}
+  #orsecNota002Modal,
+  #orsecNota002Modal *{visibility:visible !important;}
+  #orsecNota002Modal{
+    display:block !important;
+    position:static !important;
+    inset:auto !important;
+    background:#fff !important;
+    padding:0 !important;
+    overflow:visible !important;
+  }
+  #orsecNota002Modal > div{
+    max-width:none !important;
+    width:100% !important;
+    margin:0 !important;
+    box-shadow:none !important;
+    border-radius:0 !important;
+    overflow:visible !important;
+  }
+  #orsecNota002Modal button,
+  #orsecNota002Modal a{display:none !important;}
+  #orsecNota002Printable{
+    padding:12mm !important;
+    font-size:10.5pt !important;
+    line-height:1.35 !important;
+    color:#000 !important;
+  }
+  #orsecNota002Printable h2{font-size:15pt !important;color:#073e70 !important;}
+  #orsecNota002Printable h3{font-size:11.5pt !important;margin:8pt 0 3pt !important;}
+  #orsecNota002Printable p{margin:0 0 6pt !important;}
+  @page{size:A4 portrait;margin:12mm;}
+}
+</style>
+
 </head>
 <body>
 
@@ -2666,12 +2703,49 @@ function orsecVistaBI(){
 @media(max-width:800px){#orsecMapaDelito{height:430px}.orsec-map-summary{grid-template-columns:repeat(2,1fr)}}
 </style>
 
+
+<style id="orsecNota002PrintCSS">
+@media print{
+  body *{visibility:hidden !important;}
+  #orsecNota002Modal,
+  #orsecNota002Modal *{visibility:visible !important;}
+  #orsecNota002Modal{
+    display:block !important;
+    position:static !important;
+    inset:auto !important;
+    background:#fff !important;
+    padding:0 !important;
+    overflow:visible !important;
+  }
+  #orsecNota002Modal > div{
+    max-width:none !important;
+    width:100% !important;
+    margin:0 !important;
+    box-shadow:none !important;
+    border-radius:0 !important;
+    overflow:visible !important;
+  }
+  #orsecNota002Modal button,
+  #orsecNota002Modal a{display:none !important;}
+  #orsecNota002Printable{
+    padding:12mm !important;
+    font-size:10.5pt !important;
+    line-height:1.35 !important;
+    color:#000 !important;
+  }
+  #orsecNota002Printable h2{font-size:15pt !important;color:#073e70 !important;}
+  #orsecNota002Printable h3{font-size:11.5pt !important;margin:8pt 0 3pt !important;}
+  #orsecNota002Printable p{margin:0 0 6pt !important;}
+  @page{size:A4 portrait;margin:12mm;}
+}
+</style>
+
 </head><body><h1>BOLETÍN EJECUTIVO AUTOMÁTICO ORSEC</h1>
   <div class="box"><h3>SITUACIÓN ESTADÍSTICA</h3>${document.getElementById('orsecBiEstadisticaVisible')?.innerHTML||''}</div>
   <div class="box"><h3>LECTURA ORSEC · INTERPRETACIÓN PONDERADA</h3>${document.getElementById('orsecBiLecturaVisible')?.innerHTML||''}</div>
   ${con?`<div class="box con"><h3>CONTEXTO DE CONNOTACIÓN · NO ESTADÍSTICO</h3>${document.getElementById('orsecBiConVisible')?.innerHTML||''}</div>`:''}
   <div class="foot">Producto automático preliminar · Requiere revisión del analista ORSEC.<br>Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC / GRDN / GORELL</div>
-  <p><button onclick="window.print()">IMPRIMIR / GUARDAR COMO PDF</button></p>
+  <p><button onclick="orsecImprimirNota002()">IMPRIMIR / GUARDAR COMO PDF</button></p>
 
 
 <script id="orsec27js">
@@ -2938,7 +3012,7 @@ function orsecDescargarRelacionPDF(){const p=orsecCrearPaginasRelacion();if(!p.l
    <div><b style="font-size:19px;">NOTA DE INTELIGENCIA DE CONNOTACIÓN N.° 002-2026</b><div style="font-size:12px;margin-top:4px;color:#d9ecf8;">INTELIGENCIA DE CONTEXTO · NO ESTADÍSTICO · INFORMACIÓN EN DESARROLLO</div></div>
    <button onclick="orsecCerrarNota002()" style="background:#fff;color:#073e70;border:0;border-radius:7px;padding:8px 11px;font-weight:900;cursor:pointer;">CERRAR</button>
   </div>
-  <div style="padding:22px;color:#17384f;line-height:1.55;font-size:13px;">
+  <div id="orsecNota002Printable" style="padding:22px;color:#17384f;line-height:1.55;font-size:13px;">
    <h2 style="color:#073e70;margin-top:0;">Captura de objetivo de alto valor y posibles implicancias sobre la estructura criminal “Los Pulpos” en La Libertad</h2>
    <div style="display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:8px;margin:12px 0 18px;">
     <div><b>Fecha de corte:</b> 1 de septiembre de 2026</div><div><b>Ámbito:</b> Trujillo · Región La Libertad · dimensión transnacional</div>
@@ -2955,7 +3029,7 @@ function orsecDescargarRelacionPDF(){const p=orsecCrearPaginasRelacion();if(!p.l
    <div style="background:#fff4cf;border-left:4px solid #f4b400;padding:12px;margin-top:16px;"><b>SEPARACIÓN METODOLÓGICA ORSEC:</b> ESTADÍSTICA OFICIAL = incidencia consolidada | CONNOTACIÓN = trascendencia estratégica del acontecimiento.</div>
    <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px;">
     <a href="Nota_Inteligencia_ORSEC_002_2026_Visual.docx" download style="text-decoration:none;background:#f4b400;color:#092a40;font-weight:900;padding:10px 14px;border-radius:7px;">⬇ DESCARGAR NOTA 002 · DOCX</a>
-    <button onclick="window.print()" style="background:#0b5f91;color:white;border:0;border-radius:7px;padding:10px 14px;font-weight:900;cursor:pointer;">🖨 IMPRIMIR / GUARDAR PDF</button>
+    <button onclick="orsecImprimirNota002()" style="background:#0b5f91;color:white;border:0;border-radius:7px;padding:10px 14px;font-weight:900;cursor:pointer;">🖨 IMPRIMIR / GUARDAR PDF</button>
    </div>
   </div>
  </div>
@@ -2965,6 +3039,24 @@ function orsecDescargarRelacionPDF(){const p=orsecCrearPaginasRelacion();if(!p.l
 <script id="orsecNota002JS">
 function orsecAbrirNota002(){document.getElementById('orsecNota002Modal').style.display='block';document.body.style.overflow='hidden'}
 function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style.display='none';document.body.style.overflow=''}
+</script>
+
+
+<script id="orsecNota002PrintJS">
+function orsecImprimirNota002(){
+  const modal=document.getElementById('orsecNota002Modal');
+  if(!modal)return;
+  const estaba=modal.style.display;
+  modal.style.display='block';
+  document.body.classList.add('orsec-print-nota002');
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{
+      document.body.classList.remove('orsec-print-nota002');
+      modal.style.display=estaba||'block';
+    },300);
+  },100);
+}
 </script>
 
 </body>
@@ -3485,7 +3577,7 @@ function orsecDescargarRelacionPDF(){const p=orsecCrearPaginasRelacion();if(!p.l
    <div style="background:#fff4cf;border-left:4px solid #f4b400;padding:12px;margin-top:16px;"><b>SEPARACIÓN METODOLÓGICA ORSEC:</b> ESTADÍSTICA OFICIAL = incidencia consolidada | CONNOTACIÓN = trascendencia estratégica del acontecimiento.</div>
    <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px;">
     <a href="Nota_Inteligencia_ORSEC_002_2026_Visual.docx" download style="text-decoration:none;background:#f4b400;color:#092a40;font-weight:900;padding:10px 14px;border-radius:7px;">⬇ DESCARGAR NOTA 002 · DOCX</a>
-    <button onclick="window.print()" style="background:#0b5f91;color:white;border:0;border-radius:7px;padding:10px 14px;font-weight:900;cursor:pointer;">🖨 IMPRIMIR / GUARDAR PDF</button>
+    <button onclick="orsecImprimirNota002()" style="background:#0b5f91;color:white;border:0;border-radius:7px;padding:10px 14px;font-weight:900;cursor:pointer;">🖨 IMPRIMIR / GUARDAR PDF</button>
    </div>
   </div>
  </div>
@@ -3495,6 +3587,24 @@ function orsecDescargarRelacionPDF(){const p=orsecCrearPaginasRelacion();if(!p.l
 <script id="orsecNota002JS">
 function orsecAbrirNota002(){document.getElementById('orsecNota002Modal').style.display='block';document.body.style.overflow='hidden'}
 function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style.display='none';document.body.style.overflow=''}
+</script>
+
+
+<script id="orsecNota002PrintJS">
+function orsecImprimirNota002(){
+  const modal=document.getElementById('orsecNota002Modal');
+  if(!modal)return;
+  const estaba=modal.style.display;
+  modal.style.display='block';
+  document.body.classList.add('orsec-print-nota002');
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{
+      document.body.classList.remove('orsec-print-nota002');
+      modal.style.display=estaba||'block';
+    },300);
+  },100);
+}
 </script>
 
 </body></html>
