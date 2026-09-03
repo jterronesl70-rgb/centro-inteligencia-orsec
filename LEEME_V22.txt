@@ -1,0 +1,20 @@
+ORSEC V22 · INFOGRAFÍA DINÁMICA
+
+La infografía ya no es una imagen fija.
+
+El botón DESCARGAR INFOGRAFÍA DINÁMICA PNG toma automáticamente:
+- delito seleccionado: Homicidios o Detonaciones;
+- periodo: acumulado o mes;
+- provincia seleccionada;
+- número de casos;
+- distritos con hechos;
+- provincias afectadas;
+- franja horaria predominante;
+- hora pico;
+- medio empleado o tipo de artefacto;
+- mapa distrital con intensidad;
+- top 5 distritos;
+- indicadores inferiores.
+
+El diseño conserva la línea visual del Panel Ejecutivo ORSEC aprobada.
+Los datos se regeneran cada vez que se pulsa el botón.
