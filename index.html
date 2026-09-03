@@ -655,7 +655,7 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
    </select>
    <select id="orsecDetProvincia" onchange="orsecRenderDetalle()"><option value="TODAS">TODAS LAS PROVINCIAS</option></select>
    <button onclick="orsecDescargarDetalleCSV()">DESCARGAR CUADRO CSV</button>
-   <button onclick="orsecDescargarRelacionPNG()" style="background:#1479a8;color:#fff">RELACIÓN PNG</button>
+   <button onclick="orsecDescargarRelacionPNG()" style="background:#1479a8;color:#fff">RELACIÓN COMPLETA PNG</button>
    <button onclick="orsecDescargarRelacionPDF()" style="background:#b3261e;color:#fff">RELACIÓN PDF</button>
    <button onclick="orsecDescargarDetallePNG()">DESCARGAR GRÁFICA PNG</button>
   </div>
@@ -679,7 +679,7 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
  background:#eef6fb;border:1px solid #b9d2e3;border-radius:10px;">
  <strong style="color:#073e70;margin-right:4px;">DESCARGAR RELACIÓN:</strong>
  <button onclick="orsecDescargarDetalleCSV()" style="padding:9px 12px;border:0;border-radius:8px;background:#0b5f91;color:white;font-weight:800;cursor:pointer;">CSV</button>
- <button onclick="orsecDescargarRelacionPNG()" style="padding:9px 12px;border:0;border-radius:8px;background:#1479a8;color:white;font-weight:800;cursor:pointer;">IMAGEN PNG</button>
+ <button onclick="orsecDescargarRelacionPNG()" style="padding:9px 12px;border:0;border-radius:8px;background:#1479a8;color:white;font-weight:800;cursor:pointer;">IMAGEN COMPLETA PNG</button>
  <button onclick="orsecDescargarRelacionPDF()" style="padding:9px 12px;border:0;border-radius:8px;background:#b3261e;color:white;font-weight:800;cursor:pointer;">PDF</button>
 </div>
 
@@ -926,7 +926,22 @@ function orsecRenderConnotacion(){
       ${e.titulo==='Secuestro con homicidio múltiple'?`<div class="orsec-nota-actions">
         <a class="orsec-doc-mainbtn" href="Nota_Inteligencia_ORSEC_001_2026_Visual.docx" download>📄 NOTA N.° 001-2026 · VER / DESCARGAR</a>
       </div>`:''}
-    </div>`).join('');
+    </div>
+<div id="orsecNota002Card" style="margin:14px 0;padding:15px;border:1px solid #f4b400;border-radius:10px;background:linear-gradient(135deg,#132f40,#0c2637);color:#fff;">
+  <div style="font-size:11px;color:#9fd5f5;margin-bottom:5px;">2026-09-01 · LA LIBERTAD / TRUJILLO · DIMENSIÓN TRANSNACIONAL</div>
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;">
+    <div style="max-width:820px;">
+      <div style="font-weight:900;font-size:16px;">Captura de objetivo de alto valor y posibles implicancias sobre “Los Pulpos”</div>
+      <div style="font-size:12px;line-height:1.45;margin-top:6px;color:#e5f2fa;">Captura en La Paz, Bolivia, de Jhonsson Smit Cruz Torres, alias “Jhonsson Pulpo”. Análisis de connotación sobre posibles efectos en la estructura criminal y seguimiento del escenario posterior al evento del 30 de agosto.</div>
+      <div style="font-size:11px;margin-top:7px;color:#b8d9ec;">Inteligencia de contexto · NO estadístico · información en desarrollo · relación con hechos del 30/08 sujeta a investigación oficial.</div>
+    </div>
+    <span style="border:1px solid #ff3b30;color:#ff6259;padding:5px 8px;border-radius:6px;font-weight:900;font-size:11px;">EVENTO CRÍTICO</span>
+  </div>
+  <div style="margin-top:11px;">
+    <button onclick="orsecAbrirNota002()" style="border:0;border-radius:7px;background:#f4b400;color:#092a40;font-weight:900;padding:10px 14px;cursor:pointer;">📄 NOTA N.° 002-2026 · VER / DESCARGAR</button>
+  </div>
+</div>
+`).join('');
 
   const crit=ev.filter(e=>e.nivel==='EVENTO CRÍTICO').length;
   lectura.innerHTML=`<p><b>${prov||'REGIÓN LA LIBERTAD'}:</b> se registran ${ev.length} evento(s) contextual(es) de relevancia${crit?`, incluyendo <b>${crit} evento crítico</b>`:''}.</p>
@@ -2879,8 +2894,77 @@ function orsecCrearPaginasRelacion(){
   x.fillStyle='#687f90';x.font='12px Arial';x.fillText(`Fuente: ORSEC · Enero–Agosto 2026 · Página ${pages.length+1} de ${Math.ceil(a.length/n)}`,M,H-25);pages.push(c)
  }return pages
 }
-function orsecDescargarRelacionPNG(){const p=orsecCrearPaginasRelacion();if(!p.length)return;const m=orsecRelacionMeta();p.forEach((c,i)=>c.toBlob(b=>orsecDownload(`ORSEC_${m.delito}_relacion_${String(i+1).padStart(2,'0')}.png`,b),'image/png'))}
+function orsecDescargarRelacionPNG(){
+ const m=orsecRelacionMeta(),a=ORSEC_DET_FILTRADO||[];
+ if(!a.length)return;
+ const h=m.delito==='HOMICIDIOS';
+ const cs=h
+ ?[['fecha','Fecha',110],['hora','Hora',70],['provincia','Provincia',120],['distrito','Distrito',125],['edad','Edad',55],['sexo','Sexo',50],['medio','Medio empleado',180],['lugar','Lugar',500]]
+ :[['fecha','Fecha',110],['hora','Hora',70],['provincia','Provincia',115],['distrito','Distrito',120],['artefacto','Artefacto',180],['condicion','Condición',210],['comisaria','CPNP',125],['direccion','Dirección',390]];
+ const W=1800,M=45,Y=175,R=42,T=W-M*2,S=T/cs.reduce((s,c)=>s+c[2],0);
+ const H=Y+R*(a.length+1)+90;
+ const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+ x.fillStyle='#fff';x.fillRect(0,0,W,H);
+ x.fillStyle='#073e70';x.fillRect(0,0,W,105);
+ x.fillStyle='#fff';x.font='bold 34px Arial';x.fillText('ORSEC · RELACIÓN DETALLADA',M,48);
+ x.font='20px Arial';x.fillText(`${m.delito} · ${m.periodo}${m.provincia==='TODAS'?'':' · '+m.provincia}`,M,82);
+ x.fillStyle='#173d57';x.font='bold 18px Arial';x.fillText(`Total seleccionado: ${a.length} registro(s)`,M,138);
+ x.fillStyle='#073e70';x.fillRect(M,Y,T,R);
+ let q=M;x.fillStyle='#fff';x.font='bold 13px Arial';
+ cs.forEach(z=>{x.fillText(z[1],q+5,Y+27);q+=z[2]*S});
+ a.forEach((r,i)=>{
+   const y=Y+R*(i+1);
+   x.fillStyle=i%2?'#f7fafc':'#fff';x.fillRect(M,y,T,R);
+   x.strokeStyle='#dce7ef';x.beginPath();x.moveTo(M,y+R);x.lineTo(M+T,y+R);x.stroke();
+   q=M;x.fillStyle='#173d57';x.font='12px Arial';
+   cs.forEach(z=>{
+     let v=String(r[z[0]]??''),mw=z[2]*S-10;
+     while(x.measureText(v).width>mw&&v.length>4)v=v.slice(0,-1);
+     if(String(r[z[0]]??'').length>v.length)v=v.slice(0,-1)+'…';
+     x.fillText(v,q+5,y+26);q+=z[2]*S;
+   });
+ });
+ x.fillStyle='#687f90';x.font='13px Arial';
+ x.fillText(`Fuente: ORSEC · Enero–Agosto 2026 · Relación completa: ${a.length} registro(s)`,M,H-28);
+ c.toBlob(b=>orsecDownload(`ORSEC_${m.delito}_relacion_COMPLETA.png`,b),'image/png');
+}
 function orsecDescargarRelacionPDF(){const p=orsecCrearPaginasRelacion();if(!p.length)return;if(!window.jspdf){alert('No se pudo cargar el generador PDF. Verifique su conexión.');return}const{jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});p.forEach((c,i)=>{if(i)pdf.addPage('a4','landscape');pdf.addImage(c.toDataURL('image/jpeg',.92),'JPEG',18,18,806,504)});pdf.save(`ORSEC_${orsecRelacionMeta().delito}_relacion.pdf`)}
+</script>
+
+
+<div id="orsecNota002Modal" style="display:none;position:fixed;inset:0;background:#00121bd9;z-index:99999;overflow:auto;padding:24px;">
+ <div style="max-width:1050px;margin:auto;background:#f7fbfe;border-radius:14px;overflow:hidden;box-shadow:0 18px 60px #0008;">
+  <div style="background:#073e70;color:white;padding:18px 22px;display:flex;justify-content:space-between;gap:12px;align-items:center;">
+   <div><b style="font-size:19px;">NOTA DE INTELIGENCIA DE CONNOTACIÓN N.° 002-2026</b><div style="font-size:12px;margin-top:4px;color:#d9ecf8;">INTELIGENCIA DE CONTEXTO · NO ESTADÍSTICO · INFORMACIÓN EN DESARROLLO</div></div>
+   <button onclick="orsecCerrarNota002()" style="background:#fff;color:#073e70;border:0;border-radius:7px;padding:8px 11px;font-weight:900;cursor:pointer;">CERRAR</button>
+  </div>
+  <div style="padding:22px;color:#17384f;line-height:1.55;font-size:13px;">
+   <h2 style="color:#073e70;margin-top:0;">Captura de objetivo de alto valor y posibles implicancias sobre la estructura criminal “Los Pulpos” en La Libertad</h2>
+   <div style="display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:8px;margin:12px 0 18px;">
+    <div><b>Fecha de corte:</b> 1 de septiembre de 2026</div><div><b>Ámbito:</b> Trujillo · Región La Libertad · dimensión transnacional</div>
+    <div><b>Nivel de connotación:</b> EVENTO CRÍTICO</div><div><b>Estado:</b> En desarrollo / sujeto a actualización</div>
+   </div>
+   <h3>1. Situación</h3><p>El 1 de septiembre de 2026 fue confirmada en La Paz, Bolivia, la captura de Jhonsson Smit Cruz Torres, alias “Jhonsson Pulpo”, señalado por las autoridades como uno de los principales cabecillas de la organización criminal “Los Pulpos”. La intervención constituye un hecho de alta relevancia para La Libertad por el liderazgo atribuido al detenido y por la incidencia histórica de dicha estructura en Trujillo.</p>
+   <h3>2. Actualización operacional</h3><p>La captura se produce inmediatamente después del secuestro del empresario Jenss Marty Lara Tantaquilla y el asesinato de sus cuatro acompañantes, ocurrido el 30 de agosto en Trujillo. La posible participación de integrantes de “Los Pulpos” forma parte de la línea de investigación. La captura internacional no implica, por sí sola, la desarticulación de la organización.</p>
+   <h3>3. Elementos de connotación estratégica</h3><p>Captura internacional de un objetivo de alto valor; proximidad temporal con el secuestro y homicidio múltiple; posible afectación de capacidades de dirección y coordinación; riesgo de reacomodo de mandos, fragmentación de células o desplazamiento territorial; y elevada repercusión regional, nacional e internacional.</p>
+   <h3>4. Apreciación de inteligencia</h3><p>La captura constituye un golpe operativo de significativa importancia, pero su impacto real deberá evaluarse a partir de los efectos posteriores sobre la estructura criminal. La pérdida de un liderazgo puede reducir temporalmente capacidades de coordinación, pero también generar sucesión de mandos, autonomía de células, fragmentación o competencia por rentas ilícitas y espacios territoriales.</p>
+   <h3>5. Escenarios de evolución</h3><p><b>Contención operativa:</b> nuevas capturas y pérdida de coordinación reducen temporalmente capacidades. <b>Reacomodo:</b> mandos secundarios mantienen actividades con cambios de modalidad o territorio. <b>Fragmentación y disputa:</b> células asociadas compiten por liderazgo, rentas o control territorial. Estos escenarios son hipótesis de seguimiento, no hechos confirmados.</p>
+   <h3>6. Indicadores de seguimiento ORSEC</h3><p>Evolución semanal y mensual de homicidios, extorsiones, detonaciones y secuestros; nuevas capturas; resultados de la investigación del evento del 30 de agosto; situación jurídica del detenido; posibles reacomodos internos; desplazamientos territoriales y cambios en modalidades extorsivas.</p>
+   <h3>7. Valoración ORSEC</h3><p><b>Connotación estratégica:</b> CRÍTICA · <b>Atención coyuntural:</b> PRIORITARIA · <b>Tendencia estadística:</b> debe mantenerse conforme a la base oficial consolidada.</p>
+   <h3>8. Conclusión ejecutiva</h3><p>La captura de alias “Jhonsson Pulpo” representa un golpe estratégico contra una estructura criminal de alta connotación para La Libertad. Su verdadero efecto deberá medirse por la evolución posterior de la violencia, las extorsiones, detonaciones, secuestros, nuevas capturas y capacidad de reorganización de “Los Pulpos”. La relación con el evento del 30 de agosto permanece dentro del ámbito de investigación y debe actualizarse únicamente con información oficial verificable.</p>
+   <div style="background:#fff4cf;border-left:4px solid #f4b400;padding:12px;margin-top:16px;"><b>SEPARACIÓN METODOLÓGICA ORSEC:</b> ESTADÍSTICA OFICIAL = incidencia consolidada | CONNOTACIÓN = trascendencia estratégica del acontecimiento.</div>
+   <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px;">
+    <a href="Nota_Inteligencia_ORSEC_002_2026_Visual.docx" download style="text-decoration:none;background:#f4b400;color:#092a40;font-weight:900;padding:10px 14px;border-radius:7px;">⬇ DESCARGAR NOTA 002 · DOCX</a>
+    <button onclick="window.print()" style="background:#0b5f91;color:white;border:0;border-radius:7px;padding:10px 14px;font-weight:900;cursor:pointer;">🖨 IMPRIMIR / GUARDAR PDF</button>
+   </div>
+  </div>
+ </div>
+</div>
+
+
+<script id="orsecNota002JS">
+function orsecAbrirNota002(){document.getElementById('orsecNota002Modal').style.display='block';document.body.style.overflow='hidden'}
+function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style.display='none';document.body.style.overflow=''}
 </script>
 
 </body>
@@ -3375,6 +3459,42 @@ function orsecCrearPaginasRelacion(){
 }
 function orsecDescargarRelacionPNG(){const p=orsecCrearPaginasRelacion();if(!p.length)return;const m=orsecRelacionMeta();p.forEach((c,i)=>c.toBlob(b=>orsecDownload(`ORSEC_${m.delito}_relacion_${String(i+1).padStart(2,'0')}.png`,b),'image/png'))}
 function orsecDescargarRelacionPDF(){const p=orsecCrearPaginasRelacion();if(!p.length)return;if(!window.jspdf){alert('No se pudo cargar el generador PDF. Verifique su conexión.');return}const{jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});p.forEach((c,i)=>{if(i)pdf.addPage('a4','landscape');pdf.addImage(c.toDataURL('image/jpeg',.92),'JPEG',18,18,806,504)});pdf.save(`ORSEC_${orsecRelacionMeta().delito}_relacion.pdf`)}
+</script>
+
+
+<div id="orsecNota002Modal" style="display:none;position:fixed;inset:0;background:#00121bd9;z-index:99999;overflow:auto;padding:24px;">
+ <div style="max-width:1050px;margin:auto;background:#f7fbfe;border-radius:14px;overflow:hidden;box-shadow:0 18px 60px #0008;">
+  <div style="background:#073e70;color:white;padding:18px 22px;display:flex;justify-content:space-between;gap:12px;align-items:center;">
+   <div><b style="font-size:19px;">NOTA DE INTELIGENCIA DE CONNOTACIÓN N.° 002-2026</b><div style="font-size:12px;margin-top:4px;color:#d9ecf8;">INTELIGENCIA DE CONTEXTO · NO ESTADÍSTICO · INFORMACIÓN EN DESARROLLO</div></div>
+   <button onclick="orsecCerrarNota002()" style="background:#fff;color:#073e70;border:0;border-radius:7px;padding:8px 11px;font-weight:900;cursor:pointer;">CERRAR</button>
+  </div>
+  <div style="padding:22px;color:#17384f;line-height:1.55;font-size:13px;">
+   <h2 style="color:#073e70;margin-top:0;">Captura de objetivo de alto valor y posibles implicancias sobre la estructura criminal “Los Pulpos” en La Libertad</h2>
+   <div style="display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:8px;margin:12px 0 18px;">
+    <div><b>Fecha de corte:</b> 1 de septiembre de 2026</div><div><b>Ámbito:</b> Trujillo · Región La Libertad · dimensión transnacional</div>
+    <div><b>Nivel de connotación:</b> EVENTO CRÍTICO</div><div><b>Estado:</b> En desarrollo / sujeto a actualización</div>
+   </div>
+   <h3>1. Situación</h3><p>El 1 de septiembre de 2026 fue confirmada en La Paz, Bolivia, la captura de Jhonsson Smit Cruz Torres, alias “Jhonsson Pulpo”, señalado por las autoridades como uno de los principales cabecillas de la organización criminal “Los Pulpos”. La intervención constituye un hecho de alta relevancia para La Libertad por el liderazgo atribuido al detenido y por la incidencia histórica de dicha estructura en Trujillo.</p>
+   <h3>2. Actualización operacional</h3><p>La captura se produce inmediatamente después del secuestro del empresario Jenss Marty Lara Tantaquilla y el asesinato de sus cuatro acompañantes, ocurrido el 30 de agosto en Trujillo. La posible participación de integrantes de “Los Pulpos” forma parte de la línea de investigación. La captura internacional no implica, por sí sola, la desarticulación de la organización.</p>
+   <h3>3. Elementos de connotación estratégica</h3><p>Captura internacional de un objetivo de alto valor; proximidad temporal con el secuestro y homicidio múltiple; posible afectación de capacidades de dirección y coordinación; riesgo de reacomodo de mandos, fragmentación de células o desplazamiento territorial; y elevada repercusión regional, nacional e internacional.</p>
+   <h3>4. Apreciación de inteligencia</h3><p>La captura constituye un golpe operativo de significativa importancia, pero su impacto real deberá evaluarse a partir de los efectos posteriores sobre la estructura criminal. La pérdida de un liderazgo puede reducir temporalmente capacidades de coordinación, pero también generar sucesión de mandos, autonomía de células, fragmentación o competencia por rentas ilícitas y espacios territoriales.</p>
+   <h3>5. Escenarios de evolución</h3><p><b>Contención operativa:</b> nuevas capturas y pérdida de coordinación reducen temporalmente capacidades. <b>Reacomodo:</b> mandos secundarios mantienen actividades con cambios de modalidad o territorio. <b>Fragmentación y disputa:</b> células asociadas compiten por liderazgo, rentas o control territorial. Estos escenarios son hipótesis de seguimiento, no hechos confirmados.</p>
+   <h3>6. Indicadores de seguimiento ORSEC</h3><p>Evolución semanal y mensual de homicidios, extorsiones, detonaciones y secuestros; nuevas capturas; resultados de la investigación del evento del 30 de agosto; situación jurídica del detenido; posibles reacomodos internos; desplazamientos territoriales y cambios en modalidades extorsivas.</p>
+   <h3>7. Valoración ORSEC</h3><p><b>Connotación estratégica:</b> CRÍTICA · <b>Atención coyuntural:</b> PRIORITARIA · <b>Tendencia estadística:</b> debe mantenerse conforme a la base oficial consolidada.</p>
+   <h3>8. Conclusión ejecutiva</h3><p>La captura de alias “Jhonsson Pulpo” representa un golpe estratégico contra una estructura criminal de alta connotación para La Libertad. Su verdadero efecto deberá medirse por la evolución posterior de la violencia, las extorsiones, detonaciones, secuestros, nuevas capturas y capacidad de reorganización de “Los Pulpos”. La relación con el evento del 30 de agosto permanece dentro del ámbito de investigación y debe actualizarse únicamente con información oficial verificable.</p>
+   <div style="background:#fff4cf;border-left:4px solid #f4b400;padding:12px;margin-top:16px;"><b>SEPARACIÓN METODOLÓGICA ORSEC:</b> ESTADÍSTICA OFICIAL = incidencia consolidada | CONNOTACIÓN = trascendencia estratégica del acontecimiento.</div>
+   <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:18px;">
+    <a href="Nota_Inteligencia_ORSEC_002_2026_Visual.docx" download style="text-decoration:none;background:#f4b400;color:#092a40;font-weight:900;padding:10px 14px;border-radius:7px;">⬇ DESCARGAR NOTA 002 · DOCX</a>
+    <button onclick="window.print()" style="background:#0b5f91;color:white;border:0;border-radius:7px;padding:10px 14px;font-weight:900;cursor:pointer;">🖨 IMPRIMIR / GUARDAR PDF</button>
+   </div>
+  </div>
+ </div>
+</div>
+
+
+<script id="orsecNota002JS">
+function orsecAbrirNota002(){document.getElementById('orsecNota002Modal').style.display='block';document.body.style.overflow='hidden'}
+function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style.display='none';document.body.style.overflow=''}
 </script>
 
 </body></html>

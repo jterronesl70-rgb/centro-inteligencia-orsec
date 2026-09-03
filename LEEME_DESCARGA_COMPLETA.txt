@@ -1,0 +1,15 @@
+ORSEC · CORRECCIÓN DESCARGA COMPLETA V3
+
+Problema corregido:
+La descarga PNG dividía una relación larga en varias imágenes. Por eso, al abrir
+una de las páginas, podían verse solo los últimos registros.
+
+Nueva conducta:
+- PNG: genera UNA SOLA IMAGEN LARGA con TODOS los registros filtrados.
+- PDF: conserva formato multipágina, pero contiene la relación completa.
+- CSV: conserva todos los registros.
+- Respeta delito, periodo y provincia seleccionados.
+
+Ejemplo de control:
+HOMICIDIOS + AGOSTO 2026 + TODAS LAS PROVINCIAS = 25 registros.
+La imagen PNG debe indicar "Total seleccionado: 25 registro(s)" y contener las 25 filas.
