@@ -2831,16 +2831,54 @@ async function orsecDescargarInfografia(){
       x.strokeStyle='#ffffff';x.lineWidth=1.2;x.stroke();
     });
 
-    // labels for selected top districts
-    topN(counts,8).forEach(([name,v])=>{
+    // Etiquetas cartográficas inteligentes:
+    // distritos amplios dentro del polígono; núcleo metropolitano con líneas guía.
+    const metropolitanos=new Set([
+      'TRUJILLO','LA ESPERANZA','EL PORVENIR','FLORENCIA DE MORA',
+      'VICTOR LARCO HERRERA','HUANCHACO','MOCHE','SALAVERRY','LAREDO'
+    ]);
+    const labels=[];
+    topN(counts,10).forEach(([name,v])=>{
       const feat=geo.features.find(f=>orsecNorm(f.properties.NOMBDIST)===name);
       if(!feat)return;
       const pts=[];eachCoord(feat.geometry,p=>pts.push(proj(p)));
       if(!pts.length)return;
-      const cx=pts.reduce((s,p)=>s+p[0],0)/pts.length,cy=pts.reduce((s,p)=>s+p[1],0)/pts.length;
-      txt(trunc(name,15),cx,cy,12,true,C.navy,'center');
-      txt(v,cx,cy+15,12,true,C.navy,'center');
+      const cx=pts.reduce((s,p)=>s+p[0],0)/pts.length;
+      const cy=pts.reduce((s,p)=>s+p[1],0)/pts.length;
+      labels.push({name,v,cx,cy,metro:metropolitanos.has(name)});
     });
+
+    // Etiquetas interiores, solo cuando hay espacio territorial suficiente.
+    labels.filter(o=>!o.metro).forEach(o=>{
+      txt(trunc(o.name,17),o.cx,o.cy-3,12,true,C.navy,'center');
+      txt(o.v,o.cx,o.cy+13,12,true,C.navy,'center');
+    });
+
+    // Callouts metropolitanos ordenados verticalmente en un margen lateral.
+    const metro=labels.filter(o=>o.metro).sort((a,b)=>a.cy-b.cy);
+    if(metro.length){
+      const avgX=metro.reduce((s,o)=>s+o.cx,0)/metro.length;
+      const useRight=avgX < mapX+mapW*.60;
+      const labelX=useRight ? mapX+mapW-165 : mapX+165;
+      const lineEndX=useRight ? labelX-10 : labelX+10;
+      const minY=mapY+105, maxY=mapY+mapH-105;
+      const step=metro.length>1?(maxY-minY)/(metro.length-1):0;
+
+      metro.forEach((o,i)=>{
+        const ly=minY+i*step;
+        x.strokeStyle='#49697e';x.lineWidth=1.5;
+        x.beginPath();x.moveTo(o.cx,o.cy);x.lineTo(lineEndX,ly);x.stroke();
+
+        x.fillStyle=C.white;x.strokeStyle='#9fb6c5';x.lineWidth=1;
+        const bw=155,bh=38,bx=useRight?labelX-bw/2:labelX-bw/2,by=ly-bh/2;
+        x.beginPath();x.roundRect(bx,by,bw,bh,6);x.fill();x.stroke();
+
+        txt(trunc(o.name,19),labelX,ly-2,10,true,C.navy,'center');
+        txt(o.v+' caso'+(o.v===1?'':'s'),labelX,ly+12,10,true,C.red,'center');
+
+        x.fillStyle=C.red;x.beginPath();x.arc(o.cx,o.cy,4,0,Math.PI*2);x.fill();
+      });
+    }
   }else{
     txt('No se pudo cargar la cartografía oficial',mapX+mapW/2,mapY+mapH/2,24,true,C.muted,'center');
   }
@@ -2878,7 +2916,7 @@ async function orsecDescargarInfografia(){
   // footer
   x.fillStyle=C.navy;x.fillRect(0,H-38,W,38);
   txt('ORSEC · Centro de Inteligencia · Observatorio Regional de Seguridad Ciudadana · La Libertad',28,H-13,13,false,C.white);
-  txt('Enero–Agosto 2026',W-28,H-13,13,false,C.white,'right');
+  txt('Enero–Agosto 2026 · Cartografía V9',W-28,H-13,13,false,C.white,'right');
 
   c.toBlob(b=>orsecDownload(`ORSEC_${delito}_INFOGRAFIA_VISUAL_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
 }
@@ -3615,7 +3653,7 @@ async function orsecDescargarInfografia(){
   // footer
   x.fillStyle=C.navy;x.fillRect(0,H-38,W,38);
   txt('ORSEC · Centro de Inteligencia · Observatorio Regional de Seguridad Ciudadana · La Libertad',28,H-13,13,false,C.white);
-  txt('Enero–Agosto 2026',W-28,H-13,13,false,C.white,'right');
+  txt('Enero–Agosto 2026 · Cartografía V9',W-28,H-13,13,false,C.white,'right');
 
   c.toBlob(b=>orsecDownload(`ORSEC_${delito}_INFOGRAFIA_VISUAL_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
 }
@@ -3900,7 +3938,7 @@ async function orsecDescargarInfografia(){
   // footer
   x.fillStyle=C.navy;x.fillRect(0,H-38,W,38);
   txt('ORSEC · Centro de Inteligencia · Observatorio Regional de Seguridad Ciudadana · La Libertad',28,H-13,13,false,C.white);
-  txt('Enero–Agosto 2026',W-28,H-13,13,false,C.white,'right');
+  txt('Enero–Agosto 2026 · Cartografía V9',W-28,H-13,13,false,C.white,'right');
 
   c.toBlob(b=>orsecDownload(`ORSEC_${delito}_INFOGRAFIA_VISUAL_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
 }

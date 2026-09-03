@@ -1,0 +1,9 @@
+ORSEC · INFOGRAFÍA VISUAL · MAPA ETIQUETAS V9
+
+Corrección cartográfica:
+- Se evita la superposición de nombres en el núcleo metropolitano de Trujillo.
+- Trujillo, La Esperanza, El Porvenir, Florencia de Mora, Víctor Larco Herrera,
+  Huanchaco, Moche, Salaverry y Laredo usan líneas guía y etiquetas ordenadas.
+- Cada etiqueta muestra el distrito y número de casos.
+- Los distritos territorialmente amplios conservan el rótulo dentro del mapa.
+- Se mantiene intacto el resto de la infografía y las funciones ORSEC anteriores.
