@@ -1,0 +1,10 @@
+ORSEC V19 - INFOGRAFÍA PANEL EJECUTIVO
+
+Esta versión incorpora como descarga EXACTAMENTE la infografía aprobada
+por el Director del proyecto (Panel Ejecutivo ORSEC con mapa central,
+panel izquierdo, panel derecho y franja inferior institucional).
+
+Para desplegar en GitHub/Vercel:
+1. Reemplazar el contenido del repositorio por este paquete.
+2. Mantener juntos index.html y ORSEC_INFOGRAFIA_PANEL_EJECUTIVO.png.
+3. El botón DESCARGAR INFOGRAFÍA descargará esta imagen exacta.
