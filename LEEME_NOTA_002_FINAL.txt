@@ -1,0 +1,9 @@
+ORSEC · NOTA DE INTELIGENCIA 002 · VERSIÓN FINAL
+
+Se retiró la opción "IMPRIMIR / GUARDAR PDF".
+
+Se mantiene:
+- Visualización interna de la Nota N.° 002-2026.
+- Botón DESCARGAR NOTA 002 · DOCX.
+- El documento descargado puede imprimirse o guardarse como PDF desde Word.
+- Todo el resto de la plataforma ORSEC permanece sin cambios.
