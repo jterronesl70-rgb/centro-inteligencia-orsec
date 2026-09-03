@@ -1,0 +1,17 @@
+ORSEC · INFOGRAFÍA MODELO MAESTRO V13
+
+Esta versión adopta como referencia definitiva la composición aprobada por Jorge:
+- formato horizontal 16:9;
+- cabecera institucional ORSEC;
+- barra de navegación visual;
+- panel ejecutivo izquierdo;
+- mapa distrital protagonista al centro;
+- recuadros metropolitanos fuera de los polígonos y conectados por líneas guía;
+- ranking y análisis a la derecha;
+- indicadores ejecutivos inferiores;
+- descarga dinámica según HOMICIDIOS / DETONACIONES y periodo seleccionado.
+
+Para desplegar:
+1. Reemplace index.html en GitHub por el incluido en este ZIP.
+2. Mantenga los archivos JSON/GeoJSON del proyecto en sus ubicaciones actuales.
+3. Vercel actualizará el despliegue desde GitHub.
