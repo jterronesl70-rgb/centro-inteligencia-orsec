@@ -1,0 +1,16 @@
+ORSEC V21 · INFOGRAFÍA LIMPIA
+
+Corrección:
+La V20 descargaba una captura de pantalla donde se veía ChatGPT alrededor de la infografía.
+La V21 reemplaza ese archivo por la infografía limpia, sin navegador, sin ChatGPT y sin marcos externos.
+
+Archivo descargado:
+ORSEC_INFOGRAFIA_LIMPIA_APROBADA_V21.png
+
+Después de desplegar:
+1. Subir TODOS los archivos del ZIP.
+2. Esperar el nuevo deployment de Vercel.
+3. Pulsar Ctrl+F5 una vez.
+4. Descargar la infografía.
+
+El PNG debe mostrar únicamente el Panel Ejecutivo ORSEC.

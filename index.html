@@ -3406,14 +3406,14 @@ function orsecDescargarRelacionPDF(){
 
 <script id="orsecInfografiaV20Exacta">
 function orsecDescargarInfografiaV20(){
-  const url='ORSEC_PANEL_EJECUTIVO_APROBADO_V20.png?v=20';
+  const url='ORSEC_INFOGRAFIA_LIMPIA_APROBADA_V21.png?v=21';
   fetch(url,{cache:'no-store'})
     .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.blob();})
     .then(blob=>{
       const obj=URL.createObjectURL(blob);
       const a=document.createElement('a');
       a.href=obj;
-      a.download='ORSEC_PANEL_EJECUTIVO_APROBADO_V20.png';
+      a.download='ORSEC_INFOGRAFIA_LIMPIA_APROBADA_V21.png';
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -3421,7 +3421,7 @@ function orsecDescargarInfografiaV20(){
     })
     .catch(err=>{
       console.error(err);
-      alert('No se pudo descargar la infografía V20. Actualice con Ctrl+F5 y vuelva a intentar.');
+      alert('No se pudo descargar la infografía limpia V21. Actualice con Ctrl+F5 y vuelva a intentar.');
     });
 }
 </script>
