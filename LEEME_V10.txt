@@ -1,0 +1,11 @@
+ORSEC INFOGRAFÍA EJECUTIVA V10
+Rediseño final basado en el modelo visual aprobado:
+- formato 16:9 1920x1080
+- mapa central protagonista
+- etiquetas metropolitanas externas con líneas guía
+- sin superposición de nombres
+- panel ejecutivo izquierdo
+- rankings y patrones a la derecha
+- KPI inferiores
+- datos dinámicos según delito, periodo y provincia seleccionados
+La imagen de referencia se utilizó solo como guía visual; las cifras provienen de ORSEC.
