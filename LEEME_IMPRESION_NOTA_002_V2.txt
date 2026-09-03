@@ -1,0 +1,19 @@
+ORSEC · IMPRESIÓN NOTA 002 · CORRECCIÓN V2
+
+Se cambió completamente el mecanismo de impresión.
+
+Antes:
+window.print() imprimía la página ORSEC completa y el navegador incluía otras
+secciones, infografías y páginas en blanco.
+
+Ahora:
+- Se abre una ventana temporal independiente.
+- En esa ventana se copia EXCLUSIVAMENTE el contenido de la Nota 002.
+- No se copia el resto de la plataforma.
+- La impresión / Guardar PDF trabaja únicamente sobre esa ventana.
+- Formato A4 vertical.
+- Se eliminan botones y enlaces de la salida impresa.
+
+Prueba:
+Abrir Nota 002 > IMPRIMIR / GUARDAR PDF.
+La vista previa debe mostrar únicamente la Nota de Inteligencia 002.

@@ -519,41 +519,7 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 </style>
 
 
-<style id="orsecNota002PrintCSS">
-@media print{
-  body *{visibility:hidden !important;}
-  #orsecNota002Modal,
-  #orsecNota002Modal *{visibility:visible !important;}
-  #orsecNota002Modal{
-    display:block !important;
-    position:static !important;
-    inset:auto !important;
-    background:#fff !important;
-    padding:0 !important;
-    overflow:visible !important;
-  }
-  #orsecNota002Modal > div{
-    max-width:none !important;
-    width:100% !important;
-    margin:0 !important;
-    box-shadow:none !important;
-    border-radius:0 !important;
-    overflow:visible !important;
-  }
-  #orsecNota002Modal button,
-  #orsecNota002Modal a{display:none !important;}
-  #orsecNota002Printable{
-    padding:12mm !important;
-    font-size:10.5pt !important;
-    line-height:1.35 !important;
-    color:#000 !important;
-  }
-  #orsecNota002Printable h2{font-size:15pt !important;color:#073e70 !important;}
-  #orsecNota002Printable h3{font-size:11.5pt !important;margin:8pt 0 3pt !important;}
-  #orsecNota002Printable p{margin:0 0 6pt !important;}
-  @page{size:A4 portrait;margin:12mm;}
-}
-</style>
+
 
 </head>
 <body>
@@ -2704,41 +2670,7 @@ function orsecVistaBI(){
 </style>
 
 
-<style id="orsecNota002PrintCSS">
-@media print{
-  body *{visibility:hidden !important;}
-  #orsecNota002Modal,
-  #orsecNota002Modal *{visibility:visible !important;}
-  #orsecNota002Modal{
-    display:block !important;
-    position:static !important;
-    inset:auto !important;
-    background:#fff !important;
-    padding:0 !important;
-    overflow:visible !important;
-  }
-  #orsecNota002Modal > div{
-    max-width:none !important;
-    width:100% !important;
-    margin:0 !important;
-    box-shadow:none !important;
-    border-radius:0 !important;
-    overflow:visible !important;
-  }
-  #orsecNota002Modal button,
-  #orsecNota002Modal a{display:none !important;}
-  #orsecNota002Printable{
-    padding:12mm !important;
-    font-size:10.5pt !important;
-    line-height:1.35 !important;
-    color:#000 !important;
-  }
-  #orsecNota002Printable h2{font-size:15pt !important;color:#073e70 !important;}
-  #orsecNota002Printable h3{font-size:11.5pt !important;margin:8pt 0 3pt !important;}
-  #orsecNota002Printable p{margin:0 0 6pt !important;}
-  @page{size:A4 portrait;margin:12mm;}
-}
-</style>
+
 
 </head><body><h1>BOLETÍN EJECUTIVO AUTOMÁTICO ORSEC</h1>
   <div class="box"><h3>SITUACIÓN ESTADÍSTICA</h3>${document.getElementById('orsecBiEstadisticaVisible')?.innerHTML||''}</div>
@@ -3042,22 +2974,56 @@ function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style
 </script>
 
 
+
 <script id="orsecNota002PrintJS">
 function orsecImprimirNota002(){
-  const modal=document.getElementById('orsecNota002Modal');
-  if(!modal)return;
-  const estaba=modal.style.display;
-  modal.style.display='block';
-  document.body.classList.add('orsec-print-nota002');
-  setTimeout(()=>{
-    window.print();
+  const contenido=document.getElementById('orsecNota002Printable');
+  if(!contenido)return;
+
+  const titulo='NOTA DE INTELIGENCIA DE CONNOTACIÓN N.° 002-2026';
+  const w=window.open('','_blank','width=900,height=1100');
+  if(!w){
+    alert('El navegador bloqueó la ventana de impresión. Permita ventanas emergentes para ORSEC e intente nuevamente.');
+    return;
+  }
+
+  const css=`
+    @page{size:A4 portrait;margin:14mm;}
+    html,body{background:#fff;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;color:#17384f;}
+    .nota{font-size:10.5pt;line-height:1.42;}
+    .cabecera{border-bottom:3px solid #073e70;padding-bottom:10px;margin-bottom:14px;}
+    .orsec{font-size:21pt;font-weight:900;color:#073e70;}
+    .sub{font-size:9pt;color:#55758b;margin-top:3px;}
+    h2{font-size:15pt;color:#073e70;margin:10px 0 12px;}
+    h3{font-size:11.5pt;color:#17384f;margin:10px 0 4px;page-break-after:avoid;}
+    p{margin:0 0 7px;orphans:3;widows:3;}
+    a,button{display:none!important;}
+    .meta{display:grid;grid-template-columns:1fr 1fr;gap:5px 18px;margin:10px 0 16px;font-size:9.5pt;}
+    .pie{margin-top:16px;padding-top:8px;border-top:1px solid #b7c9d6;font-size:8.5pt;color:#607a8d;}
+    *{box-sizing:border-box;}
+  `;
+
+  // Clone only the printable note content.
+  const clone=contenido.cloneNode(true);
+  clone.querySelectorAll('button,a').forEach(el=>el.remove());
+
+  w.document.open();
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${titulo}</title><style>${css}</style></head><body>`);
+  w.document.write('<div class="nota"><div class="cabecera"><div class="orsec">ORSEC</div><div class="sub">CENTRO DE INTELIGENCIA · REGIÓN LA LIBERTAD</div><div class="sub">INTELIGENCIA DE CONTEXTO · NO ESTADÍSTICO · INFORMACIÓN EN DESARROLLO</div></div>');
+  w.document.write(clone.innerHTML);
+  w.document.write('<div class="pie">ORSEC / GRDN / GORELL · Documento de apoyo a la decisión. No reemplaza registros estadísticos oficiales ni investigaciones fiscales o policiales.</div></div>');
+  w.document.write('</body></html>');
+  w.document.close();
+
+  w.onload=()=>{
     setTimeout(()=>{
-      document.body.classList.remove('orsec-print-nota002');
-      modal.style.display=estaba||'block';
-    },300);
-  },100);
+      w.focus();
+      w.print();
+    },250);
+  };
 }
 </script>
+
 
 </body>
 <script id="orsec272fix">
