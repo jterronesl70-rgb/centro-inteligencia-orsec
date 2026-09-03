@@ -1,0 +1,11 @@
+ORSEC · NOTA 002 ÚNICA · CORRECCIÓN V5
+
+Causa detectada:
+La tarjeta de la Nota 002 había quedado insertada dentro de la plantilla que renderiza
+cada evento de connotación. Por eso aparecía repetida una vez por cada evento.
+
+Corrección:
+- La Nota 002 se retiró del bucle de eventos.
+- Ahora se inserta una sola vez, independientemente del número de eventos.
+- Se conserva VER / DESCARGAR y la descarga DOCX.
+- No se modifica la Nota 001 ni los demás módulos ORSEC.

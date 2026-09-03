@@ -930,20 +930,6 @@ function orsecRenderConnotacion(){
         <a class="orsec-doc-mainbtn" href="Nota_Inteligencia_ORSEC_001_2026_Visual.docx" download>📄 NOTA N.° 001-2026 · VER / DESCARGAR</a>
       </div>`:''}
     </div>
-<div id="orsecNota002Card" style="margin:14px 0;padding:15px;border:1px solid #f4b400;border-radius:10px;background:linear-gradient(135deg,#132f40,#0c2637);color:#fff;">
-  <div style="font-size:11px;color:#9fd5f5;margin-bottom:5px;">2026-09-01 · LA LIBERTAD / TRUJILLO · DIMENSIÓN TRANSNACIONAL</div>
-  <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;">
-    <div style="max-width:820px;">
-      <div style="font-weight:900;font-size:16px;">Captura de objetivo de alto valor y posibles implicancias sobre “Los Pulpos”</div>
-      <div style="font-size:12px;line-height:1.45;margin-top:6px;color:#e5f2fa;">Captura en La Paz, Bolivia, de Jhonsson Smit Cruz Torres, alias “Jhonsson Pulpo”. Análisis de connotación sobre posibles efectos en la estructura criminal y seguimiento del escenario posterior al evento del 30 de agosto.</div>
-      <div style="font-size:11px;margin-top:7px;color:#b8d9ec;">Inteligencia de contexto · NO estadístico · información en desarrollo · relación con hechos del 30/08 sujeta a investigación oficial.</div>
-    </div>
-    <span style="border:1px solid #ff3b30;color:#ff6259;padding:5px 8px;border-radius:6px;font-weight:900;font-size:11px;">EVENTO CRÍTICO</span>
-  </div>
-  <div style="margin-top:11px;">
-    <button onclick="orsecAbrirNota002()" style="border:0;border-radius:7px;background:#f4b400;color:#092a40;font-weight:900;padding:10px 14px;cursor:pointer;">📄 NOTA N.° 002-2026 · VER / DESCARGAR</button>
-  </div>
-</div>
 `).join('');
 
   const crit=ev.filter(e=>e.nivel==='EVENTO CRÍTICO').length;
@@ -2694,6 +2680,8 @@ function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style
 
 
 
+
+
 </body>
 <script id="orsec272fix">
 (function(){
@@ -3226,5 +3214,44 @@ function orsecCerrarNota002(){document.getElementById('orsecNota002Modal').style
 
 
 
+
+
+
+
+<script id="orsecNota002UniqueJS">
+(function(){
+ const NOTA002_HTML=`<div id="orsecNota002Card" style="margin:14px 0;padding:15px;border:1px solid #f4b400;border-radius:10px;background:linear-gradient(135deg,#132f40,#0c2637);color:#fff;">
+  <div style="font-size:11px;color:#9fd5f5;margin-bottom:5px;">2026-09-01 · LA LIBERTAD / TRUJILLO · DIMENSIÓN TRANSNACIONAL</div>
+  <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;">
+    <div style="max-width:820px;">
+      <div style="font-weight:900;font-size:16px;">Captura de objetivo de alto valor y posibles implicancias sobre “Los Pulpos”</div>
+      <div style="font-size:12px;line-height:1.45;margin-top:6px;color:#e5f2fa;">Captura en La Paz, Bolivia, de Jhonsson Smit Cruz Torres, alias “Jhonsson Pulpo”. Análisis de connotación sobre posibles efectos en la estructura criminal y seguimiento del escenario posterior al evento del 30 de agosto.</div>
+      <div style="font-size:11px;margin-top:7px;color:#b8d9ec;">Inteligencia de contexto · NO estadístico · información en desarrollo · relación con hechos del 30/08 sujeta a investigación oficial.</div>
+    </div>
+    <span style="border:1px solid #ff3b30;color:#ff6259;padding:5px 8px;border-radius:6px;font-weight:900;font-size:11px;">EVENTO CRÍTICO</span>
+  </div>
+  <div style="margin-top:11px;">
+    <button onclick="orsecAbrirNota002()" style="border:0;border-radius:7px;background:#f4b400;color:#092a40;font-weight:900;padding:10px 14px;cursor:pointer;">📄 NOTA N.° 002-2026 · VER / DESCARGAR</button>
+  </div>
+</div>`;
+ function colocarNota002(){
+   const existentes=[...document.querySelectorAll('#orsecNota002Card')];
+   existentes.slice(1).forEach(el=>el.remove());
+   if(document.getElementById('orsecNota002Card')) return;
+   const btn001=[...document.querySelectorAll('button,a')].find(el=>(el.textContent||'').includes('NOTA N.° 001-2026'));
+   if(btn001){
+     let host=btn001.closest('div');
+     for(let i=0;i<5 && host && host.parentElement;i++){
+       if(host.parentElement.children.length>1) break;
+       host=host.parentElement;
+     }
+     (host||btn001).insertAdjacentHTML('afterend',NOTA002_HTML);
+   }
+ }
+ document.addEventListener('DOMContentLoaded',colocarNota002);
+ setTimeout(colocarNota002,500);
+ new MutationObserver(colocarNota002).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
 
 </body></html>
