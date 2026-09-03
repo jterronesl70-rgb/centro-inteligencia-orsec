@@ -1,0 +1,7 @@
+ORSEC INFOGRAFÍA MODELO APROBADO V12
+- Mantiene el diseño ejecutivo 16:9.
+- Reserva una columna exclusiva a la izquierda del mapa para los distritos metropolitanos.
+- Los polígonos geográficos se desplazan y escalan a la derecha.
+- Huanchaco, El Porvenir, Trujillo, La Esperanza, Florencia de Mora, Víctor Larco, Moche, Salaverry y Laredo se muestran en recuadros fuera del territorio, con líneas guía.
+- Ningún recuadro puede tapar el mapa.
+- Conserva datos y filtros dinámicos ORSEC.
