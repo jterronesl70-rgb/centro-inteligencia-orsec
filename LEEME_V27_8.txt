@@ -1,0 +1,12 @@
+ORSEC V27.8 · DISEÑO APROBADO + RENDER LIMPIO
+
+1. Conserva la solución V27.7 contra superposiciones.
+2. Restaura las cinco variables superiores del diseño final aprobado:
+   Homicidios, Extorsión, Detonaciones, Robo de Vehículos y Violencia Familiar.
+3. Provincia y delito siguen apareciendo como ámbito territorial/filtro,
+   sin reemplazar las variables institucionales aprobadas.
+4. Tabla comparativa inferior: tipografía reforzada.
+5. Gráfico inferior: cifras, barras y etiquetas ampliadas.
+6. No se modifica la cabecera institucional aprobada.
+
+Marcador técnico: V27.8-DISENO-APROBADO-RENDER-LIMPIO
