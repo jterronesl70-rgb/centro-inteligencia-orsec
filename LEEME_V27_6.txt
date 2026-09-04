@@ -1,0 +1,9 @@
+ORSEC V27.6 · RESTAURACIÓN DEL DISEÑO APROBADO
+
+Esta entrega vuelve exactamente a la línea visual aprobada antes de V27.4/V27.5.
+No se usa la plantilla de cuatro tarjetas introducida en V27.5.
+Se conserva la lógica dinámica por período, provincia y delito.
+
+IMPORTANTE:
+Esta versión prioriza recuperar el diseño aprobado. No incorpora nuevos
+cambios de geometría sobre la composición visual.
