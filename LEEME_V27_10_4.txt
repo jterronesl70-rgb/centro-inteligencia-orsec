@@ -1,0 +1,14 @@
+ORSEC V27.10.4 · ALERTAS — FILTRO POR DELITO CORREGIDO
+
+BASE:
+V27.10.3 estable.
+
+CAMBIO ÚNICO:
+Alertas Inteligentes ahora respeta el selector DELITO.
+
+- TODOS: muestra todas las alertas.
+- Un delito específico: muestra únicamente la alerta correspondiente.
+- El semáforo de variaciones sigue respetando el mismo filtro.
+- Las descargas PNG, PDF y CSV continúan funcionando y respetan el filtro.
+
+NO SE MODIFICA ningún otro módulo.

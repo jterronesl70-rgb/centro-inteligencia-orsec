@@ -1455,7 +1455,8 @@ function renderAlertas(){
  const f=current();
  if(f.anio!==2026){$('alertasBox').innerHTML='<div class="alerta">Selecciona 2026 para activar el comparativo interanual 2025–2026.</div>';return}
  const p=f.provincia==='TODAS'?'TOTAL REGION':f.provincia;
- const currentRows=registros({anio:2026,tipo:f.tipo,periodo:f.periodo,provincia:p});
+ let currentRows=registros({anio:2026,tipo:f.tipo,periodo:f.periodo,provincia:p});
+ if(f.delito!=='TODOS') currentRows=currentRows.filter(r=>r.Delito===f.delito);
  const alerts=[];
  currentRows.forEach(r=>{
    const prev=registros({anio:2025,tipo:f.tipo,periodo:f.periodo,provincia:p,delito:r.Delito})[0];
@@ -4701,4 +4702,8 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
 })();
 </script>
 <script id="orsecAlertasExportMarker">window.ORSEC_PATCH_ALERTAS='V27.10.3-ALERTAS-EJECUTIVAS-DESCARGABLES';</script>
+
+<script id="orsecV27104Marker">
+window.ORSEC_PATCH_ALERTAS_FILTRO='V27.10.4-ALERTAS-FILTRO-DELITO-OK';
+</script>
 </body></html>
