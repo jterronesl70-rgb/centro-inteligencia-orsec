@@ -3925,13 +3925,22 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
       'HOMICIDIOS','EXTORSION','DETONACIONES','VIOLACION SEXUAL',
       'ROBO DE VEHICULOS','VIOLENCIA FAMILIAR','HURTOS','ROBOS','ESTAFA'
     ];
-    const disponibles=(window.META?.delitos||[]);
+    const disponibles=(typeof META!=='undefined' && Array.isArray(META.delitos) ? META.delitos : [...new Set(DB.map(r=>r.Delito).filter(Boolean))]);
     const lista=preferidos.filter(d=>disponibles.includes(d));
     return lista.length?lista:disponibles.filter(Boolean);
   }
   function _datos(){
     const f=current(), prov=_provinciaActual();
-    return _catalogo().map(del=>{
+    let catalogo=_catalogo();
+    if(!catalogo.length){
+      catalogo=[...new Set(DB.filter(r=>
+        (r.Anio==2025||r.Anio==2026) &&
+        r.TipoPeriodo===f.tipo &&
+        r.Periodo===f.periodo &&
+        r.Provincia===prov
+      ).map(r=>r.Delito).filter(Boolean))];
+    }
+    return catalogo.map(del=>{
       const a=registros({anio:2025,tipo:f.tipo,periodo:f.periodo,provincia:prov,delito:del})
         .reduce((s,r)=>s+(+r.Casos||0),0);
       const b=registros({anio:2026,tipo:f.tipo,periodo:f.periodo,provincia:prov,delito:del})
@@ -4065,6 +4074,6 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
   };
 })();
 </script>
-<script id="orsecV2792Marker">window.ORSEC_PATCH='V27.9.2-COMPARATIVO-DELITO-REPARADO';</script>
+<script id="orsecV2792Marker">window.ORSEC_PATCH='V27.9.3-COMPARATIVO-DELITO-DATOS-OK';</script>
 
 </body></html>

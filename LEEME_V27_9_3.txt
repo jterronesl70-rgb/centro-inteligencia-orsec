@@ -1,0 +1,26 @@
+ORSEC V27.9.3 · COMPARATIVO POR DELITO - DATOS OK
+
+CAUSA REAL ENCONTRADA
+El botón ya abría, pero el comparativo devolvía:
+“No existen datos comparables 2025–2026 para la selección actual”.
+
+La causa era técnica:
+- La base usa `let META={}`.
+- El parche consultaba `window.META?.delitos`.
+- `window.META` estaba vacío porque una variable `let` global no se expone como propiedad de window.
+- Por eso el catálogo de delitos quedaba vacío aunque los datos 2025 y 2026 sí existían.
+
+CORRECCIÓN
+- Se consulta `META.delitos` directamente.
+- Si META no estuviera disponible, se reconstruye el catálogo desde DB.
+- Se mantiene intacto todo lo demás.
+
+VALIDACIÓN DE DATOS
+Para ACUMULADO ENE–AGOSTO / TOTAL REGIÓN existen 13 delitos en 2025 y 13 en 2026.
+
+PRUEBA
+Incidencia Delictiva → Acumulado → Enero–Agosto → Total Región →
+GENERAR COMPARATIVO POR DELITO.
+
+Marcador técnico:
+V27.9.3-COMPARATIVO-DELITO-DATOS-OK
