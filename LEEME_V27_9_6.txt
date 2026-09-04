@@ -1,0 +1,16 @@
+ORSEC V27.9.6 — DESCARGA COMPLETA CORREGIDA
+
+Se corrigió el mensaje “No se encontró el generador del comparativo”.
+
+CAUSA
+_canvas() está encapsulada dentro del módulo del comparativo.
+La V27.9.5 intentaba llamarla desde un script externo.
+
+SOLUCIÓN
+El botón “DESCARGAR CUADRO + GRÁFICO PNG” llama ahora al exportador
+interno orsecDescargarGraficoDelitos(), que sí tiene acceso al _canvas()
+completo de 1800 × 1400 con:
+1) cuadro comparativo;
+2) gráfico comparativo.
+
+No se modifican datos ni otros módulos.

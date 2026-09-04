@@ -998,7 +998,7 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
  <div class="orsec-comp-title">📈 COMPARATIVO POR DELITO · 2025 vs 2026</div>
  <div class="orsec-comp-sub" id="orsecDelitoContexto">Matriz regional y gráfico comparativo por delito.</div>
  <div class="orsec-delito-actions">
-   <button class="orsec-comp-btn alt" onclick="orsecDescargarComparativoCompletoV2795()">DESCARGAR CUADRO + GRÁFICO PNG</button>
+   <button class="orsec-comp-btn alt" onclick="orsecDescargarGraficoDelitos()">DESCARGAR CUADRO + GRÁFICO PNG</button>
    <button class="orsec-comp-btn gold" onclick="orsecDescargarPDFDelitos()">DESCARGAR PDF</button>
  </div>
  <div class="orsec-delito-tablewrap">
@@ -3442,49 +3442,7 @@ function orsecDescargarRelacionPDF(){
     '<div class="foot">Fuente: ORSEC · Relación completa según filtros activos.</div>',
     '<div class="actions"><button onclick="window.print()">GUARDAR COMO PDF / IMPRIMIR</button></div>',
     '
-<script id="orsecV2795DescargaCompleta">
-window.ORSEC_PATCH='V27.9.5-DESCARGA-COMPLETA-CUADRO-GRAFICO';
 
-/* Función exclusiva V27.9.5:
-   obliga a descargar la composición completa creada por _canvas():
-   cuadro comparativo arriba + gráfico abajo. */
-window.orsecDescargarComparativoCompletoV2795 = function(){
-  try{
-    if(typeof _canvas !== 'function'){
-      alert('No se encontró el generador del comparativo.');
-      return;
-    }
-    const canvas = _canvas();
-
-    // Control de seguridad: la versión completa mide 1800 x 1400.
-    if(canvas.width !== 1800 || canvas.height !== 1400){
-      console.warn('Dimensión inesperada:', canvas.width, canvas.height);
-    }
-
-    canvas.toBlob(function(blob){
-      if(!blob){
-        alert('No se pudo generar la descarga completa.');
-        return;
-      }
-      const a = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      const tipo = (typeof current === 'function' && current().tipo) ? current().tipo : 'ACUMULADO';
-      const periodo = (typeof current === 'function' && current().periodo) ? current().periodo : 'ENE-AGOSTO';
-      const safe = v => String(v).replace(/[^a-z0-9_-]+/gi,'_');
-
-      a.href = url;
-      a.download = `ORSEC_Comparativo_Delito_CUADRO_Y_GRAFICO_${safe(tipo)}_${safe(periodo)}_V27_9_5.png`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url),1500);
-    }, 'image/png');
-  }catch(e){
-    console.error(e);
-    alert('No se pudo descargar el cuadro y gráfico.');
-  }
-};
-</script>
 
 </body></html>'
   ].join('');
@@ -3501,49 +3459,7 @@ window.ORSEC_BUILD='V27.9-RECUPERACION-INCIDENCIA';
 </script>
 
 
-<script id="orsecV2795DescargaCompleta">
-window.ORSEC_PATCH='V27.9.5-DESCARGA-COMPLETA-CUADRO-GRAFICO';
 
-/* Función exclusiva V27.9.5:
-   obliga a descargar la composición completa creada por _canvas():
-   cuadro comparativo arriba + gráfico abajo. */
-window.orsecDescargarComparativoCompletoV2795 = function(){
-  try{
-    if(typeof _canvas !== 'function'){
-      alert('No se encontró el generador del comparativo.');
-      return;
-    }
-    const canvas = _canvas();
-
-    // Control de seguridad: la versión completa mide 1800 x 1400.
-    if(canvas.width !== 1800 || canvas.height !== 1400){
-      console.warn('Dimensión inesperada:', canvas.width, canvas.height);
-    }
-
-    canvas.toBlob(function(blob){
-      if(!blob){
-        alert('No se pudo generar la descarga completa.');
-        return;
-      }
-      const a = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      const tipo = (typeof current === 'function' && current().tipo) ? current().tipo : 'ACUMULADO';
-      const periodo = (typeof current === 'function' && current().periodo) ? current().periodo : 'ENE-AGOSTO';
-      const safe = v => String(v).replace(/[^a-z0-9_-]+/gi,'_');
-
-      a.href = url;
-      a.download = `ORSEC_Comparativo_Delito_CUADRO_Y_GRAFICO_${safe(tipo)}_${safe(periodo)}_V27_9_5.png`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url),1500);
-    }, 'image/png');
-  }catch(e){
-    console.error(e);
-    alert('No se pudo descargar el cuadro y gráfico.');
-  }
-};
-</script>
 
 </body></html>`);
   w.document.close();
@@ -4210,51 +4126,9 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
   };
 })();
 </script>
-<script id="orsecV2792Marker">window.ORSEC_PATCH='V27.9.4-COMPARATIVO-TABLA-Y-GRAFICO';</script>
+<script id="orsecV2792Marker">window.ORSEC_PATCH='V27.9.6-DESCARGA-COMPLETA-CORREGIDA';</script>
 
 
-<script id="orsecV2795DescargaCompleta">
-window.ORSEC_PATCH='V27.9.5-DESCARGA-COMPLETA-CUADRO-GRAFICO';
 
-/* Función exclusiva V27.9.5:
-   obliga a descargar la composición completa creada por _canvas():
-   cuadro comparativo arriba + gráfico abajo. */
-window.orsecDescargarComparativoCompletoV2795 = function(){
-  try{
-    if(typeof _canvas !== 'function'){
-      alert('No se encontró el generador del comparativo.');
-      return;
-    }
-    const canvas = _canvas();
-
-    // Control de seguridad: la versión completa mide 1800 x 1400.
-    if(canvas.width !== 1800 || canvas.height !== 1400){
-      console.warn('Dimensión inesperada:', canvas.width, canvas.height);
-    }
-
-    canvas.toBlob(function(blob){
-      if(!blob){
-        alert('No se pudo generar la descarga completa.');
-        return;
-      }
-      const a = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      const tipo = (typeof current === 'function' && current().tipo) ? current().tipo : 'ACUMULADO';
-      const periodo = (typeof current === 'function' && current().periodo) ? current().periodo : 'ENE-AGOSTO';
-      const safe = v => String(v).replace(/[^a-z0-9_-]+/gi,'_');
-
-      a.href = url;
-      a.download = `ORSEC_Comparativo_Delito_CUADRO_Y_GRAFICO_${safe(tipo)}_${safe(periodo)}_V27_9_5.png`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url),1500);
-    }, 'image/png');
-  }catch(e){
-    console.error(e);
-    alert('No se pudo descargar el cuadro y gráfico.');
-  }
-};
-</script>
 
 </body></html>
