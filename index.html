@@ -421,6 +421,501 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 @page{size:A4 portrait;margin:0}
 @media print{#orsecInfoPreview{width:210mm!important;height:297mm!important;object-fit:contain!important;image-rendering:auto!important}}
 </style>
+<style>
+:root{--azul:#071A33;--azul2:#0B3D6D;--azul3:#0f5b9e;--oro:#D8AA32;--fondo:#EEF3F8;--blanco:#fff;--verde:#198754;--rojo:#c62828;--gris:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:Segoe UI,Arial,sans-serif;background:var(--fondo);color:#142238}
+header{background:linear-gradient(135deg,#06172D,#0B3D6D);color:#fff;padding:18px 24px;position:sticky;top:0;z-index:999;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+.encabezado{display:none!important;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:18px}.escudo{width:64px;height:74px;border:3px solid var(--oro);border-radius:16px 16px 24px 24px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:34px;color:var(--oro);box-shadow:0 0 22px rgba(216,170,50,.25)}.titulo h1{font-size:30px}.titulo p{opacity:.82}.status{text-align:right;font-size:13px;opacity:.9}.dot{display:inline-block;width:8px;height:8px;background:#38d982;border-radius:50%;box-shadow:0 0 10px #38d982;margin-right:7px}.lema{margin-top:12px;font-style:italic;color:#F4D77B}.reloj{margin-top:8px;font-size:18px;font-weight:700}
+.hero{background:radial-gradient(circle at 80% 20%,rgba(41,127,191,.45),transparent 25%),linear-gradient(135deg,#0B3E70,#123F62);color:white;padding:34px 24px;text-align:center}.hero h2{font-size:34px;margin-bottom:8px}.hero p{opacity:.9}.hero .fuente{font-size:12px;margin-top:10px;opacity:.7}
+.grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:26px}.tarjeta{background:#fff;border-radius:16px;padding:20px;cursor:pointer;transition:.25s;box-shadow:0 5px 18px rgba(0,0,0,.08);border:1px solid transparent}.tarjeta:hover{transform:translateY(-5px);border-color:#c8d9ea}.tarjeta.activa{outline:2px solid var(--oro)}.icono{font-size:32px;margin-bottom:8px}.numero{font-size:31px;font-weight:800;color:var(--azul2);margin:8px 0}.tarjeta p{color:#516174;font-size:14px}
+.seccion{display:none;max-width:1200px;margin:0 auto 28px;background:white;padding:24px;border-radius:16px;box-shadow:0 5px 18px rgba(0,0,0,.08)}.seccion.activa{display:block;animation:subir .25s ease}@keyframes subir{from{opacity:.3;transform:translateY(8px)}to{opacity:1;transform:none}}
+.seccion-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.badge{background:#eaf2fa;color:#0b3d6d;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:700}.filtros{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}.filtros select{padding:10px 12px;border-radius:9px;border:1px solid #CBD5E1;background:#fff;min-width:150px}.btn{padding:10px 14px;border:0;border-radius:9px;background:var(--azul2);color:#fff;cursor:pointer}.btn:hover{background:var(--azul3)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}.kpi{background:#f7fafc;border:1px solid #e4ebf3;border-radius:12px;padding:14px}.kpi b{display:block;font-size:25px;color:var(--azul2)}.kpi small{color:var(--gris)}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:10px;border-bottom:1px solid #E5E7EB;text-align:left}th{background:#F8FAFC;font-size:13px;color:#42566d}td.num{text-align:right;font-size:14px;font-weight:700}.barwrap{height:8px;background:#e7eef5;border-radius:999px;overflow:hidden;min-width:120px}.bar{height:100%;background:linear-gradient(90deg,#0b3d6d,#37a0dc);border-radius:999px}
+.alerta{padding:14px 16px;margin:10px 0;border-radius:10px;border-left:5px solid var(--gris);background:#f8fafc}.alerta.roja{border-color:var(--rojo);background:#fff1f1}.alerta.verde{border-color:var(--verde);background:#eefaf3}.alerta .var{font-weight:800}.rojo{color:var(--rojo)}.verde{color:var(--verde)}
+.territorio{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.provincia{background:#F8FAFC;padding:15px;border-radius:11px;cursor:pointer;transition:.2s;border:1px solid #e5edf5}.provincia:hover{background:#e8f1fa;transform:translateY(-2px)}.provincia b{display:block;color:#0b3d6d;font-size:19px;margin-top:5px}.boletin{background:#f8fafc;border-left:4px solid var(--oro);padding:18px;border-radius:8px;line-height:1.65}.nota{font-size:12px;color:#65758b;margin-top:12px}.loading{color:#65758b;padding:15px 0}.error{background:#fff2f2;color:#8b1a1a;padding:15px;border-radius:9px}footer{text-align:center;padding:28px;color:#6B7280;font-size:13px}
+@media(max-width:900px){.grid,.kpis,.territorio{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.grid,.kpis,.territorio{grid-template-columns:1fr}.encabezado{display:none!important;align-items:flex-start}.status{display:none}.hero h2{font-size:27px}.seccion{border-radius:0;margin-bottom:16px}}
+
+/* ===== MAPA VIVO ORSEC ===== */
+.mapa-layout{display:grid;grid-template-columns:minmax(360px,1.15fr) minmax(300px,.85fr);gap:18px;align-items:stretch;margin-top:16px}
+.mapa-panel{background:linear-gradient(160deg,#071a33,#0b3d6d);border-radius:16px;padding:16px;color:#fff;min-height:560px;position:relative;overflow:hidden;box-shadow:inset 0 0 40px rgba(46,153,220,.16)}
+.mapa-panel:before{content:"";position:absolute;inset:-30%;background:radial-gradient(circle at 50% 45%,rgba(55,160,220,.22),transparent 38%);animation:pulseMap 4s ease-in-out infinite}
+@keyframes pulseMap{50%{transform:scale(1.05);opacity:.7}}
+.mapa-titulo{position:relative;z-index:2;text-align:center;margin-bottom:8px}.mapa-titulo b{color:#f4d77b}
+#mapaLibertad{position:relative;z-index:2;width:100%;height:auto;max-height:500px;display:block;margin:auto;filter:drop-shadow(0 0 12px rgba(64,177,238,.28))}
+.prov-shape{cursor:pointer;transition:.22s;stroke:#9edcff;stroke-width:2.4;vector-effect:non-scaling-stroke}
+.prov-shape:hover{filter:brightness(1.25) drop-shadow(0 0 8px rgba(255,215,96,.7));stroke:#ffd966}
+.prov-shape.sel{stroke:#ffd966;stroke-width:4;filter:brightness(1.25) drop-shadow(0 0 10px rgba(255,215,96,.9))}
+.map-label{pointer-events:none;fill:#fff;font-size:10px;font-weight:700;text-anchor:middle}
+.map-side{background:#f8fafc;border:1px solid #e4ebf3;border-radius:16px;padding:18px}
+.map-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0 16px}.map-kpi{background:#fff;border:1px solid #e4ebf3;border-radius:11px;padding:12px}.map-kpi b{display:block;color:#0b3d6d;font-size:22px}.map-kpi small{color:#64748b}
+.ranking-mini{display:grid;gap:8px;max-height:300px;overflow:auto;padding-right:4px}.rank-row{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;padding:9px 10px;background:#fff;border:1px solid #e5edf5;border-radius:10px;cursor:pointer}.rank-row:hover{background:#edf6ff}.rank-row strong{color:#0b3d6d}.rank-num{color:#64748b;font-weight:700}
+.map-note{font-size:12px;color:#64748b;line-height:1.5;margin-top:10px}
+@media(max-width:900px){.mapa-layout{grid-template-columns:1fr}.mapa-panel{min-height:auto}}
+
+
+/* ===== ORSEC 1.4.1 · MAPA REAL ===== */
+.real-map-wrap{position:relative;z-index:2;width:100%;max-width:760px;margin:6px auto 0;aspect-ratio:661/481}
+.real-map-img{width:100%;height:100%;display:block;object-fit:contain;filter:drop-shadow(0 0 14px rgba(64,177,238,.28))}
+.map-marker{position:absolute;transform:translate(-50%,-50%);border:1px solid rgba(255,217,102,.9);background:rgba(7,26,51,.82);color:#fff;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35);white-space:nowrap;transition:.2s}
+.map-marker:hover,.map-marker.sel{background:#ffd966;color:#071a33;box-shadow:0 0 13px rgba(255,217,102,.9);transform:translate(-50%,-50%) scale(1.08)}
+.map-source{position:relative;z-index:2;text-align:center;font-size:10px;color:#b9cee2;margin-top:8px}
+@media(max-width:650px){.map-marker{font-size:7px;padding:3px 5px}}
+
+
+/* ===== ORSEC 1.5.1 · MÓDULOS REALMENTE INTEGRADOS ===== */
+.grid{grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.chart-shell{margin-top:18px;background:#f8fbfe;border:1px solid #dce7f1;border-radius:15px;padding:16px}
+.chart-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.chart-head h3,.chart-shell h3{margin:0 0 12px;color:#123b62}
+.orsec-bars{display:grid;gap:9px}.orsec-bar-row{display:grid;grid-template-columns:minmax(140px,220px) 1fr 64px;gap:10px;align-items:center;font-size:12px}
+.orsec-bar-label{font-weight:700;color:#163d65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.orsec-bar-track{height:14px;background:#e7eef5;border-radius:999px;overflow:hidden}.orsec-bar-fill{height:100%;background:linear-gradient(90deg,#0b3d6d,#1682c4);border-radius:999px}.orsec-bar-val{text-align:right;font-weight:900;color:#0b3d6d}
+.boletin-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.btn.secundario{background:#e8f1f8;color:#0b3d6d}
+.alert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.alert-card{border-radius:12px;padding:13px;border:1px solid #e0e8ef;background:#fff}.alert-card.alta{border-left:5px solid #c62828}.alert-card.media{border-left:5px solid #e6a700}.alert-card.baja{border-left:5px solid #18864b}.alert-card .delta{font-size:21px;font-weight:900;margin-top:5px}
+.sala-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}.sala-kpi{background:linear-gradient(145deg,#071a33,#0b3d6d);color:#fff;border-radius:14px;padding:16px}.sala-kpi small{color:#b9cee2}.sala-kpi b{display:block;color:#f4d77b;font-size:22px;margin-top:8px}.sala-columns{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}.sala-box{background:#f8fbfe;border:1px solid #dce7f1;border-radius:14px;padding:16px}.mini-alert{padding:10px;border-radius:9px;background:#fff;border-left:4px solid #e6a700;margin-bottom:8px;font-size:12px}
+@media(max-width:850px){.sala-grid{grid-template-columns:repeat(2,1fr)}.sala-columns{grid-template-columns:1fr}.orsec-bar-row{grid-template-columns:110px 1fr 48px}}
+
+
+/* ===== ORSEC 1.6 · IDENTIDAD INSTITUCIONAL + INTRO ===== */
+#introORSEC{position:fixed;inset:0;z-index:99999;background:
+radial-gradient(circle at 50% 35%,rgba(23,105,169,.28),transparent 35%),
+linear-gradient(160deg,#020b15,#061a32 55%,#03111f);
+display:flex;align-items:center;justify-content:center;overflow:hidden;color:#fff}
+#introORSEC::before{content:"";position:absolute;inset:-20%;background:
+linear-gradient(rgba(39,136,201,.08) 1px,transparent 1px),
+linear-gradient(90deg,rgba(39,136,201,.08) 1px,transparent 1px);
+background-size:42px 42px;transform:perspective(700px) rotateX(62deg) translateY(32%);animation:introGrid 4s linear infinite}
+@keyframes introGrid{to{background-position:0 42px,42px 0}}
+.intro-core{position:relative;z-index:2;width:min(1100px,94vw);text-align:center}
+.intro-logos{display:grid;grid-template-columns:1fr auto 1fr;gap:28px;align-items:center}
+.intro-logo-side{display:flex;align-items:center;justify-content:center;min-height:190px}
+.intro-logo-side img{max-width:220px;max-height:170px;object-fit:contain;filter:drop-shadow(0 0 18px rgba(30,155,230,.24));animation:introFloat 2.8s ease-in-out infinite}
+.intro-logo-side.obs img{max-width:300px;max-height:150px;border-radius:12px}
+@keyframes introFloat{50%{transform:translateY(-7px)}}
+.intro-center{display:grid;place-items:center}
+.intro-orsec-mark{width:118px;height:138px;border:4px solid #e1b33f;border-radius:26px 26px 42px 42px;display:grid;place-items:center;color:#e1b33f;font-size:66px;font-weight:900;box-shadow:0 0 38px rgba(225,179,63,.35),inset 0 0 28px rgba(30,121,187,.18);animation:introPulse 1.8s ease-in-out infinite}
+@keyframes introPulse{50%{transform:scale(1.04);box-shadow:0 0 55px rgba(225,179,63,.55),inset 0 0 30px rgba(30,121,187,.25)}}
+.intro-title{font-size:clamp(28px,4vw,54px);font-weight:900;letter-spacing:2px;margin:22px 0 4px}
+.intro-sub{color:#74c8ff;font-size:clamp(14px,1.8vw,22px);font-weight:700;letter-spacing:1px}
+.intro-status{margin-top:22px;color:#f0c95d;font-weight:800;letter-spacing:1.5px;animation:statusBlink 1s steps(2,end) infinite}
+@keyframes statusBlink{50%{opacity:.35}}
+.intro-motto{margin:26px auto 0;max-width:820px;color:#f3d77e;font-style:italic;font-size:clamp(13px,1.4vw,18px)}
+.intro-progress{width:min(560px,82vw);height:5px;background:rgba(255,255,255,.12);border-radius:999px;margin:22px auto 0;overflow:hidden}
+.intro-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#18a8ff,#f0c95d);animation:introLoad 2.8s ease forwards}
+@keyframes introLoad{to{width:100%}}
+#introORSEC.intro-out{animation:introOut .65s ease forwards}
+@keyframes introOut{to{opacity:0;visibility:hidden}}
+.brand-institucional{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;width:100%}
+.brand-side{display:flex;align-items:center;gap:10px}
+.brand-side img{height:62px;width:auto;object-fit:contain}
+.brand-side.obs img{height:54px;border-radius:8px}
+.brand-center{text-align:center}
+.brand-center h1{margin:0}
+.brand-center .subbrand{color:#d7e7f5;font-size:13px}
+@media(max-width:900px){.intro-logos{grid-template-columns:1fr}.intro-logo-side{min-height:auto}.intro-logo-side img{max-height:110px}.intro-center{order:-1}.brand-institucional{grid-template-columns:1fr}.brand-side{justify-content:center}.brand-center{order:-1}}
+
+
+/* ===== ORSEC 1.6.1 · LOGOS EMBEBIDOS ===== */
+.intro-logo-side img{max-width:250px;max-height:190px}
+.intro-logo-side.obs img{max-width:330px;max-height:165px}
+.brand-side.gore img{height:72px}
+.brand-side.obs img{height:60px}
+@media(max-width:900px){
+  .intro-logo-side img{max-width:210px;max-height:130px}
+  .intro-logo-side.obs img{max-width:260px;max-height:120px}
+  .brand-side.gore img,.brand-side.obs img{height:54px}
+}
+
+
+/* ORSEC 1.7 · Semáforo de riesgo */
+.alert-card.critica{border-left:6px solid #b71c1c;background:#fff1f1}
+.alert-card.alta-riesgo{border-left:6px solid #ef6c00;background:#fff6eb}
+.alert-card.vigilancia{border-left:6px solid #d9a400;background:#fffbea}
+.alert-card.estable{border-left:6px solid #1976d2;background:#eef6ff}
+.alert-card.favorable{border-left:6px solid #18864b;background:#eefaf3}
+.mini-alert.critica{border-left-color:#b71c1c;background:#fff1f1}
+.mini-alert.alta-riesgo{border-left-color:#ef6c00;background:#fff6eb}
+.mini-alert.vigilancia{border-left-color:#d9a400;background:#fffbea}
+.mini-alert.estable{border-left-color:#1976d2;background:#eef6ff}
+.mini-alert.favorable{border-left-color:#18864b;background:#eefaf3}
+.azul{color:#1976d2}.naranja{color:#ef6c00}.amarillo{color:#9a7600}
+
+
+/* ===== ORSEC 1.8 · RIESGO ESTRATÉGICO TERRITORIAL ===== */
+.riesgo-wrap{margin-top:22px}
+.riesgo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+.riesgo-card{padding:16px;border-radius:16px;background:#fff;border:1px solid rgba(15,45,70,.12);box-shadow:0 8px 24px rgba(0,0,0,.05)}
+.riesgo-card h4{margin:0 0 7px;font-size:15px}
+.riesgo-card .score{font-size:28px;font-weight:900;margin:4px 0}
+.riesgo-card.critica{border-left:7px solid #b71c1c}
+.riesgo-card.alta-riesgo{border-left:7px solid #ef6c00}
+.riesgo-card.vigilancia{border-left:7px solid #d9a400}
+.riesgo-card.estable{border-left:7px solid #1976d2}
+.riesgo-card.favorable{border-left:7px solid #18864b}
+.riesgo-leyenda{font-size:12px;opacity:.78;margin-top:10px}
+@media(max-width:900px){.riesgo-grid{grid-template-columns:1fr}}
+
+
+/* ===== ORSEC 1.8.3 · CLARIDAD DE INDICADORES ===== */
+.orsec-defs{margin-top:14px;padding:14px 16px;border-radius:14px;background:#f6f9fc;border:1px solid #dce7f1;font-size:13px;line-height:1.55}
+.orsec-defs b{color:#083b69}
+.orsec-defs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.orsec-def{padding:10px 12px;background:#fff;border-radius:11px;border:1px solid #e1eaf2}
+@media(max-width:900px){.orsec-defs-grid{grid-template-columns:1fr}}
+
+
+/* ===== ORSEC 1.9 · SALA CORESEC EJECUTIVA ===== */
+#salaCoresecEjecutiva{margin-top:18px}
+.coresec-command{background:linear-gradient(135deg,#062b52,#074a83);border:1px solid rgba(83,178,255,.35);border-radius:20px;padding:20px;color:#fff;box-shadow:0 18px 45px rgba(0,27,58,.22)}
+.coresec-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:16px}
+.coresec-head h3{margin:0;font-size:21px;letter-spacing:.3px}
+.coresec-head p{margin:5px 0 0;color:#c8def2;font-size:12px}
+.coresec-live{font-size:11px;padding:6px 10px;border:1px solid rgba(122,205,255,.4);border-radius:999px;background:rgba(9,96,158,.35);white-space:nowrap}
+.coresec-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.coresec-kpi{background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:13px;min-height:88px}
+.coresec-kpi small{display:block;color:#9fc5e5;font-size:10px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px}
+.coresec-kpi strong{display:block;font-size:18px;line-height:1.15}
+.coresec-kpi span{display:block;color:#d6e7f5;font-size:10px;margin-top:5px}
+.coresec-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-top:12px}
+.coresec-panel{background:#fff;color:#17324b;border-radius:15px;padding:15px;border:1px solid #dbe8f2}
+.coresec-panel h4{margin:0 0 10px;color:#073e6d;font-size:14px}
+.coresec-reading{font-size:13px;line-height:1.58}
+.coresec-priority{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.coresec-priority>div{background:#f5f9fc;border:1px solid #dce9f3;border-radius:12px;padding:11px}
+.coresec-priority b{display:block;color:#074a83;font-size:12px;margin-bottom:5px}
+.coresec-priority span{font-size:12px;line-height:1.35}
+.coresec-alert-row{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid #e7eef4;font-size:12px}
+.coresec-alert-row:last-child{border-bottom:0}
+.coresec-dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
+.coresec-footer{margin-top:12px;text-align:center;font-size:10px;letter-spacing:1px;color:#a9cbe5}
+@media(max-width:1000px){.coresec-kpis{grid-template-columns:repeat(2,1fr)}.coresec-grid{grid-template-columns:1fr}.coresec-priority{grid-template-columns:1fr}}
+
+
+/* ===== ORSEC 1.10 · FILTROS SINCRONIZADOS ENTRE MÓDULOS ===== */
+.orsec-contexto{margin:14px 0 16px;padding:13px 14px;border:1px solid #d6e4ef;border-radius:14px;background:linear-gradient(180deg,#f9fcff,#f1f7fb)}
+.orsec-contexto-titulo{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.orsec-contexto-titulo b{font-size:11px;color:#0b4b7d;letter-spacing:.8px}
+.orsec-contexto-resumen{font-size:11px;color:#57738d}
+.orsec-sync-filtros{display:grid;grid-template-columns:120px 155px minmax(180px,1.2fr) minmax(150px,1fr) minmax(170px,1.2fr);gap:9px}
+.orsec-sync-campo label{display:block;font-size:9px;font-weight:800;color:#6a849a;text-transform:uppercase;letter-spacing:.55px;margin:0 0 4px 2px}
+.orsec-sync-campo select{width:100%;padding:9px 10px;border-radius:9px;border:1px solid #c9d9e6;background:#fff;color:#17324b;font-size:11px}
+.orsec-sync-nota{margin-top:8px;font-size:9.5px;color:#71889b}
+#sala .orsec-contexto{background:rgba(255,255,255,.96)}
+@media(max-width:1000px){.orsec-sync-filtros{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.orsec-sync-filtros{grid-template-columns:1fr}}
+
+
+/* ===== ORSEC 1.11 · PANORAMA REGIONAL DE SEGURIDAD ===== */
+#panorama{max-width:1200px}
+.panorama-shell{background:linear-gradient(180deg,#f4f8fc,#eaf2f8);border:1px solid #d7e4ee;border-radius:18px;padding:18px}
+.panorama-title{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin-bottom:14px}
+.panorama-title h2{margin:0;color:#073e6d;font-size:22px}.panorama-title p{margin:4px 0 0;color:#617b91;font-size:11px}
+.panorama-badge{background:#073e6d;color:#fff;border-radius:999px;padding:7px 11px;font-size:10px;white-space:nowrap}
+.panorama-grid{display:grid;grid-template-columns:1fr 1.15fr 1.15fr 1fr;gap:10px}
+.pano-col{background:#fff;border:1px solid #d7e4ee;border-radius:14px;overflow:hidden;min-height:355px}
+.pano-col h3{margin:0;padding:11px 13px;color:#fff;font-size:12px;letter-spacing:.4px}
+.pano-col:nth-child(1) h3{background:#3978ad}.pano-col:nth-child(2) h3{background:#c45145}.pano-col:nth-child(3) h3{background:#167f82}.pano-col:nth-child(4) h3{background:#5d6670}
+.pano-body{padding:12px}
+.pano-stat{padding:9px 0;border-bottom:1px solid #e6edf3}.pano-stat:last-child{border-bottom:0}
+.pano-stat small{display:block;color:#70879a;font-size:9px;text-transform:uppercase;font-weight:800}.pano-stat strong{display:block;color:#123d60;font-size:19px;margin-top:3px}.pano-stat span{font-size:10px;color:#60788d}
+.pano-alert{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #e7edf2;font-size:10px}.pano-alert:last-child{border-bottom:0}
+.pano-dot{width:9px;height:9px;border-radius:50%;margin-top:3px;flex:0 0 9px}
+.pano-mini{background:#f3f8fb;border:1px solid #dce8f1;border-radius:10px;padding:9px;margin-top:8px;font-size:10px;line-height:1.45}
+.pano-provs{display:grid;gap:6px;margin-top:8px}.pano-prov{display:grid;grid-template-columns:95px 1fr 55px;align-items:center;gap:6px;font-size:9px}
+.pano-bar{height:6px;background:#e4edf4;border-radius:10px;overflow:hidden}.pano-bar i{display:block;height:100%;background:#287fba;border-radius:10px}
+.pano-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.pano-actions button{border:0;background:#0b568d;color:#fff;border-radius:8px;padding:8px 11px;font-size:9px;cursor:pointer}
+@media(max-width:1050px){.panorama-grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.panorama-grid{grid-template-columns:1fr}}
+
+
+/* ORSEC 1.11.3 · corrección definitiva de visibilidad Panorama */
+#panorama.seccion.activa{display:block !important;}
+
+
+/* ===== ORSEC 1.12 · DESCARGAR INFOGRAFÍA REGIONAL ===== */
+.orsec-infografia-tools{display:flex;justify-content:flex-end;margin:12px 0 4px}
+.orsec-infografia-btn{border:0;border-radius:9px;background:#0a5da4;color:#fff;padding:10px 15px;font-weight:800;font-size:10px;letter-spacing:.2px;cursor:pointer;box-shadow:0 5px 14px rgba(0,57,104,.16)}
+.orsec-infografia-btn:hover{filter:brightness(1.08)}
+#orsecInfoModal{display:none;position:fixed;inset:0;z-index:999999;background:rgba(0,20,38,.78);backdrop-filter:blur(3px);padding:18px;overflow:auto}
+#orsecInfoModal.abierto{display:block}
+.orsec-info-dialog{width:min(760px,96vw);margin:15px auto;background:#f7fbff;border:1px solid #6f8fa9;border-radius:14px;box-shadow:0 25px 70px rgba(0,0,0,.45);overflow:hidden}
+.orsec-info-head{background:#102c46;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;font-size:15px;font-weight:800}
+.orsec-info-close{border:0;background:transparent;color:#fff;font-size:25px;cursor:pointer}
+.orsec-info-preview{padding:10px;background:#eaf2f8;text-align:center}
+.orsec-info-preview img{width:auto;max-width:100%;max-height:68vh;object-fit:contain;box-shadow:0 3px 12px rgba(0,0,0,.12)}
+.orsec-info-foot{padding:12px 15px 15px;text-align:center;background:#fff}
+.orsec-info-download{border:0;border-radius:8px;background:#075ba9;color:#fff;padding:11px 22px;font-weight:800;cursor:pointer}
+.orsec-info-note{font-size:9px;color:#687e90;margin-top:7px}
+
+
+/* ORSEC 1.13 INFOGRAFIA DINAMICA */
+#orsecInfoModal{display:none;position:fixed;inset:0;z-index:999999;background:rgba(0,20,38,.80);padding:18px;overflow:auto}
+#orsecInfoModal.abierto{display:block}.orsec-info-dialog{width:min(900px,97vw);margin:8px auto;background:#eef5fa;border-radius:14px;overflow:hidden}
+.orsec-info-head{background:#102c46;color:#fff;display:flex;justify-content:space-between;padding:12px 16px;font-weight:800}
+.orsec-info-close{border:0;background:transparent;color:#fff;font-size:25px;cursor:pointer}.orsec-dyn-wrap{padding:14px;background:#dce9f2;display:flex;justify-content:center}
+#orsecDynInfo{width:min(100%,794px);aspect-ratio:210/297;background:#fff;box-shadow:0 3px 16px rgba(0,0,0,.18)}#orsecDynInfo svg{width:100%;height:100%;display:block}
+.orsec-info-foot{padding:12px;background:#fff;text-align:center}.orsec-info-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.orsec-info-download{border:0;border-radius:8px;background:#075ba9;color:#fff;padding:11px 18px;font-weight:800;cursor:pointer}.orsec-info-download.sec{background:#2c6f83}
+@media print{body *{visibility:hidden!important}#orsecInfoModal,#orsecInfoModal *{visibility:visible!important}#orsecInfoModal{display:block!important;position:absolute!important;inset:0!important;background:#fff!important;padding:0!important}.orsec-info-head,.orsec-info-foot{display:none!important}.orsec-info-dialog{width:210mm!important;margin:0!important}.orsec-dyn-wrap{padding:0!important;background:#fff!important}#orsecDynInfo{width:210mm!important;height:297mm!important;box-shadow:none!important}#orsecInfoPreview{width:210mm!important;height:auto!important;box-shadow:none!important}}
+
+
+/* ===== ORSEC 2.0 · CENTRO DE COMANDO EJECUTIVO CORESEC ===== */
+#salaCoresecEjecutiva{margin-top:18px}
+#salaCoresecEjecutiva .coresec-command{position:relative;overflow:hidden;background:
+radial-gradient(circle at 78% 18%,rgba(0,180,255,.12),transparent 28%),
+linear-gradient(145deg,#031728,#052d4a 52%,#041e34);border:1px solid rgba(63,190,255,.35);border-radius:22px;padding:18px;color:#fff;box-shadow:0 22px 55px rgba(0,19,42,.30)}
+#salaCoresecEjecutiva .coresec-command:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(76,180,235,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(76,180,235,.045) 1px,transparent 1px);background-size:28px 28px}
+.coresec2-head,.coresec2-kpis,.coresec2-main,.coresec2-bottom,.coresec2-footer{position:relative;z-index:1}
+.coresec2-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding-bottom:13px;border-bottom:1px solid rgba(105,194,239,.2)}
+.coresec2-head h3{margin:0;font-size:20px;letter-spacing:.8px}.coresec2-head p{margin:5px 0 0;color:#9fc7df;font-size:10px;letter-spacing:.45px}
+.coresec2-status{display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.coresec2-pill{font-size:9px;padding:6px 9px;border-radius:999px;border:1px solid rgba(88,197,255,.35);background:rgba(7,77,122,.48);color:#ccecff;white-space:nowrap}
+.coresec2-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:12px}.coresec2-kpi{background:linear-gradient(180deg,rgba(11,63,101,.82),rgba(5,42,70,.82));border:1px solid rgba(86,182,232,.25);border-radius:12px;padding:11px;min-height:82px}.coresec2-kpi small{display:block;color:#78bce1;font-size:8.5px;text-transform:uppercase;font-weight:800;letter-spacing:.55px}.coresec2-kpi strong{display:block;font-size:17px;margin-top:7px;line-height:1.1}.coresec2-kpi span{display:block;color:#bad6e8;font-size:9px;margin-top:5px}
+.coresec2-main{display:grid;grid-template-columns:1.25fr .92fr .92fr;gap:10px;margin-top:10px}.coresec2-panel{background:rgba(4,35,59,.86);border:1px solid rgba(78,170,220,.25);border-radius:13px;padding:12px;min-height:230px}.coresec2-panel h4{margin:0 0 10px;color:#8bd8ff;font-size:10px;letter-spacing:.75px}.coresec2-reading{font-size:11px;line-height:1.55;color:#d8e8f2}.coresec2-reading b{color:#fff}
+.coresec2-bars{display:grid;gap:9px}.coresec2-bar-row{display:grid;grid-template-columns:95px 1fr 44px;gap:7px;align-items:center;font-size:9px;color:#d8e8f2}.coresec2-track{height:7px;border-radius:8px;background:rgba(255,255,255,.10);overflow:hidden}.coresec2-track i{display:block;height:100%;border-radius:8px;background:#39a9df}
+.coresec2-map{position:relative;height:150px;border-radius:10px;border:1px solid rgba(71,170,221,.22);background:radial-gradient(circle at 50% 45%,rgba(25,138,195,.22),transparent 35%),linear-gradient(180deg,rgba(4,52,82,.7),rgba(2,29,49,.85));overflow:hidden}.coresec2-map:before{content:"LA LIBERTAD";position:absolute;inset:0;display:grid;place-items:center;color:rgba(130,211,250,.18);font-size:27px;font-weight:900;letter-spacing:3px}.coresec2-map i{position:absolute;width:9px;height:9px;border-radius:50%;background:#45d5ff;box-shadow:0 0 0 5px rgba(69,213,255,.12),0 0 13px rgba(69,213,255,.8)}
+.coresec2-territory{margin-top:9px;font-size:10px;color:#c7deec;line-height:1.45}.coresec2-alert{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px;color:#d7e6ef}.coresec2-alert:last-child{border:0}.coresec2-dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px;margin-top:2px}
+.coresec2-bottom{display:grid;grid-template-columns:1.1fr .9fr;gap:10px;margin-top:10px}.coresec2-priority{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.coresec2-priority>div{background:rgba(7,55,89,.78);border:1px solid rgba(75,171,221,.2);border-radius:10px;padding:10px}.coresec2-priority b{display:block;color:#79cef8;font-size:9px;margin-bottom:5px}.coresec2-priority span{font-size:10px;color:#d9e9f2;line-height:1.35}
+.coresec2-footer{margin-top:10px;padding-top:9px;border-top:1px solid rgba(105,194,239,.18);display:flex;justify-content:space-between;gap:10px;color:#7fb1cf;font-size:8.5px;letter-spacing:.45px}
+@media(max-width:1050px){.coresec2-kpis{grid-template-columns:repeat(2,1fr)}.coresec2-main{grid-template-columns:1fr}.coresec2-bottom{grid-template-columns:1fr}.coresec2-priority{grid-template-columns:1fr}}
+
+
+/* ORSEC 2.1 · MAPA TERRITORIAL REAL EN SALA CORESEC */
+.coresec2-map{height:235px!important;background:linear-gradient(180deg,rgba(3,39,64,.93),rgba(2,24,42,.96))!important;padding:8px}
+.coresec2-map:before{display:none!important}
+.coresec2-map .coresec2-map-img{position:absolute;inset:7px 9px 7px 9px;width:calc(100% - 18px);height:calc(100% - 14px);object-fit:contain;filter:brightness(.70) saturate(1.25) hue-rotate(160deg) drop-shadow(0 0 10px rgba(40,173,237,.45));opacity:.94}
+.coresec2-map .coresec2-hotspot{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:4px;z-index:3;pointer-events:none}
+.coresec2-map .coresec2-hotspot i{position:relative!important;left:auto!important;top:auto!important;width:10px;height:10px;background:var(--mc,#40d0ff)!important;box-shadow:0 0 0 5px rgba(64,208,255,.16),0 0 13px var(--mc,#40d0ff)!important}
+.coresec2-map .coresec2-hotspot em{font-style:normal;font-size:7px;font-weight:800;color:#e8f7ff;text-shadow:0 1px 4px #001522;white-space:nowrap}
+.coresec2-map-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:7px;font-size:8px;color:#9fc7df}
+.coresec2-map-legend span{display:flex;gap:4px;align-items:center}.coresec2-map-legend i{width:7px;height:7px;border-radius:50%;display:inline-block}
+
+
+/* ORSEC 2.2 · CONNOTACIÓN ESTRATÉGICA — capa separada de la estadística oficial */
+.orsec-connotacion-wrap{margin-top:12px;border:1px solid rgba(255,181,54,.38);border-radius:12px;background:linear-gradient(180deg,rgba(73,42,5,.32),rgba(3,30,49,.96));overflow:hidden}
+.orsec-connotacion-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid rgba(255,181,54,.24)}
+.orsec-connotacion-title{font-size:12px;font-weight:900;letter-spacing:.7px;color:#ffc55c}
+.orsec-connotacion-badge{font-size:9px;font-weight:900;padding:5px 8px;border-radius:999px;background:rgba(255,181,54,.13);border:1px solid rgba(255,181,54,.35);color:#ffd98d}
+.orsec-connotacion-note{font-size:9px;color:#9fb7c6;line-height:1.45;margin-top:4px}
+.orsec-connotacion-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:10px;padding:12px}
+.orsec-eventos,.orsec-contexto-lectura{border:1px solid rgba(255,255,255,.09);border-radius:10px;background:rgba(0,18,31,.55);padding:11px}
+.orsec-evento{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.orsec-evento:last-child{border-bottom:0}
+.orsec-evento-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.orsec-evento-nivel{font-size:9px;font-weight:900;padding:3px 6px;border-radius:5px}
+.orsec-evento h4{margin:4px 0 3px;font-size:11px;color:#fff}
+.orsec-evento p{margin:0;font-size:9px;line-height:1.45;color:#b8cfdd}
+.orsec-evento-meta{margin-top:5px;font-size:8px;color:#7fa2b8}
+.orsec-contexto-lectura h4{margin:0 0 8px;color:#ffc55c;font-size:10px;letter-spacing:.5px}
+.orsec-contexto-lectura p{font-size:9px;line-height:1.55;color:#d7e7ef}
+.orsec-contexto-rule{margin-top:9px;padding:8px;border-left:3px solid #ffc55c;background:rgba(255,181,54,.07);font-size:8.5px;line-height:1.45;color:#bdd0da}
+.orsec-contexto-empty{padding:14px;color:#8faaba;font-size:9px;text-align:center}
+@media(max-width:900px){.orsec-connotacion-grid{grid-template-columns:1fr}}
+
+
+/* ORSEC 2.2.1 · LEGIBILIDAD CONNOTACIÓN */
+#orsecConnotacion .orsec-connotacion-title{
+  font-size:16px !important; line-height:1.25 !important; letter-spacing:.5px !important;
+}
+#orsecConnotacion .orsec-connotacion-note{
+  font-size:12px !important; line-height:1.5 !important; color:#c8d8e2 !important;
+}
+#orsecConnotacion .orsec-connotacion-badge{
+  font-size:11px !important; padding:6px 10px !important;
+}
+#orsecConnotacion .orsec-connotacion-grid{gap:14px !important;padding:14px !important}
+#orsecConnotacion .orsec-eventos,
+#orsecConnotacion .orsec-contexto-lectura{padding:14px !important}
+#orsecConnotacion .orsec-evento{padding:12px 0 !important}
+#orsecConnotacion .orsec-evento h4{
+  font-size:14px !important; line-height:1.35 !important; margin:6px 0 5px !important;
+}
+#orsecConnotacion .orsec-evento p{
+  font-size:12px !important; line-height:1.55 !important; color:#d7e7ef !important;
+}
+#orsecConnotacion .orsec-evento-meta{
+  font-size:11px !important; line-height:1.5 !important; color:#9ec0d3 !important;
+}
+#orsecConnotacion .orsec-evento-top > div > div{
+  font-size:10px !important; line-height:1.35 !important;
+}
+#orsecConnotacion .orsec-evento-nivel{
+  font-size:10px !important; padding:5px 8px !important; white-space:nowrap;
+}
+#orsecConnotacion .orsec-contexto-lectura h4{
+  font-size:14px !important; line-height:1.3 !important; margin-bottom:10px !important;
+}
+#orsecConnotacion .orsec-contexto-lectura p{
+  font-size:12px !important; line-height:1.65 !important; color:#e2edf3 !important;
+}
+#orsecConnotacion .orsec-contexto-rule{
+  font-size:11px !important; line-height:1.55 !important; padding:10px !important;
+}
+#orsecConnotacion .orsec-contexto-empty{
+  font-size:12px !important; line-height:1.5 !important;
+}
+@media(max-width:1100px){
+  #orsecConnotacion .orsec-connotacion-grid{grid-template-columns:1fr !important}
+}
+
+
+/* ORSEC 2.3 · BITÁCORA OPERATIVA REGIONAL */
+.orsec-bitacora{margin-top:14px;border:1px solid rgba(69,201,255,.32);border-radius:12px;background:rgba(2,25,42,.96);overflow:hidden}
+.orsec-bit-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px;border-bottom:1px solid rgba(69,201,255,.18)}
+.orsec-bit-head h3{margin:0;color:#55caff;font-size:16px}
+.orsec-bit-head p{margin:4px 0 0;color:#b8cfdd;font-size:12px}
+.orsec-bit-tag{font-size:11px;font-weight:900;color:#55caff;border:1px solid rgba(69,201,255,.4);padding:6px 9px;border-radius:999px}
+.orsec-bit-body{display:grid;grid-template-columns:.9fr 1.1fr;gap:14px;padding:14px}
+.orsec-bit-form,.orsec-bit-list{border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:13px;background:rgba(0,15,27,.58)}
+.orsec-bit-form h4,.orsec-bit-list h4{margin:0 0 10px;color:#fff;font-size:13px}
+.orsec-bit-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.orsec-bit-fields label{font-size:10px;color:#9fc0d2;display:block}
+.orsec-bit-fields input,.orsec-bit-fields select,.orsec-bit-fields textarea{width:100%;box-sizing:border-box;margin-top:4px;background:#071f31;border:1px solid #24516a;border-radius:6px;color:#eef8fc;padding:8px;font-size:11px}
+.orsec-bit-fields textarea{min-height:70px;resize:vertical}
+.orsec-span2{grid-column:1/-1}
+.orsec-bit-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.orsec-bit-btn{border:0;border-radius:7px;padding:8px 11px;font-size:10px;font-weight:900;cursor:pointer}
+.orsec-bit-primary{background:#f3b400;color:#102337}
+.orsec-bit-secondary{background:#123b54;color:#dff4ff;border:1px solid #2b607b}
+.orsec-bit-item{border-bottom:1px solid rgba(255,255,255,.08);padding:10px 0}
+.orsec-bit-item:last-child{border-bottom:0}
+.orsec-bit-row{display:flex;justify-content:space-between;gap:8px}
+.orsec-bit-item b{font-size:12px;color:#fff}
+.orsec-bit-item p{font-size:11px;line-height:1.5;color:#c8dbe5;margin:5px 0}
+.orsec-bit-meta{font-size:9px;color:#87a9bb}
+.orsec-bit-status{font-size:9px;font-weight:900;padding:4px 6px;border-radius:5px;white-space:nowrap}
+.orsec-bit-warning{margin-top:10px;padding:9px;border-left:3px solid #f3b400;background:rgba(243,180,0,.07);font-size:10px;line-height:1.5;color:#cbdce5}
+.orsec-note-link{display:inline-block;margin-top:7px;padding:6px 9px;border-radius:6px;background:#153f57;border:1px solid #2e6b89;color:#e8f7ff;text-decoration:none;font-size:9px;font-weight:900}
+@media(max-width:1000px){.orsec-bit-body{grid-template-columns:1fr}.orsec-bit-fields{grid-template-columns:1fr}.orsec-span2{grid-column:auto}}
+
+
+/* ORSEC 2.3.1 · NOTAS DE INTELIGENCIA */
+.orsec-nota-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.orsec-nota-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:7px;
+background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;font-size:10px;font-weight:900}
+.orsec-nota-btn:hover{background:#18516f}
+.orsec-biblioteca{margin-top:12px;border:1px solid rgba(86,202,255,.25);border-radius:10px;background:rgba(0,20,34,.6);padding:12px}
+.orsec-biblioteca h4{margin:0 0 8px;color:#55caff;font-size:13px}
+.orsec-bib-item{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.orsec-bib-item:last-child{border-bottom:0}
+.orsec-bib-num{font-size:10px;font-weight:900;color:#ffc55c}
+.orsec-bib-title{font-size:11px;color:#eef8fc;font-weight:800}
+.orsec-bib-meta{font-size:9px;color:#8fb0c2;margin-top:3px}
+@media(max-width:760px){.orsec-bib-item{grid-template-columns:1fr}.orsec-bib-item .orsec-nota-btn{width:max-content}}
+
+
+/* ORSEC 2.3.2 · ACCESO DOCUMENTAL VISIBLE */
+.orsec-doc-topactions{
+  display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:8px;
+}
+.orsec-doc-mainbtn{
+  display:inline-flex; align-items:center; gap:7px;
+  padding:9px 12px; border-radius:8px;
+  background:#f3b400; color:#102337; text-decoration:none;
+  font-size:11px; font-weight:900; border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 0 0 1px rgba(243,180,0,.12),0 3px 10px rgba(0,0,0,.18);
+}
+.orsec-doc-mainbtn:hover{filter:brightness(1.06)}
+.orsec-doc-secondary{
+  background:#123f59; color:#effaff; border:1px solid #2e789a;
+}
+.orsec-context-head-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.orsec-library-panel{
+  margin-top:12px;border:1px solid rgba(85,202,255,.32);border-radius:12px;
+  background:linear-gradient(180deg,rgba(3,36,57,.95),rgba(2,24,39,.98));
+  padding:13px;
+}
+.orsec-library-panel h4{margin:0;color:#55caff;font-size:14px}
+.orsec-library-panel .orsec-bib-item{margin-top:8px}
+@media(max-width:700px){
+  .orsec-context-head-tools{width:100%;justify-content:flex-start}
+  .orsec-doc-mainbtn{font-size:10px}
+}
+
+
+.orsec-bi{margin-top:14px}.orsec-bi-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.orsec-bi-card{border:1px solid #cbdde9;border-radius:12px;background:#f7fbfe;padding:14px}.orsec-bi-card h4{margin:0 0 8px;color:#083b68}.orsec-bi-read{border-left:4px solid #1684b8}.orsec-bi-int{border-left:4px solid #f3b400;background:#fffaf0}.orsec-bi-con{border-left:4px solid #c44735;background:#fff7f5}.orsec-bi-label{font-size:9px;font-weight:900;letter-spacing:.08em;color:#5d7890}.orsec-bi-value{font-size:13px;line-height:1.55;color:#18354a;margin-top:5px}.orsec-bi-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.orsec-bi-btn{border:0;border-radius:8px;padding:10px 13px;font-weight:800;font-size:11px;cursor:pointer;background:#073e70;color:white}.orsec-bi-btn.alt{background:#eaf3f8;color:#174c70}.orsec-bi-btn.pdf{background:#f3b400;color:#17364c}.orsec-bi-review{margin-top:10px;font-size:9px;color:#678094}@media(max-width:850px){.orsec-bi-grid{grid-template-columns:1fr}}
+
+/* ===== ORSEC 2.5 · COMPARATIVO TERRITORIAL ===== */
+.orsec-comp-launch{margin:14px 0 4px;padding:14px;border:1px solid #c8dbe8;border-radius:13px;background:linear-gradient(135deg,#f7fbfe,#eef7fc)}
+.orsec-comp-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.orsec-comp-title{font-weight:900;color:#073e70;font-size:15px}.orsec-comp-sub{font-size:10px;color:#648198;margin-top:3px}.orsec-comp-actions{display:flex;gap:8px;flex-wrap:wrap}.orsec-comp-btn{border:0;border-radius:8px;padding:10px 12px;font-weight:900;font-size:10px;cursor:pointer;background:#073e70;color:#fff}.orsec-comp-btn.alt{background:#e7f2f8;color:#174d70}.orsec-comp-btn.gold{background:#f3b400;color:#17364c}.orsec-comp-box{display:none;margin-top:13px;border-top:1px solid #d5e3ec;padding-top:13px}.orsec-comp-box.activo{display:block}.orsec-comp-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}.orsec-comp-kpi{background:white;border:1px solid #d2e0e9;border-radius:10px;padding:10px}.orsec-comp-kpi small{display:block;font-size:8px;font-weight:900;color:#71899c;letter-spacing:.05em}.orsec-comp-kpi b{display:block;color:#073e70;font-size:16px;margin-top:4px}.orsec-comp-tablewrap{overflow:auto;max-height:440px;border:1px solid #d4e2eb;border-radius:10px;background:#fff}.orsec-comp-table{width:100%;border-collapse:collapse;font-size:10px;min-width:780px}.orsec-comp-table th{position:sticky;top:0;background:#0b4f7d;color:white;padding:8px;text-align:right;z-index:2}.orsec-comp-table th:first-child,.orsec-comp-table td:first-child{text-align:left}.orsec-comp-table td{padding:7px 8px;border-bottom:1px solid #e5edf2;text-align:right}.orsec-comp-table tr:hover td{background:#f4f9fc}.orsec-comp-var-up{color:#b6281f;font-weight:900}.orsec-comp-var-down{color:#0b7a49;font-weight:900}.orsec-comp-var-flat{color:#355a72;font-weight:900}.orsec-comp-chart{margin-top:12px;background:#fff;border:1px solid #d4e2eb;border-radius:10px;padding:12px}.orsec-comp-chart h4{margin:0 0 10px;color:#073e70;font-size:12px}.orsec-comp-bars{display:grid;gap:7px}.orsec-comp-row{display:grid;grid-template-columns:130px 1fr 70px 70px;gap:8px;align-items:center;font-size:9px}.orsec-comp-track{height:12px;background:#e7eef3;border-radius:10px;overflow:hidden;position:relative}.orsec-comp-b25,.orsec-comp-b26{position:absolute;left:0;height:5px;border-radius:8px}.orsec-comp-b25{top:1px;background:#8aa6b9}.orsec-comp-b26{bottom:1px;background:#1388c9}.orsec-comp-reading{margin-top:12px;padding:12px 14px;border-left:4px solid #f3b400;background:#fffaf0;border-radius:8px;font-size:11px;line-height:1.55;color:#25465d}@media(max-width:850px){.orsec-comp-kpis{grid-template-columns:1fr 1fr}.orsec-comp-row{grid-template-columns:90px 1fr 50px 50px}}
+
+</style>
+<style id="orsec27css">
+.orsec-delito-comp{display:none;margin-top:14px;padding:14px;background:#f7fafc;border:1px solid #cadce7;border-radius:12px}
+.orsec-delito-comp.activo{display:block}
+.orsec-delito-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.orsec-delito-tablewrap{overflow:auto;border:1px solid #d4e1e9;border-radius:9px;background:#fff}
+.orsec-delito-table{width:100%;border-collapse:collapse;font-size:10px;min-width:760px}
+.orsec-delito-table th{background:#0b4f7d;color:#fff;padding:8px;text-align:right}
+.orsec-delito-table th:first-child,.orsec-delito-table td:first-child{text-align:left}
+.orsec-delito-table td{padding:7px 8px;border-bottom:1px solid #e5edf2;text-align:right}
+.orsec-delito-chart{margin-top:12px;background:#fff;border:1px solid #d4e1e9;border-radius:9px;padding:12px;overflow:auto}
+.orsec-delito-bars{min-width:850px;height:360px;display:flex;align-items:flex-end;gap:12px;padding:20px 10px 70px;position:relative;border-left:1px solid #bbcbd6;border-bottom:1px solid #bbcbd6}
+.orsec-delito-group{flex:1;min-width:65px;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:5px;position:relative}
+.orsec-delito-bar{width:24px;min-height:2px;border-radius:4px 4px 0 0;position:relative}
+.orsec-delito-bar.y25{background:#1d65ad}.orsec-delito-bar.y26{background:#ef4135}
+.orsec-delito-val{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:900;white-space:nowrap;color:#17364c}
+.orsec-delito-label{position:absolute;bottom:-55px;left:50%;transform:translateX(-50%);width:90px;text-align:center;font-size:7px;font-weight:900;color:#17364c;line-height:1.15}
+</style>
+<style id="orsec271css">
+.orsec-delito-launcher{
+ margin-top:12px;padding:13px 14px;border-radius:11px;
+ background:linear-gradient(90deg,#073e70,#0b6fae);
+ display:flex;align-items:center;justify-content:space-between;gap:14px;
+ box-shadow:0 4px 12px rgba(7,62,112,.14)
+}
+.orsec-delito-launcher b{display:block;color:#fff;font-size:13px;letter-spacing:.01em}
+.orsec-delito-launcher span{display:block;color:#dceef8;font-size:9px;margin-top:4px}
+.orsec-delito-launcher button{
+ border:0;border-radius:9px;background:#f3b400;color:#17364c;
+ padding:12px 16px;font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap
+}
+.orsec-delito-launcher button:hover{filter:brightness(1.04);transform:translateY(-1px)}
+@media(max-width:760px){.orsec-delito-launcher{flex-direction:column;align-items:stretch}.orsec-delito-launcher button{width:100%}}
+</style>
+<style id="orsecDetalleImpactoCSS">
+.orsec-detail-launch{margin:16px 0;padding:18px;border:1px solid #1d5f96;border-radius:16px;background:linear-gradient(135deg,#062b4b,#0b4978);color:#fff;box-shadow:0 10px 24px #001b3030}
+.orsec-detail-launch .row{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.orsec-detail-launch h3{margin:0;font-size:18px}.orsec-detail-launch p{margin:5px 0 0;color:#d7ebfb;font-size:13px}
+.orsec-detail-btn{border:0;border-radius:10px;padding:11px 15px;font-weight:900;cursor:pointer;background:#f4b400;color:#062b4b}
+.orsec-detail-panel{display:none;margin-top:14px;background:#fff;color:#15364f;border-radius:14px;padding:16px}
+.orsec-detail-panel.on{display:block}
+.orsec-detail-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.orsec-detail-controls select,.orsec-detail-controls button{padding:9px 10px;border:1px solid #aac4d8;border-radius:8px;background:#fff;font-weight:700;color:#123e60}
+.orsec-detail-controls button{cursor:pointer;background:#0b5f91;color:#fff;border-color:#0b5f91}
+.orsec-detail-kpis{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:10px;margin:10px 0}
+.orsec-detail-kpi{border:1px solid #d5e2ec;border-radius:11px;padding:11px;background:#f8fbfd}.orsec-detail-kpi small{display:block;color:#668399;font-weight:800}.orsec-detail-kpi b{font-size:20px;color:#073e70}
+.orsec-detail-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+.orsec-detail-card{border:1px solid #d7e3ec;border-radius:12px;padding:13px;background:#fff}
+.orsec-detail-card h4{margin:0 0 10px;color:#073e70}
+.orsec-hour-bars{display:flex;align-items:end;height:175px;gap:3px;border-bottom:1px solid #b9ccda;padding:0 4px}
+.orsec-hour-col{flex:1;min-width:5px;background:#2d83b8;border-radius:4px 4px 0 0;position:relative}
+.orsec-hour-col:hover:after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#062b4b;color:#fff;padding:4px 6px;border-radius:5px;font-size:10px;white-space:nowrap;z-index:5}
+.orsec-hour-axis{display:flex;justify-content:space-between;font-size:10px;color:#6a8396;margin-top:5px}
+.orsec-mini-bars{display:grid;gap:7px}.orsec-mini-row{display:grid;grid-template-columns:110px 1fr 42px;gap:7px;align-items:center;font-size:12px}.orsec-mini-track{height:11px;background:#eaf1f6;border-radius:8px;overflow:hidden}.orsec-mini-fill{height:100%;background:#1976a8;border-radius:8px}
+.orsec-detail-reading{margin-top:12px;padding:12px;border-left:4px solid #f4b400;background:#fff8df;border-radius:8px;font-size:13px;line-height:1.45}
+.orsec-detail-tablewrap{max-height:330px;overflow:auto;margin-top:12px;border:1px solid #d9e5ed;border-radius:10px}.orsec-detail-table{width:100%;border-collapse:collapse;font-size:11px}.orsec-detail-table th{position:sticky;top:0;background:#073e70;color:#fff;padding:8px}.orsec-detail-table td{padding:7px;border-bottom:1px solid #e5edf3;vertical-align:top}
+@media(max-width:850px){.orsec-detail-grid{grid-template-columns:1fr}.orsec-detail-kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+<style id="orsecMapaDelitoCSS">
+.orsec-map-launch{margin:14px 0;padding:16px;border:1px solid #2773a5;border-radius:14px;background:linear-gradient(135deg,#052743,#0a416d);color:white}
+.orsec-map-launch .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.orsec-map-launch h3{margin:0;font-size:18px}.orsec-map-launch p{margin:5px 0 0;color:#d6eafa;font-size:12px}
+.orsec-map-panel{display:none;margin-top:14px;background:#f8fbfd;color:#173b54;border-radius:12px;padding:13px}.orsec-map-panel.on{display:block}
+.orsec-map-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.orsec-map-controls select,.orsec-map-controls button{padding:9px 10px;border-radius:8px;border:1px solid #a9c4d7;font-weight:800;background:#fff;color:#123e60}
+.orsec-map-controls button{background:#0b5f91;color:#fff;cursor:pointer;border-color:#0b5f91}
+#orsecMapaDelito{height:520px;border-radius:12px;border:1px solid #b9d0df;overflow:hidden}
+.orsec-map-legend{background:white;padding:9px 11px;border-radius:8px;box-shadow:0 1px 8px #0003;font-size:11px;line-height:1.55}
+.orsec-map-legend i{width:15px;height:10px;display:inline-block;margin-right:5px;border-radius:2px}
+.orsec-map-summary{display:grid;grid-template-columns:repeat(4,minmax(110px,1fr));gap:8px;margin:10px 0}
+.orsec-map-stat{background:#fff;border:1px solid #d4e2ec;border-radius:9px;padding:9px}.orsec-map-stat small{display:block;color:#6a8396;font-weight:800}.orsec-map-stat b{font-size:18px;color:#073e70}
+.orsec-map-note{font-size:11px;color:#5d778a;margin-top:8px}
+@media(max-width:800px){#orsecMapaDelito{height:430px}.orsec-map-summary{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+<link id="orsecLeafletCSS" rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script id="orsecLeafletJS" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
 </head>
 <body>
 
@@ -471,6 +966,126 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 <div id="incidencia" class="seccion activa">
  <div class="seccion-head"><h2>Incidencia Delictiva</h2><span class="badge" id="badgePeriodo">Datos institucionales</span></div>
  <div class="filtros"><select id="anio"></select><select id="tipoPeriodo"></select><select id="periodo"></select><select id="provincia"></select><select id="delito"></select><button class="btn" onclick="limpiarFiltros()">Restablecer</button></div>
+ <div class="orsec-comp-launch">
+  <div class="orsec-comp-head">
+   <div><div class="orsec-comp-title">📊 COMPARATIVO TERRITORIAL ORSEC</div><div class="orsec-comp-sub">Comparación provincial 2025 ↔ 2026. El selector MENSUAL / ACUMULADO define automáticamente el reporte.</div></div>
+   <div class="orsec-comp-actions">
+    <button class="orsec-comp-btn" onclick="orsecGenerarComparativo()">GENERAR COMPARATIVO</button>
+    <button class="orsec-comp-btn alt" onclick="orsecDescargarExcelComparativo()">DESCARGAR EXCEL</button>
+    <button class="orsec-comp-btn alt" onclick="orsecDescargarGraficoComparativo()">DESCARGAR GRÁFICO</button>
+    <button class="orsec-comp-btn gold" onclick="orsecDescargarPDFComparativo()">DESCARGAR PDF</button>
+   </div>
+  </div>
+
+<div class="orsec-delito-launcher">
+  <div>
+    <b>📈 COMPARATIVO 2025 vs 2026 POR DELITO</b>
+    <span>Genera el cuadro y gráfico comparativo de todos los delitos según período y provincia seleccionados.</span>
+  </div>
+  <button onclick="orsecGenerarComparativoDelitos()">GENERAR COMPARATIVO POR DELITO</button>
+</div>
+  <div class="orsec-comp-box" id="orsecComparativoBox">
+   <div class="orsec-comp-kpis">
+    <div class="orsec-comp-kpi"><small>PERÍODO</small><b id="orsecCompPeriodo">—</b></div>
+    <div class="orsec-comp-kpi"><small>DELITO / UNIVERSO</small><b id="orsecCompDelito">—</b></div>
+    <div class="orsec-comp-kpi"><small>MAYOR REDUCCIÓN</small><b id="orsecCompReduccion">—</b></div>
+    <div class="orsec-comp-kpi"><small>MAYOR INCREMENTO</small><b id="orsecCompIncremento">—</b></div>
+   </div>
+   <div class="orsec-comp-tablewrap"><table class="orsec-comp-table"><thead><tr><th>Provincia</th><th>2025</th><th>2026</th><th>Diferencia</th><th>Variación %</th><th>Participación 2026</th></tr></thead><tbody id="orsecCompBody"></tbody></table></div>
+   <div class="orsec-comp-chart"><h4>Comparativo provincial · 2025 vs 2026</h4><div class="orsec-comp-bars" id="orsecCompBars"></div></div>
+   <div class="orsec-comp-reading" id="orsecCompLectura">Genere el comparativo para obtener la lectura territorial.</div>
+<div class="orsec-delito-comp" id="orsecDelitoComp">
+ <div class="orsec-comp-title">📈 COMPARATIVO POR DELITO · 2025 vs 2026</div>
+ <div class="orsec-comp-sub" id="orsecDelitoContexto">Matriz regional y gráfico comparativo por delito.</div>
+ <div class="orsec-delito-actions">
+   <button class="orsec-comp-btn alt" onclick="orsecDescargarGraficoDelitos()">DESCARGAR GRÁFICO PNG</button>
+   <button class="orsec-comp-btn gold" onclick="orsecDescargarPDFDelitos()">DESCARGAR PDF</button>
+ </div>
+ <div class="orsec-delito-tablewrap">
+  <table class="orsec-delito-table">
+   <thead><tr><th>Delito</th><th>2025</th><th>2026</th><th>Diferencia</th><th>Variación %</th><th>Tendencia</th></tr></thead>
+   <tbody id="orsecDelitoBody"></tbody>
+  </table>
+ </div>
+ <div class="orsec-delito-chart">
+   <div style="font-weight:900;color:#073e70;margin-bottom:8px">Gráfico comparativo por delito</div>
+   <div class="orsec-delito-bars" id="orsecDelitoBars"></div>
+ </div>
+</div>
+
+  </div>
+ </div>
+
+
+<div class="orsec-map-launch" id="orsecMapaLauncher">
+ <div class="top">
+  <div><h3>🗺️ MAPA DELICTIVO DISTRITAL ORSEC V1</h3><p>Concentración distrital de homicidios y detonaciones · enero–agosto 2026.</p></div>
+  <button class="orsec-detail-btn" onclick="orsecToggleMapa()">ABRIR MAPA DEL DELITO</button>
+ </div>
+ <div class="orsec-map-panel" id="orsecMapaPanel">
+  <div class="orsec-map-controls">
+   <select id="orsecMapDelito" onchange="orsecRenderMapa()"><option value="AMBOS">HOMICIDIOS + DETONACIONES</option><option value="HOMICIDIOS">HOMICIDIOS</option><option value="DETONACIONES">DETONACIONES</option></select>
+   <select id="orsecMapMes" onchange="orsecRenderMapa()"><option value="0">ACUMULADO ENE–AGO</option><option value="1">ENERO</option><option value="2">FEBRERO</option><option value="3">MARZO</option><option value="4">ABRIL</option><option value="5">MAYO</option><option value="6">JUNIO</option><option value="7">JULIO</option><option value="8">AGOSTO</option></select>
+   <select id="orsecMapFranja" onchange="orsecRenderMapa()"><option value="TODAS">TODAS LAS FRANJAS</option><option>MADRUGADA</option><option>MAÑANA</option><option>TARDE</option><option>NOCHE</option></select>
+   <button onclick="orsecMapReset()">VER TODA LA REGIÓN</button>
+  </div>
+  <div class="orsec-map-summary">
+   <div class="orsec-map-stat"><small>HECHOS VISIBLES</small><b id="orsecMapTotal">—</b></div>
+   <div class="orsec-map-stat"><small>DISTRITOS CON HECHOS</small><b id="orsecMapDistritos">—</b></div>
+   <div class="orsec-map-stat"><small>DISTRITO DE MAYOR CONCENTRACIÓN</small><b id="orsecMapTop">—</b></div>
+   <div class="orsec-map-stat"><small>FRANJA SELECCIONADA</small><b id="orsecMapFranjaKpi">—</b></div>
+  </div>
+  <div id="orsecMapaDelito"></div>
+  <div class="orsec-map-note">Mapa coroplético distrital. La intensidad representa cantidad absoluta de hechos registrados, no una tasa poblacional. Fuente cartográfica: GeoServidor MINAM; datos delictivos: ORSEC.</div>
+ </div>
+</div>
+
+<div class="orsec-detail-launch" id="orsecDetalleLauncher">
+ <div class="row">
+  <div><h3>🔎 ANÁLISIS DETALLADO DE ALTO IMPACTO</h3><p>Homicidios y detonaciones · lectura acumulada/mensual · territorio · modalidad · patrón horario.</p></div>
+  <button class="orsec-detail-btn" onclick="orsecToggleDetalle()">ABRIR ANÁLISIS</button>
+ </div>
+ <div class="orsec-detail-panel" id="orsecDetallePanel">
+  <div class="orsec-detail-controls">
+   <select id="orsecDetDelito" onchange="orsecRenderDetalle()"><option>HOMICIDIOS</option><option>DETONACIONES</option></select>
+   <select id="orsecDetPeriodo" onchange="orsecRenderDetalle()">
+    <option value="0">ACUMULADO ENE–AGO 2026</option><option value="1">ENERO 2026</option><option value="2">FEBRERO 2026</option><option value="3">MARZO 2026</option><option value="4">ABRIL 2026</option><option value="5">MAYO 2026</option><option value="6">JUNIO 2026</option><option value="7">JULIO 2026</option><option value="8">AGOSTO 2026</option>
+   </select>
+   <select id="orsecDetProvincia" onchange="orsecRenderDetalle()"><option value="TODAS">TODAS LAS PROVINCIAS</option></select>
+   <button onclick="orsecDescargarDetalleCSV()">DESCARGAR CUADRO CSV</button>
+   <button onclick="orsecDescargarRelacionPNG()" style="background:#1479a8;color:#fff">RELACIÓN COMPLETA PNG</button>
+   <button onclick="orsecDescargarRelacionPDF()" style="background:#b3261e;color:#fff">RELACIÓN PDF</button>
+   <button onclick="orsecDescargarInfografia()" style="background:#f4b400;color:#073e70;font-weight:900">DESCARGAR INFOGRAFÍA EJECUTIVA PNG</button>
+   <button onclick="orsecDescargarDetallePNG()">DESCARGAR GRÁFICA PNG</button>
+  </div>
+  <div class="orsec-detail-kpis">
+   <div class="orsec-detail-kpi"><small>CASOS SELECCIONADOS</small><b id="orsecDetTotal">—</b></div>
+   <div class="orsec-detail-kpi"><small>FRANJA DE MAYOR INCIDENCIA</small><b id="orsecDetFranja">—</b></div>
+   <div class="orsec-detail-kpi"><small>HORA PICO</small><b id="orsecDetHora">—</b></div>
+   <div class="orsec-detail-kpi"><small>PROVINCIA PRINCIPAL</small><b id="orsecDetProvTop">—</b></div>
+  </div>
+  <div class="orsec-detail-grid">
+   <div class="orsec-detail-card"><h4>Distribución por hora · 00–23 h</h4><div id="orsecDetHoras"></div></div>
+   <div class="orsec-detail-card"><h4>Distribución por franja horaria</h4><div class="orsec-mini-bars" id="orsecDetFranjas"></div></div>
+   <div class="orsec-detail-card"><h4>Concentración territorial</h4><div class="orsec-mini-bars" id="orsecDetProvincias"></div></div>
+   <div class="orsec-detail-card"><h4 id="orsecDetModalidadTitulo">Modalidad / medio empleado</h4><div class="orsec-mini-bars" id="orsecDetModalidades"></div></div>
+  </div>
+  <div class="orsec-detail-reading" id="orsecDetLectura">Seleccione un delito y período para generar la lectura.</div>
+  
+<div id="orsecRelacionDescargasVisibles" style="
+ display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+ margin:12px 0 10px;padding:10px 12px;
+ background:#eef6fb;border:1px solid #b9d2e3;border-radius:10px;">
+ <strong style="color:#073e70;margin-right:4px;">DESCARGAR RELACIÓN:</strong>
+ <button onclick="orsecDescargarDetalleCSV()" style="padding:9px 12px;border:0;border-radius:8px;background:#0b5f91;color:white;font-weight:800;cursor:pointer;">CSV</button>
+ <button onclick="orsecDescargarRelacionPNG()" style="padding:9px 12px;border:0;border-radius:8px;background:#1479a8;color:white;font-weight:800;cursor:pointer;">IMAGEN COMPLETA PNG</button>
+ <button onclick="orsecDescargarRelacionPDF()" style="padding:9px 12px;border:0;border-radius:8px;background:#b3261e;color:white;font-weight:800;cursor:pointer;">PDF</button>
+</div>
+
+<div class="orsec-detail-tablewrap"><table class="orsec-detail-table"><thead id="orsecDetHead"></thead><tbody id="orsecDetBody"></tbody></table></div>
+ </div>
+</div>
+
  <div class="kpis"><div class="kpi"><small>Total seleccionado</small><b id="kTotal">--</b></div><div class="kpi"><small>Delito principal</small><b id="kDelito" style="font-size:17px">--</b></div><div class="kpi"><small>Provincia líder</small><b id="kProvincia" style="font-size:17px">--</b></div><div class="kpi"><small>Variación comparable</small><b id="kVariacion">--</b></div></div>
  <div id="tablaWrap" class="loading">Cargando información…</div>
  <div class="chart-shell"><div class="chart-head"><h3>Gráfico dinámico · principales delitos</h3><span class="badge">DATOS EXCEL</span></div><div class="orsec-bars" id="barrasDelitos"></div></div>
@@ -2346,6 +2961,500 @@ document.addEventListener('change', function(e){
 <script>
 window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
 </script>
+<script id="orsecInfografiaAltoImpactoJS">
+async function orsecDescargarInfografia(){
+ if(!ORSEC_DETALLE || !ORSEC_DET_FILTRADO || !ORSEC_DET_FILTRADO.length){
+   alert('No hay registros para la selección actual.'); return;
+ }
+ const delito=document.getElementById('orsecDetDelito').value;
+ const periodo=document.getElementById('orsecDetPeriodo').selectedOptions[0].textContent;
+ const provincia=document.getElementById('orsecDetProvincia').value;
+ const arr=ORSEC_DET_FILTRADO;
+ const all=(delito==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:ORSEC_DETALLE.detonaciones)||[];
+
+ const W=1920,H=1080,c=document.createElement('canvas'); c.width=W;c.height=H; const x=c.getContext('2d');
+ const C={navy:'#031d36',navy2:'#073e70',blue:'#0d5f9b',blue2:'#2f88c0',white:'#fff',bg:'#f5f8fb',
+          text:'#16364e',muted:'#6a8293',gold:'#f4b400',red:'#b51f1f',orange:'#f47721',
+          yellow:'#f7c84b',pale:'#e9f0f5',green:'#17834b'};
+ function box(px,py,pw,ph,fill=C.white,stroke='#d2dee7',r=10){
+   x.fillStyle=fill;x.strokeStyle=stroke;x.lineWidth=1.5;x.beginPath();x.roundRect(px,py,pw,ph,r);x.fill();x.stroke();
+ }
+ function txt(s,px,py,sz=16,b=false,col=C.text,al='left'){
+   x.fillStyle=col;x.font=(b?'bold ':'')+sz+'px Arial';x.textAlign=al;x.fillText(String(s??''),px,py);
+ }
+ function norm(s){return orsecNorm(String(s||''))}
+ function cnt(a,k){const m={};a.forEach(r=>{let q=typeof k==='function'?k(r):r[k];q=q||'SIN DATO';m[q]=(m[q]||0)+1});return m}
+ function topN(m,n=5){return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,n)}
+ function top(m){return topN(m,1)[0]||['—',0]}
+ function trunc(s,n){s=String(s||'');return s.length>n?s.slice(0,n-1)+'…':s}
+ function rankPanel(title,data,px,py,pw,ph,n=5){
+   box(px,py,pw,ph);
+   txt(title,px+18,py+30,18,true,C.navy2);
+   const a=topN(data,n),mx=Math.max(1,...a.map(q=>q[1]));
+   a.forEach(([k,v],i)=>{
+     const yy=py+66+i*42;
+     txt(String(i+1),px+20,yy,13,true,C.orange);
+     txt(trunc(k,21),px+48,yy,14,true,C.text);
+     x.fillStyle=C.pale;x.fillRect(px+245,yy-12,pw-315,13);
+     x.fillStyle=i===0?C.red:(i===1?C.orange:C.gold);
+     x.fillRect(px+245,yy-12,(pw-315)*(v/mx),13);
+     txt(v,px+pw-22,yy,14,true,C.navy2,'right');
+   });
+ }
+
+ x.fillStyle=C.bg;x.fillRect(0,0,W,H);
+ // Header
+ x.fillStyle=C.navy;x.fillRect(0,0,W,92);
+ txt('GOBIERNO REGIONAL',30,31,14,true,C.white);txt('LA LIBERTAD',30,53,14,true,C.white);
+ txt('ORSEC',W/2,36,34,true,C.white,'center');
+ txt('Centro de Inteligencia · Región La Libertad',W/2,60,15,false,C.white,'center');
+ txt('“Cada dato tiene una ubicación. Cada ubicación tiene un riesgo. Cada riesgo debe convertirse en una decisión.”',
+     W/2,82,12,false,C.gold,'center');
+ txt('OBSERVATORIO REGIONAL',W-30,31,13,true,C.white,'right');
+ txt('DE SEGURIDAD CIUDADANA',W-30,52,13,true,C.white,'right');
+ // Navigation strip: visual language of the approved ORSEC dashboard.
+ x.fillStyle='#062a4b';x.fillRect(0,92,W,42);
+ const nav=['⌂  INICIO','▥  INCIDENCIA DELICTIVA','⚠  ALERTAS','▣  BOLETINES','◉  SALA DE SITUACIÓN'];
+ nav.forEach((s,i)=>{const nx=34+i*250; if(i===1){x.fillStyle='#075da0';x.fillRect(nx-12,92,238,42);}
+   txt(s,nx,119,12,true,C.white);});
+ txt('▥  PANEL EJECUTIVO',W-35,119,12,true,C.white,'right');
+
+ // Left executive panel
+ const lx=20,ly=152,lw=390;
+ box(lx,ly,lw,790);
+ txt('MAPA DELICTIVO DISTRITAL ORSEC V1',lx+18,ly+34,20,true,C.navy2);
+ txt(periodo,lx+18,ly+58,14,false,C.muted);
+
+ const provC=cnt(arr,'provincia'),distC=cnt(arr,'distrito'),franC=cnt(arr,'franja'),
+       hourC=cnt(arr,r=>r.hora?r.hora.slice(0,2):'SIN HORA'),
+       modeC=cnt(arr,delito==='HOMICIDIOS'?'medio':'artefacto');
+ const ft=top(franC),ht=top(hourC),dt=top(distC),mt=top(modeC);
+
+ const ky=ly+82, kw=110;
+ [['TOTAL',arr.length,C.blue],['DISTRITOS',Object.keys(distC).length,C.red],['PROVINCIAS',Object.keys(provC).length,C.orange]].forEach((q,i)=>{
+   box(lx+18+i*(kw+10),ky,kw,92,'#fff');
+   txt(q[0],lx+28+i*(kw+10),ky+25,12,true,C.muted);
+   txt(q[1],lx+28+i*(kw+10),ky+63,28,true,q[2]);
+ });
+ txt('SELECCIÓN',lx+18,ky+125,13,true,C.navy2);
+ box(lx+18,ky+140,lw-36,54,'#f9fbfd');txt(delito+' · '+(provincia==='TODAS'?'REGIÓN':provincia),lx+34,ky+174,15,true,C.text);
+
+ txt('PATRÓN TEMPORAL',lx+18,ky+225,13,true,C.navy2);
+ box(lx+18,ky+240,165,105,'#f9fbfd');
+ txt('FRANJA PRINCIPAL',lx+32,ky+266,11,true,C.muted);txt(ft[0],lx+32,ky+300,20,true,C.navy2);txt(ft[1]+' casos',lx+32,ky+326,13,false,C.text);
+ box(lx+201,ky+240,171,105,'#f9fbfd');
+ txt('HORA PICO',lx+215,ky+266,11,true,C.muted);txt(ht[0]==='SIN HORA'?'—':ht[0]+':00',lx+215,ky+300,20,true,C.navy2);txt(ht[1]+' casos',lx+215,ky+326,13,false,C.text);
+
+ txt(delito==='HOMICIDIOS'?'MEDIO EMPLEADO':'ARTEFACTO PREDOMINANTE',lx+18,ky+385,13,true,C.navy2);
+ box(lx+18,ky+400,lw-36,94,'#f9fbfd');
+ txt(trunc(mt[0],29),lx+34,ky+435,18,true,C.navy2);txt(mt[1]+' casos · '+(arr.length?(mt[1]/arr.length*100).toFixed(1):0)+'%',lx+34,ky+466,14,false,C.text);
+
+ txt('LECTURA ORSEC',lx+18,ky+535,13,true,C.navy2);
+ box(lx+18,ky+550,lw-36,155,'#fff8dc','#f0c34c');
+ const lines=[
+   `${arr.length} casos seleccionados.`,
+   `${dt[0]} lidera con ${dt[1]} casos.`,
+   `${ft[0]} concentra ${ft[1]} hechos.`,
+   `Hora pico: ${ht[0]==='SIN HORA'?'sin dato':ht[0]+':00'}.`,
+   `Patrón descriptivo; requiere contraste territorial.`
+ ];
+ lines.forEach((s,i)=>txt(s,lx+34,ky+580+i*25,13,i<2,C.text));
+
+ // Map
+ const mx=430,my=152,mw=960,mh=763;
+ box(mx,my,mw,mh);
+ txt('DISTRIBUCIÓN POR DISTRITO',mx+18,my+34,19,true,C.navy2);
+ txt('Incidencia según la selección activa',mx+18,my+58,14,false,C.muted);
+ const mapX=mx+18,mapY=my+78,mapW=mw-36,mapH=mh-100;
+ x.fillStyle='#dceff7';x.fillRect(mapX,mapY,mapW,mapH);
+
+ let geo=null;
+ try{
+   if(window.ORSEC_MAP_GEO)geo=window.ORSEC_MAP_GEO;
+   if(!geo){const r=await fetch(ORSEC_GEO_URL,{cache:'no-store'});geo=await r.json();}
+ }catch(e){}
+ const dcounts={};arr.forEach(r=>{const k=norm(r.distrito);dcounts[k]=(dcounts[k]||0)+1});
+ const maxD=Math.max(1,...Object.values(dcounts));
+ function col(v){if(!v)return '#edf2f5';let q=v/maxD;return q>.75?'#8f1717':q>.5?'#d94b22':q>.25?'#f58a24':'#f5cf64'}
+ function each(g,fn){if(g.type==='Polygon')g.coordinates.forEach(r=>r.forEach(fn));else if(g.type==='MultiPolygon')g.coordinates.forEach(p=>p.forEach(r=>r.forEach(fn)))}
+ if(geo&&geo.features){
+   let minX=999,maxX=-999,minY=999,maxY=-999;
+   geo.features.forEach(f=>each(f.geometry,p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1])}));
+   // V12: reserve a dedicated ocean-side gutter for metropolitan callouts.
+   // The geographic polygons begin to the right of this gutter, so labels can never cover them.
+   const calloutGutter=250;
+   const geoX=mapX+calloutGutter, geoW=mapW-calloutGutter;
+   const sc=Math.min(geoW/(maxX-minX),mapH/(maxY-minY))*.94;
+   const ox=geoX+(geoW-(maxX-minX)*sc)/2,oy=mapY+(mapH-(maxY-minY)*sc)/2;
+   const pr=p=>[ox+(p[0]-minX)*sc,oy+(maxY-p[1])*sc];
+   geo.features.forEach(f=>{
+     const name=norm(f.properties.NOMBDIST),v=dcounts[name]||0;
+     x.beginPath();
+     const ring=r=>{r.forEach((p,i)=>{const q=pr(p);i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1])});x.closePath()};
+     f.geometry.type==='Polygon'?f.geometry.coordinates.forEach(ring):f.geometry.coordinates.forEach(p=>p.forEach(ring));
+     x.fillStyle=col(v);x.fill();x.strokeStyle='#fff';x.lineWidth=1.3;x.stroke();
+   });
+
+   const metro=new Set(['TRUJILLO','LA ESPERANZA','EL PORVENIR','FLORENCIA DE MORA','VICTOR LARCO HERRERA','HUANCHACO','MOCHE','SALAVERRY','LAREDO']);
+   const labs=[];
+   topN(dcounts,16).forEach(([name,v])=>{
+     const f=geo.features.find(z=>norm(z.properties.NOMBDIST)===name);if(!f)return;
+     const pts=[];each(f.geometry,p=>pts.push(pr(p)));if(!pts.length)return;
+     const cx=pts.reduce((s,p)=>s+p[0],0)/pts.length,cy=pts.reduce((s,p)=>s+p[1],0)/pts.length;
+     labs.push({name,v,cx,cy,metro:metro.has(name)});
+   });
+   labs.filter(o=>!o.metro).forEach(o=>{txt(trunc(o.name,17),o.cx,o.cy-2,12,true,C.navy,'center');txt(o.v,o.cx,o.cy+14,12,true,C.navy,'center')});
+
+   // Metropolitan callout rail on LEFT side of map, separated and non-overlapping.
+   const ml=labs.filter(o=>o.metro).sort((a,b)=>a.cy-b.cy);
+   // Rail metropolitano definitivo: etiquetas en el margen oceánico,
+   // separadas del territorio y distribuidas verticalmente sin superposición.
+   // V13 master callout model: boxes entirely inside the reserved gutter.
+   const labelW=205, labelH=29;
+   const railX=mapX+8;
+   const startY=mapY+125, endY=mapY+mapH-88;
+   const step=ml.length>1?(endY-startY)/(ml.length-1):0;
+   ml.forEach((o,i)=>{
+     const cy=startY+i*step, bx=railX, by=cy-labelH/2;
+     const lineStartX=bx+labelW+8, elbowX=mapX+calloutGutter-8;
+     x.strokeStyle='#365b73';x.lineWidth=1.25;
+     x.beginPath();x.moveTo(lineStartX,cy);x.lineTo(elbowX,cy);x.lineTo(o.cx,o.cy);x.stroke();
+     x.fillStyle='#111';x.beginPath();x.arc(lineStartX,cy,3,0,Math.PI*2);x.fill();
+     box(bx,by,labelW,labelH,'#ffffff','#8fa9ba',5);
+     txt(trunc(o.name,19),bx+10,cy+4,10,true,C.navy);
+     txt(o.v,bx+labelW-10,cy+4,12,true,C.red,'right');
+     x.fillStyle=C.red;x.beginPath();x.arc(o.cx,o.cy,3.5,0,Math.PI*2);x.fill();
+   });
+
+   // legend
+   box(mapX+mapW-170,mapY+mapH-135,150,115,'#fffffff2','#bacbd6',7);
+   txt('INTENSIDAD',mapX+mapW-158,mapY+mapH-112,11,true,C.navy2);
+   [['#edf2f5','0'],['#f5cf64','Baja'],['#f58a24','Media'],['#d94b22','Alta'],['#8f1717','Muy alta']].forEach((q,i)=>{
+     x.fillStyle=q[0];x.fillRect(mapX+mapW-158,mapY+mapH-94+i*16,12,9);txt(q[1],mapX+mapW-140,mapY+mapH-85+i*16,9,false,C.text);
+   });
+ }
+
+ // Right analytics
+ const rx=1410,rw=490;
+ rankPanel('TOP 5 DISTRITOS',distC,rx,152,rw,250,5);
+ rankPanel('DISTRIBUCIÓN POR FRANJA',franC,rx,420,rw,215,4);
+ rankPanel(delito==='HOMICIDIOS'?'MEDIO EMPLEADO':'TIPO DE ARTEFACTO',modeC,rx,653,rw,262,4);
+
+ // Bottom KPI strip
+ const by=932,bw=355;
+ const ks=[['CASOS',arr.length],['DISTRITOS CON HECHOS',Object.keys(distC).length],['PROVINCIA PRINCIPAL',top(provC)[0]],['FRANJA PRINCIPAL',ft[0]],['HORA PICO',ht[0]==='SIN HORA'?'—':ht[0]+':00']];
+ ks.forEach((q,i)=>{const px=20+i*(bw+24);box(px,by,bw,100);txt(q[0],px+16,by+29,12,true,C.muted);txt(trunc(q[1],24),px+16,by+68,24,true,C.navy2)});
+ x.fillStyle=C.navy;x.fillRect(0,H-25,W,25);
+ txt('ORSEC · Centro de Inteligencia · Observatorio Regional de Seguridad Ciudadana · La Libertad',22,H-8,11,false,C.white);
+ txt('Versión ejecutiva ORSEC · diseño maestro aprobado V13',W-22,H-8,11,false,C.white,'right');
+
+ c.toBlob(b=>orsecDownload(`ORSEC_${delito}_INFOGRAFIA_MODELO_MAESTRO_${periodo.replace(/\s+/g,'_')}.png`,b),'image/png');
+}
+</script>
+<script>
+let ORSEC_COMP_DATA=[];
+function orsecCompLabelPeriodo(){return document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||current().periodo}
+function orsecCompValor(anio,prov,delito){const f=current();let rr=registros({anio:anio,tipo:f.tipo,periodo:f.periodo,provincia:prov});if(delito&&delito!=='TODOS')rr=rr.filter(r=>r.Delito===delito);return rr.reduce((s,r)=>s+(Number(r.Casos)||0),0)}
+function orsecCompClass(v){return v>1?'orsec-comp-var-up':v<-1?'orsec-comp-var-down':'orsec-comp-var-flat'}
+function orsecCompFmtPct(v){return v==null?'N/D':`${v>=0?'+':''}${v.toFixed(1)}%`}
+function orsecCompSafe(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9_-]+/g,'_')}
+function orsecGenerarComparativo(){
+ const f=current(),delitos=f.delito==='TODOS'?'TODOS':f.delito;
+ const provs=(typeof META!=='undefined'&&META.provincias?META.provincias:[]).filter(p=>p!=='TOTAL REGION'&&p!=='TODAS');
+ const regional26=orsecCompValor(2026,'TOTAL REGION',delitos);
+ ORSEC_COMP_DATA=provs.map(p=>{const a25=orsecCompValor(2025,p,delitos),a26=orsecCompValor(2026,p,delitos),dif=a26-a25,vari=a25?dif/a25*100:(a26>0?null:0),part=regional26?a26/regional26*100:0;return{Provincia:p,Anio2025:a25,Anio2026:a26,Diferencia:dif,Variacion:vari,Participacion:part}}).sort((a,b)=>b.Anio2026-a.Anio2026);
+ document.getElementById('orsecComparativoBox')?.classList.add('activo');
+ document.getElementById('orsecCompPeriodo').textContent=`${f.tipo} · ${orsecCompLabelPeriodo()}`;
+ document.getElementById('orsecCompDelito').textContent=delitos==='TODOS'?'TODOS LOS DELITOS':delitos;
+ const comp=ORSEC_COMP_DATA.filter(x=>x.Variacion!=null&&isFinite(x.Variacion)),redu=[...comp].sort((a,b)=>a.Variacion-b.Variacion)[0],incr=[...comp].sort((a,b)=>b.Variacion-a.Variacion)[0];
+ document.getElementById('orsecCompReduccion').textContent=redu?`${redu.Provincia} · ${orsecCompFmtPct(redu.Variacion)}`:'N/D';
+ document.getElementById('orsecCompIncremento').textContent=incr?`${incr.Provincia} · ${orsecCompFmtPct(incr.Variacion)}`:'N/D';
+ document.getElementById('orsecCompBody').innerHTML=ORSEC_COMP_DATA.map(x=>`<tr><td><b>${x.Provincia}</b></td><td>${x.Anio2025.toLocaleString('es-PE')}</td><td>${x.Anio2026.toLocaleString('es-PE')}</td><td>${x.Diferencia>=0?'+':''}${x.Diferencia.toLocaleString('es-PE')}</td><td class="${orsecCompClass(x.Variacion||0)}">${orsecCompFmtPct(x.Variacion)}</td><td>${x.Participacion.toFixed(1)}%</td></tr>`).join('');
+ const mx=Math.max(1,...ORSEC_COMP_DATA.flatMap(x=>[x.Anio2025,x.Anio2026]));
+ document.getElementById('orsecCompBars').innerHTML=ORSEC_COMP_DATA.map(x=>`<div class="orsec-comp-row"><div><b>${x.Provincia}</b></div><div class="orsec-comp-track"><div class="orsec-comp-b25" style="width:${x.Anio2025/mx*100}%"></div><div class="orsec-comp-b26" style="width:${x.Anio2026/mx*100}%"></div></div><div>25: ${x.Anio2025.toLocaleString('es-PE')}</div><div>26: ${x.Anio2026.toLocaleString('es-PE')}</div></div>`).join('');
+ const top=ORSEC_COMP_DATA[0],delTxt=delitos==='TODOS'?'el conjunto de delitos seleccionados':delitos;
+ document.getElementById('orsecCompLectura').innerHTML=top?`Para <b>${orsecCompLabelPeriodo()}</b>, la mayor concentración territorial de ${delTxt} corresponde a <b>${top.Provincia}</b>, con <b>${top.Anio2026.toLocaleString('es-PE')}</b> incidencias (${top.Participacion.toFixed(1)}% del total regional seleccionado). ${redu?`La mayor reducción comparable se observa en <b>${redu.Provincia}</b> (${orsecCompFmtPct(redu.Variacion)}).`:''} ${incr?`El mayor incremento comparable se observa en <b>${incr.Provincia}</b> (${orsecCompFmtPct(incr.Variacion)}).`:''} La concentración por volumen no equivale por sí sola a prioridad estratégica.`:'Sin registros comparables.';
+ return ORSEC_COMP_DATA;
+}
+function orsecCompDetalle(){const f=current(),out=[],provs=(META?.provincias||[]).filter(p=>p!=='TOTAL REGION'&&p!=='TODAS'),dels=f.delito==='TODOS'?(META?.delitos||[]):[f.delito];provs.forEach(p=>dels.forEach(d=>{const a=orsecCompValor(2025,p,d),b=orsecCompValor(2026,p,d),dif=b-a;out.push({Provincia:p,Delito:d,'2025':a,'2026':b,Diferencia:dif,'Variacion %':a?dif/a*100:(b?null:0)})}));return out}
+function orsecLoadScript(src,test){return new Promise((resolve,reject)=>{if(test())return resolve();const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}
+async function orsecDescargarExcelComparativo(){orsecGenerarComparativo();try{await orsecLoadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',()=>!!window.XLSX);const f=current(),wb=XLSX.utils.book_new(),res=ORSEC_COMP_DATA.map(x=>({Provincia:x.Provincia,'2025':x.Anio2025,'2026':x.Anio2026,Diferencia:x.Diferencia,'Variación %':x.Variacion,'Participación 2026 %':x.Participacion}));XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(res),'Comparativo Provincial');XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(orsecCompDetalle()),'Detalle por Delito');XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['PRODUCTO','Comparativo Territorial ORSEC'],['Tipo de período',f.tipo],['Período',orsecCompLabelPeriodo()],['Delito',f.delito],['Comparación','2025 vs 2026'],['Fuente','Unidad de Estadística de la Región Policial La Libertad'],['Elaborado','ORSEC / GRDN / GORELL']]),'Fuente y Metodología');XLSX.writeFile(wb,`ORSEC_Comparativo_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}.xlsx`)}catch(e){console.error(e);alert('No se pudo generar Excel. Revise la conexión a internet.')}}
+function orsecCanvasComparativo(){orsecGenerarComparativo();const canvas=document.createElement('canvas');canvas.width=1500;canvas.height=980;const c=canvas.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,1500,980);c.fillStyle='#073e70';c.font='bold 40px Arial';c.fillText('COMPARATIVO TERRITORIAL ORSEC',70,70);const f=current();c.font='22px Arial';c.fillStyle='#43657c';c.fillText(`${f.tipo} · ${orsecCompLabelPeriodo()} · ${f.delito==='TODOS'?'TODOS LOS DELITOS':f.delito}`,70,110);const max=Math.max(1,...ORSEC_COMP_DATA.flatMap(x=>[x.Anio2025,x.Anio2026]));let y=160;ORSEC_COMP_DATA.forEach(x=>{c.fillStyle='#17364c';c.font='bold 18px Arial';c.fillText(x.Provincia,70,y+18);const x0=350,w=800;c.fillStyle='#dfe8ee';c.fillRect(x0,y,w,26);c.fillStyle='#8aa6b9';c.fillRect(x0,y,Math.max(2,x.Anio2025/max*w),11);c.fillStyle='#1388c9';c.fillRect(x0,y+15,Math.max(2,x.Anio2026/max*w),11);c.fillStyle='#17364c';c.font='16px Arial';c.fillText(`2025: ${x.Anio2025.toLocaleString('es-PE')}   2026: ${x.Anio2026.toLocaleString('es-PE')}   ${orsecCompFmtPct(x.Variacion)}`,1180,y+19);y+=60});c.fillStyle='#687f91';c.font='15px Arial';c.fillText('Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC / GRDN / GORELL',70,930);return canvas}
+function orsecDescargarGraficoComparativo(){const canvas=orsecCanvasComparativo(),f=current(),a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=`ORSEC_Grafico_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}.png`;a.click()}
+async function orsecDescargarPDFComparativo(){const canvas=orsecCanvasComparativo();try{await orsecLoadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',()=>!!(window.jspdf&&window.jspdf.jsPDF));const{jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});doc.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',8,8,281,184);const f=current();doc.save(`ORSEC_Comparativo_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}.pdf`)}catch(e){console.error(e);alert('No se pudo generar el PDF. Puede descargar el gráfico PNG.')}}
+document.addEventListener('change',e=>{if(e.target&&['anio','tipoPeriodo','periodo','provincia','delito'].includes(e.target.id))document.getElementById('orsecComparativoBox')?.classList.remove('activo')});
+</script>
+<script id="orsecDetalleImpactoJS">
+let ORSEC_DETALLE=null, ORSEC_DET_FILTRADO=[];
+const ORSEC_MESES=['','ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO'];
+function orsecEsc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+async function orsecLoadDetalle(){
+ try{
+  const r=await fetch('detalle_alto_impacto.json',{cache:'no-store'}); if(!r.ok)throw 0;
+  ORSEC_DETALLE=await r.json();
+  const ps=[...new Set([...ORSEC_DETALLE.homicidios,...ORSEC_DETALLE.detonaciones].map(x=>x.provincia).filter(Boolean))].sort();
+  const sel=document.getElementById('orsecDetProvincia'); if(sel) ps.forEach(p=>sel.insertAdjacentHTML('beforeend',`<option>${orsecEsc(p)}</option>`));
+ }catch(e){console.warn('detalle_alto_impacto.json no disponible')}
+}
+function orsecToggleDetalle(){
+ const p=document.getElementById('orsecDetallePanel'); p.classList.toggle('on');
+ if(!ORSEC_DETALLE){orsecLoadDetalle().then(orsecRenderDetalle)} else orsecRenderDetalle();
+}
+function orsecCount(arr,key){const m={};arr.forEach(x=>{const k=(typeof key==='function'?key(x):x[key])||'SIN DATO';m[k]=(m[k]||0)+1});return m}
+function orsecTop(m){return Object.entries(m).sort((a,b)=>b[1]-a[1])[0]||['—',0]}
+function orsecMini(m,limit=8){
+ const a=Object.entries(m).sort((x,y)=>y[1]-x[1]).slice(0,limit),mx=Math.max(1,...a.map(x=>x[1]));
+ return a.map(([k,v])=>`<div class="orsec-mini-row"><span>${orsecEsc(k)}</span><div class="orsec-mini-track"><div class="orsec-mini-fill" style="width:${v/mx*100}%"></div></div><b>${v}</b></div>`).join('');
+}
+function orsecRenderDetalle(){
+ if(!ORSEC_DETALLE)return;
+ const delito=document.getElementById('orsecDetDelito').value;
+ const mes=+document.getElementById('orsecDetPeriodo').value;
+ const prov=document.getElementById('orsecDetProvincia').value;
+ let arr=(delito==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:ORSEC_DETALLE.detonaciones).filter(x=>(!mes||x.mes===mes)&&(prov==='TODAS'||x.provincia===prov));
+ ORSEC_DET_FILTRADO=arr;
+ const fran=orsecCount(arr,'franja'), pro=orsecCount(arr,'provincia'), horas=orsecCount(arr,x=>x.hora?x.hora.slice(0,2):'SIN HORA');
+ const ft=orsecTop(fran), pt=orsecTop(pro), ht=orsecTop(horas);
+ document.getElementById('orsecDetTotal').textContent=arr.length;
+ document.getElementById('orsecDetFranja').textContent=ft[0];
+ document.getElementById('orsecDetHora').textContent=ht[0]==='SIN HORA'?'SIN DATO':ht[0]+':00–'+ht[0]+':59';
+ document.getElementById('orsecDetProvTop').textContent=pt[0];
+ let hv=Array.from({length:24},(_,h)=>horas[String(h).padStart(2,'0')]||0), mx=Math.max(1,...hv);
+ document.getElementById('orsecDetHoras').innerHTML=`<div class="orsec-hour-bars">${hv.map((v,h)=>`<div class="orsec-hour-col" data-tip="${String(h).padStart(2,'0')}:00 · ${v} caso(s)" style="height:${Math.max(2,v/mx*100)}%"></div>`).join('')}</div><div class="orsec-hour-axis"><span>00h</span><span>06h</span><span>12h</span><span>18h</span><span>23h</span></div>`;
+ document.getElementById('orsecDetFranjas').innerHTML=orsecMini(fran,5);
+ document.getElementById('orsecDetProvincias').innerHTML=orsecMini(pro,8);
+ const mod=delito==='HOMICIDIOS'?orsecCount(arr,'medio'):orsecCount(arr,'artefacto');
+ document.getElementById('orsecDetModalidadTitulo').textContent=delito==='HOMICIDIOS'?'Medio empleado':'Tipo de artefacto';
+ document.getElementById('orsecDetModalidades').innerHTML=orsecMini(mod,8);
+ const pct=arr.length?Math.round(ft[1]/arr.length*1000)/10:0;
+ const per=mes?ORSEC_MESES[mes]+' 2026':'ENERO–AGOSTO 2026';
+ document.getElementById('orsecDetLectura').innerHTML=arr.length?`<b>Lectura ORSEC:</b> En ${per}, ${prov==='TODAS'?'la selección regional':orsecEsc(prov)} registra <b>${arr.length}</b> ${delito.toLowerCase()}. La franja con mayor concentración es <b>${orsecEsc(ft[0])}</b> (${ft[1]} casos; ${pct}%). La hora con mayor frecuencia es <b>${orsecEsc(ht[0])}:00</b>. Esta concentración constituye un <b>patrón temporal descriptivo</b>; por sí sola no acredita un modus operandi y debe contrastarse con territorio y modalidad.`:'No existen registros para la selección.';
+ if(delito==='HOMICIDIOS'){
+  document.getElementById('orsecDetHead').innerHTML='<tr><th>Fecha</th><th>Hora</th><th>Provincia</th><th>Distrito</th><th>Edad</th><th>Sexo</th><th>Medio empleado</th><th>Lugar</th></tr>';
+  document.getElementById('orsecDetBody').innerHTML=arr.map(x=>`<tr><td>${orsecEsc(x.fecha)}</td><td>${orsecEsc(x.hora)}</td><td>${orsecEsc(x.provincia)}</td><td>${orsecEsc(x.distrito)}</td><td>${orsecEsc(x.edad)}</td><td>${orsecEsc(x.sexo)}</td><td>${orsecEsc(x.medio)}</td><td>${orsecEsc(x.lugar)}</td></tr>`).join('');
+ }else{
+  document.getElementById('orsecDetHead').innerHTML='<tr><th>Fecha</th><th>Hora</th><th>Provincia</th><th>Distrito</th><th>Artefacto</th><th>Condición</th><th>CPNP</th><th>Dirección</th></tr>';
+  document.getElementById('orsecDetBody').innerHTML=arr.map(x=>`<tr><td>${orsecEsc(x.fecha)}</td><td>${orsecEsc(x.hora)}</td><td>${orsecEsc(x.provincia)}</td><td>${orsecEsc(x.distrito)}</td><td>${orsecEsc(x.artefacto)}</td><td>${orsecEsc(x.condicion)}</td><td>${orsecEsc(x.comisaria)}</td><td>${orsecEsc(x.direccion)}</td></tr>`).join('');
+ }
+}
+function orsecDownload(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+function orsecDescargarDetalleCSV(){
+ if(!ORSEC_DET_FILTRADO.length)return;
+ const d=document.getElementById('orsecDetDelito').value, keys=d==='HOMICIDIOS'?['fecha','hora','franja','provincia','distrito','edad','sexo','nacionalidad','medio','lugar']:['fecha','hora','franja','provincia','distrito','artefacto','condicion','comisaria','direccion'];
+ const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+ const csv=[keys.join(';'),...ORSEC_DET_FILTRADO.map(x=>keys.map(k=>q(x[k])).join(';'))].join('\n');
+ orsecDownload(`ORSEC_${d}_detalle.csv`,new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+}
+function orsecDescargarDetallePNG(){
+ if(!ORSEC_DET_FILTRADO.length)return;
+ const d=document.getElementById('orsecDetDelito').value, c=document.createElement('canvas');c.width=1400;c.height=760;const x=c.getContext('2d');
+ x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.fillStyle='#073e70';x.fillRect(0,0,c.width,95);x.fillStyle='#fff';x.font='bold 34px Arial';x.fillText(`ORSEC · ${d} · PATRÓN HORARIO`,45,58);
+ const horas=orsecCount(ORSEC_DET_FILTRADO,z=>z.hora?z.hora.slice(0,2):'SIN HORA'), vals=Array.from({length:24},(_,h)=>horas[String(h).padStart(2,'0')]||0),mx=Math.max(1,...vals);
+ x.fillStyle='#173d57';x.font='bold 20px Arial';x.fillText(`Casos seleccionados: ${ORSEC_DET_FILTRADO.length}`,50,145);
+ const left=70,top=190,w=1260,h=420,bw=w/24;
+ vals.forEach((v,i)=>{const bh=v/mx*h;x.fillStyle='#1976a8';x.fillRect(left+i*bw+4,top+h-bh,bw-8,bh);x.fillStyle='#526f83';x.font='12px Arial';x.fillText(String(i).padStart(2,'0'),left+i*bw+8,top+h+24);if(v){x.fillStyle='#173d57';x.fillText(v,left+i*bw+9,top+h-bh-7)}});
+ x.fillStyle='#6a8192';x.font='16px Arial';x.fillText('Distribución de hechos por hora (00–23 h). Fuente: archivos detallados ORSEC, enero–agosto 2026.',70,690);
+ c.toBlob(b=>orsecDownload(`ORSEC_${d}_patron_horario.png`,b),'image/png');
+}
+orsecLoadDetalle();
+</script>
+<script id="orsecMapaDelitoJS">
+let ORSEC_MAP=null,ORSEC_MAP_GEO=null,ORSEC_MAP_LAYER=null;
+const ORSEC_GEO_URL="https://geoservidorperu.minam.gob.pe/arcgis/rest/services/ServicioBase/MapServer/12/query?where=NOMBDEP%3D%27LA%20LIBERTAD%27&outFields=IDDIST,NOMBDIST,NOMBPROV,NOMBDEP&returnGeometry=true&outSR=4326&f=geojson";
+function orsecNorm(s){
+ let n=String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();
+ const alias={
+  'VICTOR LARCO':'VICTOR LARCO HERRERA',
+  'FCIA. DE MORA':'FLORENCIA DE MORA',
+  'FCIA DE MORA':'FLORENCIA DE MORA',
+  'FLORENCIA DE MORA':'FLORENCIA DE MORA'
+ };
+ return alias[n]||n;
+}
+async function orsecInitMapa(){
+ if(!ORSEC_DETALLE) await orsecLoadDetalle();
+ if(!ORSEC_MAP_GEO){try{const r=await fetch(ORSEC_GEO_URL);ORSEC_MAP_GEO=await r.json()}catch(e){document.getElementById('orsecMapaDelito').innerHTML='<div style="padding:30px">No fue posible cargar la cartografía distrital oficial. Verifique conexión a internet.</div>';return}}
+ if(!ORSEC_MAP){
+   ORSEC_MAP=L.map('orsecMapaDelito',{zoomControl:true}).setView([-8.0,-78.5],7);
+   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap · Cartografía distrital: MINAM'}).addTo(ORSEC_MAP);
+ }
+ orsecRenderMapa();setTimeout(()=>ORSEC_MAP.invalidateSize(),150);
+}
+function orsecToggleMapa(){const p=document.getElementById('orsecMapaPanel');p.classList.toggle('on');if(p.classList.contains('on'))orsecInitMapa()}
+function orsecMapData(){
+ if(!ORSEC_DETALLE)return[];
+ const d=document.getElementById('orsecMapDelito').value,m=+document.getElementById('orsecMapMes').value,f=document.getElementById('orsecMapFranja').value;
+ let a=d==='HOMICIDIOS'?ORSEC_DETALLE.homicidios:d==='DETONACIONES'?ORSEC_DETALLE.detonaciones:[...ORSEC_DETALLE.homicidios,...ORSEC_DETALLE.detonaciones];
+ return a.filter(x=>(!m||x.mes===m)&&(f==='TODAS'||x.franja===f));
+}
+function orsecMapColor(v,mx){if(!v)return '#e8eef2';let q=v/mx;return q>.75?'#8b1e1e':q>.5?'#d04432':q>.25?'#ed8b2c':'#f3c85b'}
+function orsecRenderMapa(){
+ if(!ORSEC_MAP||!ORSEC_MAP_GEO||!ORSEC_DETALLE)return;
+ const arr=orsecMapData(), cnt={}, hom={}, det={};
+ arr.forEach(x=>{let k=orsecNorm(x.distrito);cnt[k]=(cnt[k]||0)+1});
+ ORSEC_DETALLE.homicidios.filter(x=>arr.includes(x)).forEach(x=>{let k=orsecNorm(x.distrito);hom[k]=(hom[k]||0)+1});
+ ORSEC_DETALLE.detonaciones.filter(x=>arr.includes(x)).forEach(x=>{let k=orsecNorm(x.distrito);det[k]=(det[k]||0)+1});
+ const vals=Object.values(cnt),mx=Math.max(1,...vals),top=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0]||['—',0];
+ document.getElementById('orsecMapTotal').textContent=arr.length;
+ document.getElementById('orsecMapDistritos').textContent=Object.keys(cnt).length;
+ document.getElementById('orsecMapTop').textContent=top[0]+' · '+top[1];
+ document.getElementById('orsecMapFranjaKpi').textContent=document.getElementById('orsecMapFranja').value;
+ if(ORSEC_MAP_LAYER)ORSEC_MAP.removeLayer(ORSEC_MAP_LAYER);
+ ORSEC_MAP_LAYER=L.geoJSON(ORSEC_MAP_GEO,{
+  style:f=>{let v=cnt[orsecNorm(f.properties.NOMBDIST)]||0;return{color:'#31576e',weight:.8,fillColor:orsecMapColor(v,mx),fillOpacity:.78}},
+  onEachFeature:(f,l)=>{
+    let k=orsecNorm(f.properties.NOMBDIST),v=cnt[k]||0;
+    l.bindTooltip(`<b>${orsecEsc(f.properties.NOMBDIST)}</b><br>${orsecEsc(f.properties.NOMBPROV)}<br><b>${v}</b> hecho(s)`,{sticky:true});
+    l.bindPopup(`<b>${orsecEsc(f.properties.NOMBDIST)}</b><br>Provincia: ${orsecEsc(f.properties.NOMBPROV)}<hr style="border:.5px solid #ddd"><b>Total: ${v}</b><br>Homicidios: ${hom[k]||0}<br>Detonaciones: ${det[k]||0}`);
+  }
+ }).addTo(ORSEC_MAP);
+ if(!ORSEC_MAP._orsecLegend){
+   const lg=L.control({position:'bottomright'});lg.onAdd=()=>{const d=L.DomUtil.create('div','orsec-map-legend');d.innerHTML='<b>INTENSIDAD</b><br><i style="background:#e8eef2"></i>Sin hechos<br><i style="background:#f3c85b"></i>Baja<br><i style="background:#ed8b2c"></i>Media<br><i style="background:#d04432"></i>Alta<br><i style="background:#8b1e1e"></i>Muy alta';return d};lg.addTo(ORSEC_MAP);ORSEC_MAP._orsecLegend=lg;
+ }
+}
+function orsecMapReset(){if(ORSEC_MAP&&ORSEC_MAP_LAYER){ORSEC_MAP.fitBounds(ORSEC_MAP_LAYER.getBounds(),{padding:[10,10]})}}
+</script>
+<script id="orsecRelacionExportJS">
+function orsecRelacionMeta(){
+  return {
+    delito: document.getElementById('orsecDetDelito').value,
+    periodo: document.getElementById('orsecDetPeriodo').selectedOptions[0].textContent,
+    provincia: document.getElementById('orsecDetProvincia').value
+  };
+}
+
+function orsecRelCols(delito){
+  return delito==='HOMICIDIOS'
+    ? [['fecha','Fecha'],['hora','Hora'],['provincia','Provincia'],['distrito','Distrito'],['edad','Edad'],['sexo','Sexo'],['medio','Medio empleado'],['lugar','Lugar']]
+    : [['fecha','Fecha'],['hora','Hora'],['provincia','Provincia'],['distrito','Distrito'],['artefacto','Artefacto'],['condicion','Condición'],['comisaria','CPNP'],['direccion','Dirección']];
+}
+
+function orsecRelEsc(v){
+  return String(v??'').replace(/[&<>"']/g, function(s){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s];
+  });
+}
+
+function orsecRelTrunc(ctx, value, maxWidth){
+  let s=String(value??'');
+  if(ctx.measureText(s).width<=maxWidth) return s;
+  while(s.length>4 && ctx.measureText(s+'…').width>maxWidth) s=s.slice(0,-1);
+  return s+'…';
+}
+
+function orsecDescargarRelacionPNG(){
+  const meta=orsecRelacionMeta();
+  const arr=ORSEC_DET_FILTRADO||[];
+  if(!arr.length){ alert('No hay registros para descargar.'); return; }
+
+  const cols=orsecRelCols(meta.delito);
+  const W=1800, margin=42, headerH=170, rowH=42, footerH=65;
+  const H=headerH + rowH*(arr.length+1) + footerH;
+  const canvas=document.createElement('canvas');
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+
+  ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#073e70'; ctx.fillRect(0,0,W,108);
+  ctx.fillStyle='#ffffff'; ctx.font='bold 34px Arial';
+  ctx.fillText('ORSEC · RELACIÓN DETALLADA',margin,48);
+  ctx.font='20px Arial';
+  const prov=meta.provincia==='TODAS'?'Todas las provincias':meta.provincia;
+  ctx.fillText(meta.delito+' · '+meta.periodo+' · '+prov,margin,82);
+
+  ctx.fillStyle='#17384f'; ctx.font='bold 18px Arial';
+  ctx.fillText('Total seleccionado: '+arr.length+' registro(s)',margin,142);
+
+  const rawWidths=meta.delito==='HOMICIDIOS'
+    ? [110,75,125,130,60,55,190,600]
+    : [110,75,120,125,190,220,135,500];
+  const usable=W-margin*2;
+  const sum=rawWidths.reduce((a,b)=>a+b,0);
+  const widths=rawWidths.map(v=>v*usable/sum);
+
+  let x=margin;
+  ctx.fillStyle='#0b4f7c'; ctx.fillRect(margin,headerH,usable,rowH);
+  ctx.fillStyle='#ffffff'; ctx.font='bold 13px Arial';
+  cols.forEach((c,i)=>{ ctx.fillText(c[1],x+6,headerH+27); x+=widths[i]; });
+
+  arr.forEach((r,ri)=>{
+    const y=headerH+rowH*(ri+1);
+    ctx.fillStyle=ri%2 ? '#f7fafc' : '#ffffff';
+    ctx.fillRect(margin,y,usable,rowH);
+    ctx.strokeStyle='#dce7ef'; ctx.beginPath();
+    ctx.moveTo(margin,y+rowH); ctx.lineTo(margin+usable,y+rowH); ctx.stroke();
+
+    x=margin; ctx.fillStyle='#17384f'; ctx.font='12px Arial';
+    cols.forEach((c,i)=>{
+      const s=orsecRelTrunc(ctx,r[c[0]],widths[i]-12);
+      ctx.fillText(s,x+6,y+26);
+      x+=widths[i];
+    });
+  });
+
+  ctx.fillStyle='#6a8192'; ctx.font='13px Arial';
+  ctx.fillText('Fuente: ORSEC · Relación completa · '+arr.length+' registro(s)',margin,H-25);
+
+  canvas.toBlob(function(blob){
+    if(!blob){ alert('No se pudo generar la imagen.'); return; }
+    orsecDownload('ORSEC_'+meta.delito+'_RELACION_COMPLETA.png',blob);
+  },'image/png');
+}
+
+function orsecDescargarRelacionPDF(){
+  const meta=orsecRelacionMeta();
+  const arr=ORSEC_DET_FILTRADO||[];
+  if(!arr.length){ alert('No hay registros para descargar.'); return; }
+
+  const cols=orsecRelCols(meta.delito);
+  const win=window.open('','_blank','width=1200,height=900');
+  if(!win){
+    alert('El navegador bloqueó la ventana PDF. Permita ventanas emergentes para ORSEC e intente nuevamente.');
+    return;
+  }
+
+  const prov=meta.provincia==='TODAS'?'Todas las provincias':meta.provincia;
+  const thead=cols.map(c=>'<th>'+orsecRelEsc(c[1])+'</th>').join('');
+  const rows=arr.map(r=>'<tr>'+cols.map(c=>'<td>'+orsecRelEsc(r[c[0]])+'</td>').join('')+'</tr>').join('');
+
+  const doc = [
+    '<!doctype html><html><head><meta charset="utf-8">',
+    '<title>ORSEC · '+orsecRelEsc(meta.delito)+' · Relación</title>',
+    '<style>',
+    '@page{size:A4 landscape;margin:10mm;}',
+    'body{font-family:Arial,Helvetica,sans-serif;margin:0;color:#17384f;background:white;}',
+    '.head{background:#073e70;color:white;padding:16px 18px;margin-bottom:10px;}',
+    '.head h1{font-size:19pt;margin:0 0 5px}.head p{margin:0;font-size:10pt}',
+    '.meta{font-size:9.5pt;margin:0 0 10px;font-weight:bold;color:#073e70}',
+    'table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:7.5pt;}',
+    'thead{display:table-header-group;}',
+    'th{background:#0b4f7c;color:white;border:1px solid #d5e1e9;padding:5px;text-align:left;}',
+    'td{border:1px solid #dfe8ee;padding:4px;vertical-align:top;overflow-wrap:anywhere;}',
+    'tbody tr:nth-child(even){background:#f7fafc;}',
+    'tr{page-break-inside:avoid;}',
+    '.foot{margin-top:8px;font-size:8pt;color:#667f90;}',
+    '.actions{margin:12px 0}.actions button{padding:10px 15px;border:0;border-radius:7px;background:#0b5f91;color:white;font-weight:bold;cursor:pointer;}',
+    '@media print{.actions{display:none!important;}}',
+    '</style></head><body>',
+    '<div class="head"><h1>ORSEC · RELACIÓN DETALLADA</h1><p>'+orsecRelEsc(meta.delito)+' · '+orsecRelEsc(meta.periodo)+' · '+orsecRelEsc(prov)+'</p></div>',
+    '<div class="meta">Total seleccionado: '+arr.length+' registro(s)</div>',
+    '<table><thead><tr>'+thead+'</tr></thead><tbody>'+rows+'</tbody></table>',
+    '<div class="foot">Fuente: ORSEC · Relación completa según filtros activos.</div>',
+    '<div class="actions"><button onclick="window.print()">GUARDAR COMO PDF / IMPRIMIR</button></div>',
+    '</body></html>'
+  ].join('');
+
+  win.document.open();
+  win.document.write(doc);
+  win.document.close();
+  setTimeout(function(){ win.focus(); win.print(); }, 350);
+}
+</script>
+
+<script id="orsecV279RecoveryMarker">
+window.ORSEC_BUILD='V27.9-RECUPERACION-INCIDENCIA';
+</script>
+
 </body></html>`);
   w.document.close();
 }

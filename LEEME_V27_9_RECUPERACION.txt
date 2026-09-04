@@ -1,0 +1,42 @@
+ORSEC V27.9 · RECUPERACIÓN DE INCIDENCIA DELICTIVA
+
+BASE SEGURA:
+- Parte de V27.8 (infografía Panorama Regional aprobada).
+- No modifica el diseño ni el motor de la infografía V27.8.
+
+FUNCIONALIDADES RECUPERADAS EN INCIDENCIA DELICTIVA:
+1. Comparativo Territorial ORSEC 2025 vs 2026.
+   - Generar comparativo provincial.
+   - Descargar Excel.
+   - Descargar gráfico.
+   - Descargar PDF.
+2. Comparativo 2025 vs 2026 por delito.
+   - Cuadro completo.
+   - Gráfico.
+   - PNG y PDF.
+3. Mapa Delictivo Distrital ORSEC V1.
+   - Homicidios + detonaciones.
+   - Acumulado o mensual.
+   - Filtro por franja horaria.
+   - Interacción por distrito.
+4. Análisis Detallado de Alto Impacto.
+   - Homicidios / detonaciones.
+   - Acumulado Ene–Ago o por mes.
+   - Provincia.
+   - Hora y franja.
+   - Concentración territorial.
+   - Modalidad / medio empleado.
+   - Relación detallada.
+5. Descargas del análisis detallado:
+   - CSV.
+   - Relación completa PNG.
+   - Relación PDF.
+   - Infografía ejecutiva PNG.
+   - Gráfica PNG.
+
+ARCHIVOS DE DATOS RECUPERADOS:
+- datos.json
+- detalle_alto_impacto.json
+
+Marcador técnico:
+V27.9-RECUPERACION-INCIDENCIA
