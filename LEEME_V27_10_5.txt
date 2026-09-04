@@ -1,0 +1,26 @@
+ORSEC V27.10.5 · ALERTAS PDF SIN DEPENDENCIAS EXTERNAS
+
+BASE:
+V27.10.4 estable.
+
+CAMBIO ÚNICO:
+Se corrige únicamente el botón REPORTE EJECUTIVO PDF del módulo Alertas.
+
+CAUSA:
+El navegador no estaba pudiendo cargar jsPDF desde la red/CDN.
+
+SOLUCIÓN:
+El PDF ahora se genera localmente en el navegador, sin jsPDF y sin conexión externa.
+Usa el mismo canvas que ya funciona para el PNG, por lo que conserva exactamente
+la misma presentación del Reporte Ejecutivo de Alertas.
+
+NO SE MODIFICA:
+- filtro por delito;
+- PNG;
+- CSV;
+- Alertas Inteligentes;
+- Incidencia Delictiva;
+- Panorama Regional;
+- mapas;
+- análisis detallado;
+- ni ningún otro módulo.

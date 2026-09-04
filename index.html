@@ -4706,4 +4706,100 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
 <script id="orsecV27104Marker">
 window.ORSEC_PATCH_ALERTAS_FILTRO='V27.10.4-ALERTAS-FILTRO-DELITO-OK';
 </script>
+
+<script id="orsecV27105AlertasPDFStandalone">
+(function(){
+  function b64ToBytes(b64){
+    const bin=atob(b64), out=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) out[i]=bin.charCodeAt(i);
+    return out;
+  }
+  function strBytes(s){
+    return new TextEncoder().encode(s);
+  }
+  function concatBytes(parts){
+    let len=0; parts.forEach(p=>len+=p.length);
+    const out=new Uint8Array(len); let pos=0;
+    parts.forEach(p=>{out.set(p,pos);pos+=p.length});
+    return out;
+  }
+  function buildSinglePageJpegPDF(jpegBytes,imgW,imgH){
+    // Página A4 horizontal en puntos.
+    const pageW=841.89, pageH=595.28;
+    const scale=Math.min(pageW/imgW,pageH/imgH);
+    const drawW=imgW*scale, drawH=imgH*scale;
+    const x=(pageW-drawW)/2, y=(pageH-drawH)/2;
+    const content=`q\n${drawW.toFixed(2)} 0 0 ${drawH.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)} cm\n/Im0 Do\nQ\n`;
+
+    const objects=[];
+    objects[1]=`<< /Type /Catalog /Pages 2 0 R >>`;
+    objects[2]=`<< /Type /Pages /Kids [3 0 R] /Count 1 >>`;
+    objects[3]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageW} ${pageH}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`;
+
+    const header = strBytes('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+    const parts=[header];
+    const offsets=[0];
+
+    function addObj(num, bodyBytes){
+      offsets[num]=parts.reduce((s,p)=>s+p.length,0);
+      parts.push(strBytes(`${num} 0 obj\n`), bodyBytes, strBytes('\nendobj\n'));
+    }
+
+    addObj(1,strBytes(objects[1]));
+    addObj(2,strBytes(objects[2]));
+    addObj(3,strBytes(objects[3]));
+
+    offsets[4]=parts.reduce((s,p)=>s+p.length,0);
+    parts.push(
+      strBytes(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${imgW} /Height ${imgH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpegBytes.length} >>\nstream\n`),
+      jpegBytes,
+      strBytes('\nendstream\nendobj\n')
+    );
+
+    const contentBytes=strBytes(content);
+    offsets[5]=parts.reduce((s,p)=>s+p.length,0);
+    parts.push(
+      strBytes(`5 0 obj\n<< /Length ${contentBytes.length} >>\nstream\n`),
+      contentBytes,
+      strBytes('endstream\nendobj\n')
+    );
+
+    const xrefPos=parts.reduce((s,p)=>s+p.length,0);
+    let xref='xref\n0 6\n0000000000 65535 f \n';
+    for(let i=1;i<=5;i++){
+      xref += String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+    }
+    xref += `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefPos}\n%%EOF`;
+    parts.push(strBytes(xref));
+    return new Blob([concatBytes(parts)],{type:'application/pdf'});
+  }
+
+  window.orsecDescargarAlertasPDF=function(){
+    try{
+      const canvas=window.orsecConstruirReporteAlertasCanvas();
+      if(!canvas){alert('No hay alertas comparables para descargar.');return;}
+      const data=canvas.toDataURL('image/jpeg',0.92);
+      const comma=data.indexOf(',');
+      if(comma<0){alert('No se pudo preparar el reporte PDF.');return;}
+      const bytes=b64ToBytes(data.slice(comma+1));
+      const blob=buildSinglePageJpegPDF(bytes,canvas.width,canvas.height);
+
+      const f=current();
+      const periodo=document.getElementById('periodo')?.selectedOptions?.[0]?.textContent || f.periodo;
+      const prov=f.provincia==='TODAS'?'TOTAL REGION':f.provincia;
+      const safe=v=>String(v||'REGION').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'_');
+
+      const a=document.createElement('a'),url=URL.createObjectURL(blob);
+      a.href=url;
+      a.download=`ORSEC_Alertas_${safe(periodo)}_${safe(prov)}_${safe(f.delito)}_V27_10_5.pdf`;
+      document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),2000);
+    }catch(e){
+      console.error('V27.10.5 PDF alertas',e);
+      alert('No se pudo generar el reporte ejecutivo PDF.');
+    }
+  };
+})();
+</script>
+<script id="orsecV27105Marker">window.ORSEC_PATCH_ALERTAS_PDF='V27.10.5-PDF-SIN-DEPENDENCIAS';</script>
 </body></html>
