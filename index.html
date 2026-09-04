@@ -930,6 +930,19 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 @media(max-width:760px){.orsec-alert-export-head{display:block}.orsec-alert-export-badge{display:inline-block;margin-top:9px}}
 </style>
 
+
+<style id="orsecTotal13CSS">
+#orsecDelitoBody tr.orsec-total-13 td{
+  background:#073e70 !important;
+  color:#ffffff !important;
+  font-weight:900 !important;
+  border-top:3px solid #f4b400 !important;
+}
+#orsecDelitoBody tr.orsec-total-13 td.orsec-comp-var-down{color:#9df0b2 !important;}
+#orsecDelitoBody tr.orsec-total-13 td.orsec-comp-var-up{color:#ffd3ce !important;}
+#orsecDelitoBody tr.orsec-total-13 td.orsec-comp-var-flat{color:#ffffff !important;}
+</style>
+
 </head>
 <body>
 
@@ -3212,7 +3225,7 @@ async function orsecDescargarExcelComparativo(){orsecGenerarComparativo();try{aw
 function orsecCanvasComparativo(){
  orsecGenerarComparativo();
  const canvas=document.createElement('canvas');
- canvas.width=1800; canvas.height=1400;
+ canvas.width=1800; canvas.height=1620;
  const c=canvas.getContext('2d');
  const navy='#073e70',text='#17364c',muted='#687f91',blue='#1d65ad',red='#ef4135',green='#11823b',grid='#d7e1e8',pale='#f5f9fc';
  c.fillStyle='#fff';c.fillRect(0,0,1800,1400);
@@ -4099,6 +4112,14 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
       if(ctx) ctx.textContent=`${f.tipo} · ${_txtPeriodo()} · ${prov==='TOTAL REGION'?'REGIÓN LA LIBERTAD':prov} · 2025 vs 2026`;
 
       const body=document.getElementById('orsecDelitoBody');
+      const totalA=arr.reduce((s,x)=>s+x.A,0);
+      const totalB=arr.reduce((s,x)=>s+x.B,0);
+      const totalDif=totalB-totalA;
+      const totalVar=totalA ? totalDif/totalA*100 : (totalB ? null : 0);
+      const totalPV=totalVar==null?'N/D':`${totalVar>=0?'+':''}${totalVar.toFixed(1)}%`;
+      const totalCls=totalVar==null?'orsec-comp-var-flat':totalVar>1?'orsec-comp-var-up':totalVar<-1?'orsec-comp-var-down':'orsec-comp-var-flat';
+      const totalTend=totalVar==null?'BASE 0':totalVar>1?'▲ AUMENTO':totalVar<-1?'▼ REDUCCIÓN':'● ESTABLE';
+      window.ORSEC_DELITO_TOTAL={A:totalA,B:totalB,Dif:totalDif,Var:totalVar};
       if(body) body.innerHTML=arr.map(x=>{
         const pv=x.Var==null?'N/D':`${x.Var>=0?'+':''}${x.Var.toFixed(1)}%`;
         const cls=x.Var==null?'orsec-comp-var-flat':x.Var>1?'orsec-comp-var-up':x.Var<-1?'orsec-comp-var-down':'orsec-comp-var-flat';
@@ -4111,7 +4132,14 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
           <td class="${cls}">${pv}</td>
           <td class="${cls}">${tend}</td>
         </tr>`;
-      }).join('');
+      }).join('') + `<tr class="orsec-total-13">
+        <td><b>TOTAL ${arr.length} DELITOS</b></td>
+        <td><b>${totalA.toLocaleString('es-PE')}</b></td>
+        <td><b>${totalB.toLocaleString('es-PE')}</b></td>
+        <td><b>${totalDif>=0?'+':''}${totalDif.toLocaleString('es-PE')}</b></td>
+        <td class="${totalCls}"><b>${totalPV}</b></td>
+        <td class="${totalCls}"><b>${totalTend}</b></td>
+      </tr>`;
 
       const bars=document.getElementById('orsecDelitoBars');
       if(bars){
@@ -4183,13 +4211,32 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
       c.fillText(tend, cols[5]+widths[5]/2, y+29);
     });
 
-    const chartTop = Math.max(735, tableTop + arr.length*rowH + 55);
+    const totalA=arr.reduce((sum,x)=>sum+x.A,0);
+    const totalB=arr.reduce((sum,x)=>sum+x.B,0);
+    const totalDif=totalB-totalA;
+    const totalVar=totalA ? totalDif/totalA*100 : (totalB ? null : 0);
+    const totalPV=totalVar==null?'N/D':`${totalVar>=0?'+':''}${totalVar.toFixed(1)}%`;
+    const totalTend=totalVar==null?'BASE 0':totalVar>1?'▲ AUMENTO':totalVar<-1?'▼ REDUCCIÓN':'● ESTABLE';
+    const totalY=tableTop+arr.length*rowH;
+    c.fillStyle=navy; c.fillRect(55,totalY,1690,rowH);
+    c.strokeStyle='#f4b400'; c.lineWidth=3; c.beginPath(); c.moveTo(55,totalY); c.lineTo(1745,totalY); c.stroke(); c.lineWidth=1;
+    c.fillStyle='#fff'; c.font='bold 17px Arial'; c.textAlign='left';
+    c.fillText(`TOTAL ${arr.length} DELITOS`,75,totalY+29);
+    c.textAlign='center';
+    c.fillText(totalA.toLocaleString('es-PE'), cols[1]+widths[1]/2,totalY+29);
+    c.fillText(totalB.toLocaleString('es-PE'), cols[2]+widths[2]/2,totalY+29);
+    c.fillText(`${totalDif>=0?'+':''}${totalDif.toLocaleString('es-PE')}`, cols[3]+widths[3]/2,totalY+29);
+    c.fillStyle=totalVar!=null&&totalVar<=0?'#9df0b2':'#ffd3ce';
+    c.fillText(totalPV, cols[4]+widths[4]/2,totalY+29);
+    c.fillText(totalTend, cols[5]+widths[5]/2,totalY+29);
+
+    const chartTop = Math.max(900, totalY + rowH + 55);
     c.fillStyle=navy; c.fillRect(55,chartTop,1690,46);
     c.fillStyle='#fff'; c.font='bold 22px Arial'; c.textAlign='left';
     c.fillText('GRÁFICO COMPARATIVO POR DELITO',75,chartTop+31);
 
     // ===== GRÁFICO =====
-    const x0=120, y0=chartTop+95, x1=1700, y1=1320;
+    const x0=120, y0=chartTop+95, x1=1700, y1=1535;
     const max=Math.max(1,...arr.flatMap(x=>[x.A,x.B]));
     const slot=(x1-x0)/Math.max(1,arr.length);
     c.strokeStyle=grid; c.lineWidth=1;
@@ -4219,7 +4266,7 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
 
     // Pie
     c.fillStyle=muted; c.font='15px Arial'; c.textAlign='left';
-    c.fillText('Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC',70,1380);
+    c.fillText('Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC',70,1595);
     return canvas;
   }
 
@@ -4805,4 +4852,8 @@ window.ORSEC_PATCH_ALERTAS_FILTRO='V27.10.4-ALERTAS-FILTRO-DELITO-OK';
 <script id="orsecV27105Marker">window.ORSEC_PATCH_ALERTAS_PDF='V27.10.5-PDF-SIN-DEPENDENCIAS';</script>
 
 <script id="orsecV27106Marker">window.ORSEC_PATCH_COMPARATIVO_13_DELITOS='V27.10.6-COMPARATIVO-13-DELITOS';</script>
+
+<script id="orsecV27107Marker">
+window.ORSEC_PATCH_COMPARATIVO_TOTAL='V27.10.7-TOTAL-13-DELITOS';
+</script>
 </body></html>

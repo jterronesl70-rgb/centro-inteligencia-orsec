@@ -1,0 +1,23 @@
+ORSEC V27.10.7 · TOTAL 13 DELITOS EN COMPARATIVO
+
+BASE:
+V27.10.6 estable.
+
+SE ADICIONA ÚNICAMENTE AL COMPARATIVO POR DELITO:
+- Fila final TOTAL 13 DELITOS en pantalla.
+- Total 2025.
+- Total 2026.
+- Diferencia absoluta.
+- Variación interanual total.
+- Tendencia.
+- La misma fila aparece en las descargas PNG y PDF.
+
+La variación total se calcula sobre los totales, NO promediando porcentajes individuales.
+
+Ejemplo Ene–Ago Región:
+2025 = 16,398
+2026 = 12,884
+Diferencia = -3,514
+Variación = -21.4%
+
+NO SE MODIFICA ningún otro módulo.
