@@ -1,0 +1,12 @@
+ORSEC V27.9.7 — COMPARATIVO TERRITORIAL: CUADRO + GRÁFICO
+
+Cambio único:
+- El botón superior ahora dice DESCARGAR CUADRO + GRÁFICO PNG.
+- La descarga provincial genera una sola imagen de 1800 × 1400 px.
+- Parte superior: cuadro comparativo provincial 2025 vs 2026.
+- Parte inferior: gráfico comparativo provincial 2025 vs 2026.
+- Se mantienen Excel y PDF.
+- No se modifica el comparativo por delito ni otros módulos.
+
+Marcador:
+V27.9.7-COMPARATIVO-PROVINCIAL-CUADRO-GRAFICO

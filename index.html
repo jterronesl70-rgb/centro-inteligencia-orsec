@@ -972,7 +972,7 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
    <div class="orsec-comp-actions">
     <button class="orsec-comp-btn" onclick="orsecGenerarComparativo()">GENERAR COMPARATIVO</button>
     <button class="orsec-comp-btn alt" onclick="orsecDescargarExcelComparativo()">DESCARGAR EXCEL</button>
-    <button class="orsec-comp-btn alt" onclick="orsecDescargarGraficoComparativo()">DESCARGAR GRÁFICO</button>
+    <button class="orsec-comp-btn alt" onclick="orsecDescargarGraficoComparativo()">DESCARGAR CUADRO + GRÁFICO PNG</button>
     <button class="orsec-comp-btn gold" onclick="orsecDescargarPDFComparativo()">DESCARGAR PDF</button>
    </div>
   </div>
@@ -3179,8 +3179,105 @@ function orsecGenerarComparativo(){
 function orsecCompDetalle(){const f=current(),out=[],provs=(META?.provincias||[]).filter(p=>p!=='TOTAL REGION'&&p!=='TODAS'),dels=f.delito==='TODOS'?(META?.delitos||[]):[f.delito];provs.forEach(p=>dels.forEach(d=>{const a=orsecCompValor(2025,p,d),b=orsecCompValor(2026,p,d),dif=b-a;out.push({Provincia:p,Delito:d,'2025':a,'2026':b,Diferencia:dif,'Variacion %':a?dif/a*100:(b?null:0)})}));return out}
 function orsecLoadScript(src,test){return new Promise((resolve,reject)=>{if(test())return resolve();const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}
 async function orsecDescargarExcelComparativo(){orsecGenerarComparativo();try{await orsecLoadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',()=>!!window.XLSX);const f=current(),wb=XLSX.utils.book_new(),res=ORSEC_COMP_DATA.map(x=>({Provincia:x.Provincia,'2025':x.Anio2025,'2026':x.Anio2026,Diferencia:x.Diferencia,'Variación %':x.Variacion,'Participación 2026 %':x.Participacion}));XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(res),'Comparativo Provincial');XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(orsecCompDetalle()),'Detalle por Delito');XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([['PRODUCTO','Comparativo Territorial ORSEC'],['Tipo de período',f.tipo],['Período',orsecCompLabelPeriodo()],['Delito',f.delito],['Comparación','2025 vs 2026'],['Fuente','Unidad de Estadística de la Región Policial La Libertad'],['Elaborado','ORSEC / GRDN / GORELL']]),'Fuente y Metodología');XLSX.writeFile(wb,`ORSEC_Comparativo_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}.xlsx`)}catch(e){console.error(e);alert('No se pudo generar Excel. Revise la conexión a internet.')}}
-function orsecCanvasComparativo(){orsecGenerarComparativo();const canvas=document.createElement('canvas');canvas.width=1500;canvas.height=980;const c=canvas.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,1500,980);c.fillStyle='#073e70';c.font='bold 40px Arial';c.fillText('COMPARATIVO TERRITORIAL ORSEC',70,70);const f=current();c.font='22px Arial';c.fillStyle='#43657c';c.fillText(`${f.tipo} · ${orsecCompLabelPeriodo()} · ${f.delito==='TODOS'?'TODOS LOS DELITOS':f.delito}`,70,110);const max=Math.max(1,...ORSEC_COMP_DATA.flatMap(x=>[x.Anio2025,x.Anio2026]));let y=160;ORSEC_COMP_DATA.forEach(x=>{c.fillStyle='#17364c';c.font='bold 18px Arial';c.fillText(x.Provincia,70,y+18);const x0=350,w=800;c.fillStyle='#dfe8ee';c.fillRect(x0,y,w,26);c.fillStyle='#8aa6b9';c.fillRect(x0,y,Math.max(2,x.Anio2025/max*w),11);c.fillStyle='#1388c9';c.fillRect(x0,y+15,Math.max(2,x.Anio2026/max*w),11);c.fillStyle='#17364c';c.font='16px Arial';c.fillText(`2025: ${x.Anio2025.toLocaleString('es-PE')}   2026: ${x.Anio2026.toLocaleString('es-PE')}   ${orsecCompFmtPct(x.Variacion)}`,1180,y+19);y+=60});c.fillStyle='#687f91';c.font='15px Arial';c.fillText('Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC / GRDN / GORELL',70,930);return canvas}
-function orsecDescargarGraficoComparativo(){const canvas=orsecCanvasComparativo(),f=current(),a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=`ORSEC_Grafico_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}.png`;a.click()}
+function orsecCanvasComparativo(){
+ orsecGenerarComparativo();
+ const canvas=document.createElement('canvas');
+ canvas.width=1800; canvas.height=1400;
+ const c=canvas.getContext('2d');
+ const navy='#073e70',text='#17364c',muted='#687f91',blue='#1d65ad',red='#ef4135',green='#11823b',grid='#d7e1e8',pale='#f5f9fc';
+ c.fillStyle='#fff';c.fillRect(0,0,1800,1400);
+
+ const f=current();
+
+ // CABECERA
+ c.fillStyle=navy;c.fillRect(0,0,1800,150);
+ c.fillStyle='#fff';c.font='bold 42px Arial';c.textAlign='left';
+ c.fillText('COMPARATIVO TERRITORIAL ORSEC',70,65);
+ c.font='22px Arial';
+ c.fillText(`${f.tipo} · ${orsecCompLabelPeriodo()} · ${f.delito==='TODOS'?'TODOS LOS DELITOS':f.delito} · 2025 vs 2026`,70,108);
+
+ // CUADRO COMPARATIVO
+ c.fillStyle=navy;c.fillRect(55,180,1690,46);
+ c.fillStyle='#fff';c.font='bold 22px Arial';
+ c.fillText('CUADRO COMPARATIVO POR PROVINCIA',75,211);
+
+ const headers=['PROVINCIA','2025','2026','DIFERENCIA','VARIACIÓN %','PARTICIPACIÓN 2026'];
+ const colX=[75,650,865,1085,1305,1495];
+ const colW=[575,215,220,220,190,210];
+
+ c.fillStyle='#eaf3f9';c.fillRect(55,226,1690,42);
+ c.fillStyle=text;c.font='bold 18px Arial';
+ headers.forEach((h,i)=>{
+   c.textAlign=i===0?'left':'center';
+   c.fillText(h,colX[i]+(i===0?0:colW[i]/2),254);
+ });
+
+ const rowH=44,tableTop=268;
+ ORSEC_COMP_DATA.forEach((x,i)=>{
+   const y=tableTop+i*rowH;
+   c.fillStyle=i%2===0?'#fff':pale;c.fillRect(55,y,1690,rowH);
+   c.strokeStyle=grid;c.beginPath();c.moveTo(55,y+rowH);c.lineTo(1745,y+rowH);c.stroke();
+
+   c.fillStyle=text;c.font='bold 17px Arial';c.textAlign='left';
+   c.fillText(x.Provincia,75,y+28);
+
+   c.font='17px Arial';c.textAlign='center';
+   c.fillText(x.Anio2025.toLocaleString('es-PE'),colX[1]+colW[1]/2,y+28);
+   c.fillText(x.Anio2026.toLocaleString('es-PE'),colX[2]+colW[2]/2,y+28);
+   c.fillText(`${x.Diferencia>=0?'+':''}${x.Diferencia.toLocaleString('es-PE')}`,colX[3]+colW[3]/2,y+28);
+
+   c.fillStyle=(x.Variacion!=null&&x.Variacion<=0)?green:red;c.font='bold 17px Arial';
+   c.fillText(orsecCompFmtPct(x.Variacion),colX[4]+colW[4]/2,y+28);
+
+   c.fillStyle=text;
+   c.fillText(`${x.Participacion.toFixed(1)}%`,colX[5]+colW[5]/2,y+28);
+ });
+
+ // GRÁFICO DEBAJO
+ const chartTop=Math.max(820,tableTop+ORSEC_COMP_DATA.length*rowH+55);
+ c.fillStyle=navy;c.fillRect(55,chartTop,1690,46);
+ c.fillStyle='#fff';c.font='bold 22px Arial';c.textAlign='left';
+ c.fillText('GRÁFICO COMPARATIVO POR PROVINCIA',75,chartTop+31);
+
+ const chartData=ORSEC_COMP_DATA.slice(0,12);
+ const max=Math.max(1,...chartData.flatMap(x=>[x.Anio2025,x.Anio2026]));
+ const x0=120,y0=chartTop+95,x1=1700,y1=1320;
+ const slot=(x1-x0)/Math.max(1,chartData.length);
+
+ c.strokeStyle=grid;c.fillStyle=muted;c.font='14px Arial';c.textAlign='right';
+ for(let i=0;i<=5;i++){
+   const y=y1-(y1-y0)*i/5;
+   c.beginPath();c.moveTo(x0,y);c.lineTo(x1,y);c.stroke();
+   c.fillText(Math.round(max*i/5).toLocaleString('es-PE'),x0-12,y+5);
+ }
+
+ chartData.forEach((x,i)=>{
+   const cx=x0+slot*(i+.5),bw=Math.min(30,slot*.23);
+   const h25=x.Anio2025/max*(y1-y0),h26=x.Anio2026/max*(y1-y0);
+
+   c.fillStyle=blue;c.fillRect(cx-bw-3,y1-h25,bw,h25);
+   c.fillStyle=red;c.fillRect(cx+3,y1-h26,bw,h26);
+
+   c.fillStyle=text;c.textAlign='center';c.font='bold 13px Arial';
+   c.fillText(String(x.Anio2025),cx-bw/2-3,y1-h25-6);
+   c.fillText(String(x.Anio2026),cx+bw/2+3,y1-h26-6);
+
+   c.save();c.translate(cx,y1+28);c.rotate(-Math.PI/5);
+   c.font='bold 13px Arial';c.fillText(x.Provincia,0,0);c.restore();
+ });
+
+ // LEYENDA
+ c.textAlign='left';c.fillStyle=blue;c.fillRect(1300,chartTop+55,22,22);
+ c.fillStyle=text;c.font='bold 16px Arial';c.fillText('2025',1332,chartTop+72);
+ c.fillStyle=red;c.fillRect(1410,chartTop+55,22,22);
+ c.fillStyle=text;c.fillText('2026',1442,chartTop+72);
+
+ // PIE
+ c.fillStyle=muted;c.font='15px Arial';c.textAlign='left';
+ c.fillText('Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC / GRDN / GORELL',70,1380);
+ return canvas
+}
+function orsecDescargarGraficoComparativo(){const canvas=orsecCanvasComparativo(),f=current(),a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=`ORSEC_Comparativo_Provincial_CUADRO_Y_GRAFICO_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}_V27_9_7.png`;a.click()}
 async function orsecDescargarPDFComparativo(){const canvas=orsecCanvasComparativo();try{await orsecLoadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',()=>!!(window.jspdf&&window.jspdf.jsPDF));const{jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});doc.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',8,8,281,184);const f=current();doc.save(`ORSEC_Comparativo_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}.pdf`)}catch(e){console.error(e);alert('No se pudo generar el PDF. Puede descargar el gráfico PNG.')}}
 document.addEventListener('change',e=>{if(e.target&&['anio','tipoPeriodo','periodo','provincia','delito'].includes(e.target.id))document.getElementById('orsecComparativoBox')?.classList.remove('activo')});
 </script>
@@ -4131,4 +4228,5 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
 
 
 
+<script id="orsecV2797Marker">window.ORSEC_PATCH="V27.9.7-COMPARATIVO-PROVINCIAL-CUADRO-GRAFICO";</script>
 </body></html>
