@@ -1078,7 +1078,7 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
  background:#eef6fb;border:1px solid #b9d2e3;border-radius:10px;">
  <strong style="color:#073e70;margin-right:4px;">DESCARGAR RELACIÓN:</strong>
  <button onclick="orsecDescargarDetalleCSV()" style="padding:9px 12px;border:0;border-radius:8px;background:#0b5f91;color:white;font-weight:800;cursor:pointer;">CSV</button>
- <button onclick="orsecDescargarRelacionPNG()" style="padding:9px 12px;border:0;border-radius:8px;background:#1479a8;color:white;font-weight:800;cursor:pointer;">IMAGEN COMPLETA PNG</button>
+ <button onclick="orsecDescargarRelacionImagenCompletaV2798()" style="padding:9px 12px;border:0;border-radius:8px;background:#1479a8;color:white;font-weight:800;cursor:pointer;">IMAGEN COMPLETA PNG</button>
  <button onclick="orsecDescargarRelacionPDF()" style="padding:9px 12px;border:0;border-radius:8px;background:#b3261e;color:white;font-weight:800;cursor:pointer;">PDF</button>
 </div>
 
@@ -4229,4 +4229,94 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
 
 
 <script id="orsecV2797Marker">window.ORSEC_PATCH="V27.9.7-COMPARATIVO-PROVINCIAL-CUADRO-GRAFICO";</script>
+
+<script id="orsecV2798RelacionImagenCompleta">
+(function(){
+  async function ensureHtml2Canvas(){
+    if(window.html2canvas) return true;
+    return await new Promise(resolve=>{
+      const sc=document.createElement('script');
+      sc.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+      sc.onload=()=>resolve(true);
+      sc.onerror=()=>resolve(false);
+      document.head.appendChild(sc);
+    });
+  }
+
+  window.orsecDescargarRelacionImagenCompletaV2798 = async function(){
+    try{
+      const ok=await ensureHtml2Canvas();
+      if(!ok || !window.html2canvas){
+        alert('No se pudo cargar el generador de imagen. Verifique la conexión e intente nuevamente.');
+        return;
+      }
+
+      const btn=[...document.querySelectorAll('button')].find(b=>b.textContent.trim().includes('IMAGEN COMPLETA PNG'));
+      if(!btn){ alert('No se encontró el botón de descarga.'); return; }
+
+      // Buscar el contenedor funcional que incluye lectura, botones y tabla.
+      let root=btn.closest('.card, .panel, .orsec-card, section, article');
+      if(!root) root=btn.parentElement?.parentElement?.parentElement;
+      if(!root){ alert('No se encontró la relación para exportar.'); return; }
+
+      // Ampliar hasta incluir la tabla que sigue al bloque de botones.
+      let candidate=root;
+      for(let i=0;i<4 && candidate;i++){
+        const txt=candidate.innerText||'';
+        if(txt.includes('Lectura ORSEC') && candidate.querySelector('table')) { root=candidate; break; }
+        candidate=candidate.parentElement;
+      }
+
+      const scrollables=[...root.querySelectorAll('*')].filter(el=>{
+        const cs=getComputedStyle(el);
+        return (cs.overflowY==='auto'||cs.overflowY==='scroll') && el.scrollHeight>el.clientHeight;
+      });
+      const saved=scrollables.map(el=>({
+        el, height:el.style.height, maxHeight:el.style.maxHeight,
+        overflow:el.style.overflow, overflowY:el.style.overflowY
+      }));
+      scrollables.forEach(el=>{
+        el.style.height=el.scrollHeight+'px';
+        el.style.maxHeight='none';
+        el.style.overflow='visible';
+        el.style.overflowY='visible';
+      });
+
+      const canvas=await html2canvas(root,{
+        backgroundColor:'#ffffff',
+        scale:2,
+        useCORS:true,
+        allowTaint:false,
+        logging:false,
+        scrollX:0,
+        scrollY:-window.scrollY,
+        windowWidth:Math.max(document.documentElement.clientWidth,root.scrollWidth),
+        windowHeight:Math.max(document.documentElement.clientHeight,root.scrollHeight)
+      });
+
+      saved.forEach(x=>{
+        x.el.style.height=x.height;x.el.style.maxHeight=x.maxHeight;
+        x.el.style.overflow=x.overflow;x.el.style.overflowY=x.overflowY;
+      });
+
+      canvas.toBlob(blob=>{
+        if(!blob){ alert('No se pudo generar la imagen completa.'); return; }
+        const a=document.createElement('a');
+        const url=URL.createObjectURL(blob);
+        a.href=url;
+        const f=(typeof current==='function')?current():{};
+        const safe=v=>String(v||'REGION').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'_');
+        a.download=`ORSEC_Relacion_Completa_${safe(f.delito)}_${safe(f.provincia)}_V27_9_8.png`;
+        document.body.appendChild(a);a.click();a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),2000);
+      },'image/png');
+
+    }catch(e){
+      console.error('ORSEC V27.9.8',e);
+      alert('No se pudo generar la imagen completa de la relación.');
+    }
+  };
+})();
+</script>
+<script id="orsecV2798Marker">window.ORSEC_PATCH_RELACION="V27.9.8-IMAGEN-COMPLETA-RELACION";</script>
 </body></html>

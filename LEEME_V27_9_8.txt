@@ -1,0 +1,11 @@
+ORSEC V27.9.8 — CORRECCIÓN IMAGEN COMPLETA DE LA RELACIÓN
+
+Cambio único:
+- Se corrige el botón IMAGEN COMPLETA PNG del módulo de relación detallada.
+- La exportación abre temporalmente las áreas con scroll para incluir TODA la relación.
+- Genera PNG a escala 2x.
+- CSV y PDF permanecen sin cambios.
+- No se modifica la infografía, comparativos, mapas, datos ni otros módulos.
+
+Marcador:
+V27.9.8-IMAGEN-COMPLETA-RELACION
