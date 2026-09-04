@@ -1,0 +1,21 @@
+ORSEC V25 · INFOGRAFÍA REGIONAL DINÁMICA
+
+Base estable: V23.
+Diseño visual: V24 aprobado.
+
+La primera infografía de Panorama Regional ahora se genera desde datos.json:
+- período activo;
+- Homicidios, Extorsión, Detonaciones y Robo de Vehículos;
+- variación interanual;
+- total regional;
+- delito de mayor volumen;
+- concentración provincial;
+- tabla comparativa de 9 delitos;
+- gráfico comparativo por delito;
+- fecha de actualización tomada de META.actualizado.
+
+El mapa institucional de La Libertad y la composición visual V24 se conservan.
+
+IMPORTANTE:
+Subir TODOS los archivos juntos a GitHub/Vercel, incluidos:
+index.html, datos.json y ORSEC_PANORAMA_V24_PLANTILLA.png.

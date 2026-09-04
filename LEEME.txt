@@ -1,13 +1,20 @@
-ORSEC 2.4.4 – TOTAL Y PDF CORREGIDOS
+ORSEC · ANÁLISIS DETALLADO DE ALTO IMPACTO · V1
+Archivos:
+- index.html
+- datos.json (base principal corregida: extorsión acumulada 1,328)
+- detalle_alto_impacto.json (160 homicidios + 138 detonaciones, ene-ago 2026)
 
-Se corrigen dos incidencias:
-1. El Boletín Inteligente ya no depende de orsecTop() para el total.
-   Calcula directamente desde registros(), respetando:
-   - TOTAL REGION = solo filas TOTAL REGION (sin duplicar provincias)
-   - Provincia específica = solo esa provincia
-   - TODOS = suma todos los delitos existentes del contexto
-   - Delito específico = solo ese delito
-2. La descarga PDF ya no usa html2canvas/html2pdf.
-   Ahora genera el PDF directamente con jsPDF, evitando páginas en blanco.
+Novedad:
+Incidencia Delictiva > ANÁLISIS DETALLADO DE ALTO IMPACTO
+- Acumulado y mensual
+- Provincia
+- Patrón horario 00–23 h
+- Franjas: madrugada, mañana, tarde, noche
+- Concentración territorial
+- Medio empleado / tipo de artefacto
+- Cuadro detallado
+- Descarga CSV
+- Descarga gráfica PNG
 
-Instalación: reemplazar únicamente index.html en GitHub.
+Nota: En homicidios se normalizaron Provincia/Distrito al integrar los datos.
+Subir los tres archivos principales juntos a la raíz de GitHub.
