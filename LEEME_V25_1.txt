@@ -1,0 +1,11 @@
+ORSEC V25.1 · INFOGRAFÍA REGIONAL DINÁMICA SIN CAMBIAR LA V24
+
+Corrección:
+- Base visual e interfaz: V24 aprobada.
+- NO se incorpora la pantalla antigua de dos infografías.
+- Se mantiene el modal simple "Infografía Regional ORSEC".
+- Al abrirlo, la imagen se regenera desde datos.json.
+- La descarga PNG también se genera dinámicamente.
+- Se incluyen datos.json y archivos de soporte que no estaban dentro del ZIP V24.
+
+La V24 sigue siendo el respaldo visual estable.
