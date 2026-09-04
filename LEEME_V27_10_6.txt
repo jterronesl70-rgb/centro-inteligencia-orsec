@@ -1,0 +1,22 @@
+ORSEC V27.10.6 · COMPARATIVO 13 DELITOS RESTAURADO
+
+BASE: V27.10.5 estable.
+
+CAMBIO ÚNICO:
+El Comparativo por Delito vuelve a manejar los 13 delitos institucionales:
+1. HOMICIDIOS
+2. EXTORSION
+3. DETONACIONES
+4. LESIONES
+5. SECUESTRO AL PASO
+6. VIOLACION SEXUAL
+7. HURTOS
+8. ROBOS
+9. APROPIACION ILICITA
+10. ESTAFA
+11. USURPACION
+12. ROBO DE VEHICULOS
+13. VIOLENCIA FAMILIAR
+
+Se aplica a pantalla y a las descargas PNG/PDF del comparativo.
+No se modifica ningún otro módulo ni funcionalidad.

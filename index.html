@@ -4055,8 +4055,9 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
   }
   function _catalogo(){
     const preferidos=[
-      'HOMICIDIOS','EXTORSION','DETONACIONES','VIOLACION SEXUAL',
-      'ROBO DE VEHICULOS','VIOLENCIA FAMILIAR','HURTOS','ROBOS','ESTAFA'
+      'HOMICIDIOS','EXTORSION','DETONACIONES','LESIONES','SECUESTRO AL PASO',
+      'VIOLACION SEXUAL','HURTOS','ROBOS','APROPIACION ILICITA','ESTAFA',
+      'USURPACION','ROBO DE VEHICULOS','VIOLENCIA FAMILIAR'
     ];
     const disponibles=(typeof META!=='undefined' && Array.isArray(META.delitos) ? META.delitos : [...new Set(DB.map(r=>r.Delito).filter(Boolean))]);
     const lista=preferidos.filter(d=>disponibles.includes(d));
@@ -4802,4 +4803,6 @@ window.ORSEC_PATCH_ALERTAS_FILTRO='V27.10.4-ALERTAS-FILTRO-DELITO-OK';
 })();
 </script>
 <script id="orsecV27105Marker">window.ORSEC_PATCH_ALERTAS_PDF='V27.10.5-PDF-SIN-DEPENDENCIAS';</script>
+
+<script id="orsecV27106Marker">window.ORSEC_PATCH_COMPARATIVO_13_DELITOS='V27.10.6-COMPARATIVO-13-DELITOS';</script>
 </body></html>
