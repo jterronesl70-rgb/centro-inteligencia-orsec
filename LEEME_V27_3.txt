@@ -1,0 +1,10 @@
+ORSEC V27.3 — CORRECCIÓN DE DESCARGA PNG
+
+Base: V27.2 estable.
+Corrección puntual del renderizado de la zona central de la infografía dinámica:
+- encabezados de Fotografía, Comparativo Interanual y Concentración Provincial redibujados en el canvas;
+- contenido central redistribuido para evitar superposición al descargar PNG;
+- filtros territoriales y por delito conservados;
+- tablas, gráfico inferior y cálculos sin cambios funcionales.
+
+Prueba recomendada: Provincia TRUJILLO + TODOS LOS DELITOS + Descargar infografía PNG.

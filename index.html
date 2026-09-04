@@ -2574,7 +2574,9 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     txt(x,`Comparativo interanual: ${pLabel.replace(String(year),String(prev))} vs. ${pLabel}. Datos sujetos a actualización.`,66,428,12,true,COLORS.text);
 
     // ===== PANEL 1: FOTOGRAFÍA REGIONAL =====
-    fillRect(x,124,451,328,236,'#ffffff');
+    fillRect(x,118,442,340,248,'#ffffff');
+    fillRect(x,118,442,340,38,COLORS.navy2);
+    txt(x,scopeProv==='TOTAL REGION'?'FOTOGRAFÍA REGIONAL':`FOTOGRAFÍA · ${scopeProv}`,288,467,16,true,'#ffffff','center');
     const curScope=(scopeDel==='TODOS'?cur:cur.filter(r=>r.Delito===scopeDel));
     const prvScope=(scopeDel==='TODOS'?prv:prv.filter(r=>r.Delito===scopeDel));
     const tot=total(curScope);
@@ -2583,27 +2585,30 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     const fourTotal=(scopeDel==='TODOS'?kpis.reduce((s,[d])=>s+N(d26[d]),0):tot);
     const share4=tot?fourTotal/tot*100:0;
 
-    txt(x,scopeDel==='TODOS'?'TOTAL DE DELITOS':'CASOS DEL DELITO SELECCIONADO',132,473,12,true,COLORS.text);
-    txt(x,fmt(tot),132,500,23,true,COLORS.navy2);
-    txt(x,'Casos registrados',132,517,12,false,COLORS.text);
-    line(x,132,529,444,529);
-    txt(x,scopeDel==='TODOS'?'DELITO DE MAYOR VOLUMEN':'DELITO ANALIZADO',132,550,13,true,COLORS.text);
-    fit(x,top.Delito||'—',132,576,286,20,true,COLORS.navy2);
-    txt(x,`${fmt(top.Casos)} casos (${tot?(N(top.Casos)/tot*100).toFixed(1):'0.0'}% del total)`,132,595,12,false,COLORS.text);
-    line(x,132,609,444,609);
-    txt(x,'PARTICIPACIÓN 4 PRINCIPALES',132,630,13,true,COLORS.text);
-    txt(x,'INDICADORES',132,647,13,true,COLORS.text);
-    txt(x,share4.toFixed(1)+'%',132,674,24,true,COLORS.navy2);
-    txt(x,'Del total regional',132,690,12,false,COLORS.text);
+    txt(x,scopeDel==='TODOS'?'TOTAL DE DELITOS':'CASOS DEL DELITO SELECCIONADO',132,500,12,true,COLORS.text);
+    txt(x,fmt(tot),132,526,23,true,COLORS.navy2);
+    txt(x,'Casos registrados',132,543,12,false,COLORS.text);
+    line(x,132,553,444,553);
+    txt(x,scopeDel==='TODOS'?'DELITO DE MAYOR VOLUMEN':'DELITO ANALIZADO',132,573,13,true,COLORS.text);
+    fit(x,top.Delito||'—',132,598,286,20,true,COLORS.navy2);
+    txt(x,`${fmt(top.Casos)} casos (${tot?(N(top.Casos)/tot*100).toFixed(1):'0.0'}% del total)`,132,617,12,false,COLORS.text);
+    line(x,132,630,444,630);
+    txt(x,'PARTICIPACIÓN 4 PRINCIPALES',132,650,13,true,COLORS.text);
+    txt(x,'INDICADORES',132,666,13,true,COLORS.text);
+    txt(x,share4.toFixed(1)+'%',132,684,24,true,COLORS.navy2);
+    txt(x,'Del total regional',132,698,12,false,COLORS.text);
 
     // ===== PANEL 2: COMPARATIVO INTERANUAL =====
-    fillRect(x,474,451,512,236,'#ffffff');
-    txt(x,String(prev),632,470,11,true,COLORS.navy2);
-    txt(x,String(year),690,470,11,true,COLORS.darkRed);
+    fillRect(x,466,442,526,248,'#ffffff');
+    fillRect(x,466,442,526,38,'#f4f8fb');
+    txt(x,'COMPARATIVO INTERANUAL',729,463,16,true,COLORS.navy2,'center');
+    txt(x,`(${up(pLabel).replace(String(year),'').trim()})`,729,478,10,true,COLORS.navy2,'center');
+    txt(x,String(prev),632,497,11,true,COLORS.navy2);
+    txt(x,String(year),690,497,11,true,COLORS.darkRed);
     const barDel=['HOMICIDIOS','EXTORSION','DETONACIONES','ROBO DE VEHICULOS'];
     const maxBar=Math.max(1,...barDel.flatMap(d=>[N(d25[d]),N(d26[d])]));
     barDel.forEach((d,i)=>{
-      const yy=493+i*44, a=N(d25[d]),b=N(d26[d]),v=varPct(b,a);
+      const yy=512+i*41, a=N(d25[d]),b=N(d26[d]),v=varPct(b,a);
       fit(x,d.replace('ROBO DE VEHICULOS','ROBO DE\nVEHÍCULOS'),486,yy+14,105,12,true,COLORS.text);
       const bw=270;
       fillRect(x,600,yy,Math.max(2,bw*a/maxBar),14,COLORS.blue);
@@ -2614,16 +2619,18 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     });
 
     // ===== PANEL 3: CONCENTRACIÓN PROVINCIAL =====
-    fillRect(x,1014,451,489,235,'#ffffff');
-    fit(x,scopeDel==='TODOS'?'PROVINCIA':`PROVINCIAS · ${scopeDel}`,1028,471,190,11,true,COLORS.text);
-    txt(x,'CASOS',1228,471,12,true,COLORS.text,'right');
-    txt(x,'PART. %',1490,471,12,true,COLORS.text,'right');
+    fillRect(x,1002,442,507,248,'#ffffff');
+    fillRect(x,1002,442,507,38,'#f4f8fb');
+    txt(x,scopeDel==='TODOS'?'CONCENTRACIÓN PROVINCIAL':`CONCENTRACIÓN · ${scopeDel}`,1255,466,15,true,COLORS.navy2,'center');
+    fit(x,'PROVINCIA',1028,500,190,11,true,COLORS.text);
+    txt(x,'CASOS',1228,500,12,true,COLORS.text,'right');
+    txt(x,'PART. %',1490,500,12,true,COLORS.text,'right');
     const top7=provRanking.slice(0,7);
     const others=provRanking.slice(7).reduce((s,q)=>s+q[1],0);
     const rows=[...top7, ...(others?[['OTROS',others]]:[])];
     const pmax=Math.max(1,...rows.map(q=>q[1]));
     rows.slice(0,8).forEach(([p,cases],i)=>{
-      const yy=493+i*24;
+      const yy=522+i*22;
       fit(x,p,1028,yy,145,12,true,COLORS.text);
       txt(x,fmt(cases),1228,yy,12,true,COLORS.text,'right');
       fillRect(x,1248,yy-12,190,13,COLORS.pale);
@@ -2691,7 +2698,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     // Footer dinámico
     fillRect(x,1180,975,356,49,COLORS.navy);
     txt(x,`Datos actualizados al ${dt.long}`,1392,997,9,false,'#ffffff','center');
-    txt(x,'V27.2 · TERRITORIAL',1506,997,10,true,'#ffffff','right');
+    txt(x,'V27.3 · DESCARGA CORREGIDA',1506,997,10,true,'#ffffff','right');
 
     return c.toDataURL('image/png');
   }
