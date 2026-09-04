@@ -2330,7 +2330,19 @@ function orsecVistaBI(){
   <div class="box"><h3>LECTURA ORSEC · INTERPRETACIÓN PONDERADA</h3>${document.getElementById('orsecBiLecturaVisible')?.innerHTML||''}</div>
   ${con?`<div class="box con"><h3>CONTEXTO DE CONNOTACIÓN · NO ESTADÍSTICO</h3>${document.getElementById('orsecBiConVisible')?.innerHTML||''}</div>`:''}
   <div class="foot">Producto automático preliminar · Requiere revisión del analista ORSEC.<br>Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC / GRDN / GORELL</div>
-  <p><button onclick="window.print()">IMPRIMIR / GUARDAR COMO PDF</button></p></body></html>`);
+  <p><button onclick="window.print()">IMPRIMIR / GUARDAR COMO PDF</button></p>
+<script id="orsecV26AutoRefresh">
+document.addEventListener('change', function(e){
+  if(!e.target || !['anio','tipoPeriodo','periodo','provincia','delito'].includes(e.target.id)) return;
+  const modal=document.getElementById('orsecInfoModal');
+  const visible=modal && getComputedStyle(modal).display!=='none';
+  if(visible && typeof window.abrirInfografiaRegional==='function'){
+    setTimeout(()=>window.abrirInfografiaRegional(),120);
+  }
+});
+</script>
+
+</body></html>`);
   w.document.close();
 }
 
@@ -2477,15 +2489,17 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     const prev=year-1;
     const tipo=f.tipo||'ACUMULADO';
     const periodo=f.periodo;
-    const cur=rowsFor(year,tipo,periodo,'TOTAL REGION');
-    const prv=rowsFor(prev,tipo,periodo,'TOTAL REGION');
-    if(!cur.length)throw new Error('No existen registros regionales para la selección actual.');
+    const scopeProv=(f.provincia && f.provincia!=='TODAS') ? f.provincia : 'TOTAL REGION';
+    const scopeDel=(f.delito && f.delito!=='TODOS') ? f.delito : 'TODOS';
+    const cur=rowsFor(year,tipo,periodo,scopeProv);
+    const prv=rowsFor(prev,tipo,periodo,scopeProv);
+    if(!cur.length)throw new Error('No existen registros para la selección actual.');
 
     const d26=byDelito(cur), d25=byDelito(prv);
     const pLabel=periodoLabel(f,cur);
     const dt=dateInfo();
 
-    const provinciasRows=DB.filter(r=>r.Anio==year&&r.TipoPeriodo===tipo&&r.Periodo===periodo&&r.Provincia!=='TOTAL REGION');
+    const provinciasRows=DB.filter(r=>r.Anio==year&&r.TipoPeriodo===tipo&&r.Periodo===periodo&&r.Provincia!=='TOTAL REGION'&&(scopeDel==='TODOS'||r.Delito===scopeDel));
     const provMap={};
     provinciasRows.forEach(r=>provMap[r.Provincia]=(provMap[r.Provincia]||0)+N(r.Casos));
     const provRanking=Object.entries(provMap).sort((a,b)=>b[1]-a[1]);
@@ -2507,7 +2521,8 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     // ===== TÍTULO / PERÍODO =====
     fillRect(x,270,153,780,61,'#ffffff');
     txt(x,'INDICADORES DE INCIDENCIA DELICTIVA',768,187,31,true,COLORS.text,'center');
-    fit(x,`PERÍODO: ${up(pLabel)}`,745,211,620,19,true,COLORS.text,'center');
+    const contexto=[scopeProv==='TOTAL REGION'?'REGIÓN LA LIBERTAD':scopeProv, scopeDel==='TODOS'?'TODOS LOS DELITOS':scopeDel].join(' · ');
+    fit(x,`PERÍODO: ${up(pLabel)} · ${contexto}`,745,211,760,16,true,COLORS.text,'center');
     rounded(x,892,190,126,27,5,COLORS.navy,null);
     txt(x,`${year} – ${prev}`,955,211,17,true,COLORS.gold,'center');
 
@@ -2521,15 +2536,27 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
 
     // ===== 4 KPIs =====
     const kpiX=[28,395,770,1149], kpiW=[357,368,372,358];
-    kpis.forEach((it,i)=>{
-      const [delito,color]=it, a=N(d26[delito]), b=N(d25[delito]), v=varPct(a,b);
+    const kpisVista = scopeDel==='TODOS' ? kpis : [
+      [scopeDel, COLORS.darkRed],
+      ['TOTAL DELITOS', COLORS.orange],
+      ['PARTICIPACIÓN', '#31842b'],
+      ['VARIACIÓN', '#0755ba']
+    ];
+    kpisVista.forEach((it,i)=>{
+      let [delito,color]=it, a=0,b=0,v=null;
+      if(scopeDel==='TODOS'){ a=N(d26[delito]); b=N(d25[delito]); v=varPct(a,b); }
+      else if(i===0){ a=N(d26[scopeDel]); b=N(d25[scopeDel]); v=varPct(a,b); }
+      else if(i===1){ a=total(cur); b=total(prv); v=varPct(a,b); }
+      else if(i===2){ a=total(cur)?N(d26[scopeDel])/total(cur)*100:0; b=total(prv)?N(d25[scopeDel])/total(prv)*100:0; v=varPct(a,b); }
+      else { a=varPct(N(d26[scopeDel]),N(d25[scopeDel])); b=0; v=a; }
       // Limpiar solo zona de texto, preservando icono y marco del diseño.
       fillRect(x,kpiX[i]+140,226,kpiW[i]-150,142,'#ffffff');
-      fit(x,delito.replace('ROBO DE VEHICULOS','ROBO DE VEHÍCULOS'),kpiX[i]+145,246,kpiW[i]-160,16,true,COLORS.text);
-      txt(x,fmt(a),kpiX[i]+145,292,42,true,color);
-      txt(x,`CASOS ${year}`,kpiX[i]+145,316,13,true,COLORS.text);
-      txt(x,(v!=null&&v<0?'▼ ':'▲ ')+pct(v),kpiX[i]+145,343,21,true,v!=null&&v<=0?COLORS.green:COLORS.darkRed);
-      fit(x,`vs. ${up(pLabel).replace(String(year),'').trim()} ${prev} (${fmt(b)})`,kpiX[i]+145,365,kpiW[i]-160,12,false,COLORS.text);
+      fit(x,delito.replace('ROBO DE VEHICULOS','ROBO DE VEHÍCULOS').replace('VIOLACION SEXUAL','VIOLACIÓN SEXUAL'),kpiX[i]+145,246,kpiW[i]-160,16,true,COLORS.text);
+      const esPct=(scopeDel!=='TODOS' && (i===2 || i===3));
+      txt(x,esPct ? (N(a).toFixed(1)+'%') : fmt(a),kpiX[i]+145,292,esPct?34:42,true,color);
+      txt(x,(scopeDel!=='TODOS'&&i===2)?'DEL TOTAL DEL ÁMBITO':(scopeDel!=='TODOS'&&i===3?'CAMBIO INTERANUAL':`CASOS ${year}`),kpiX[i]+145,316,12,true,COLORS.text);
+      if(!(scopeDel!=='TODOS'&&i===3)) txt(x,(v!=null&&v<0?'▼ ':'▲ ')+pct(v),kpiX[i]+145,343,21,true,v!=null&&v<=0?COLORS.green:COLORS.darkRed);
+      fit(x,scopeDel!=='TODOS'&&i===2?`Referencia ${prev}: ${N(b).toFixed(1)}%`:`vs. ${up(pLabel).replace(String(year),'').trim()} ${prev}${b?` (${esPct?N(b).toFixed(1)+'%':fmt(b)})`:''}`,kpiX[i]+145,365,kpiW[i]-160,12,false,COLORS.text);
     });
 
     // Línea comparativa
@@ -2538,17 +2565,19 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
 
     // ===== PANEL 1: FOTOGRAFÍA REGIONAL =====
     fillRect(x,124,451,328,236,'#ffffff');
-    const tot=total(cur);
-    const orden=[...cur].sort((a,b)=>N(b.Casos)-N(a.Casos));
+    const curScope=(scopeDel==='TODOS'?cur:cur.filter(r=>r.Delito===scopeDel));
+    const prvScope=(scopeDel==='TODOS'?prv:prv.filter(r=>r.Delito===scopeDel));
+    const tot=total(curScope);
+    const orden=[...curScope].sort((a,b)=>N(b.Casos)-N(a.Casos));
     const top=orden[0]||{};
-    const fourTotal=kpis.reduce((s,[d])=>s+N(d26[d]),0);
+    const fourTotal=(scopeDel==='TODOS'?kpis.reduce((s,[d])=>s+N(d26[d]),0):tot);
     const share4=tot?fourTotal/tot*100:0;
 
-    txt(x,'TOTAL DE DELITOS',132,473,13,true,COLORS.text);
+    txt(x,scopeDel==='TODOS'?'TOTAL DE DELITOS':'CASOS DEL DELITO SELECCIONADO',132,473,12,true,COLORS.text);
     txt(x,fmt(tot),132,500,23,true,COLORS.navy2);
     txt(x,'Casos registrados',132,517,12,false,COLORS.text);
     line(x,132,529,444,529);
-    txt(x,'DELITO DE MAYOR VOLUMEN',132,550,13,true,COLORS.text);
+    txt(x,scopeDel==='TODOS'?'DELITO DE MAYOR VOLUMEN':'DELITO ANALIZADO',132,550,13,true,COLORS.text);
     fit(x,top.Delito||'—',132,576,286,20,true,COLORS.navy2);
     txt(x,`${fmt(top.Casos)} casos (${tot?(N(top.Casos)/tot*100).toFixed(1):'0.0'}% del total)`,132,595,12,false,COLORS.text);
     line(x,132,609,444,609);
@@ -2576,7 +2605,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
 
     // ===== PANEL 3: CONCENTRACIÓN PROVINCIAL =====
     fillRect(x,1014,451,489,235,'#ffffff');
-    txt(x,'PROVINCIA',1028,471,12,true,COLORS.text);
+    fit(x,scopeDel==='TODOS'?'PROVINCIA':`PROVINCIAS · ${scopeDel}`,1028,471,190,11,true,COLORS.text);
     txt(x,'CASOS',1228,471,12,true,COLORS.text,'right');
     txt(x,'PART. %',1490,471,12,true,COLORS.text,'right');
     const top7=provRanking.slice(0,7);
@@ -2652,7 +2681,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     // Footer dinámico
     fillRect(x,1180,975,356,49,COLORS.navy);
     txt(x,`Datos actualizados al ${dt.long}`,1392,997,9,false,'#ffffff','center');
-    txt(x,'V25 · DINÁMICA',1506,997,10,true,'#ffffff','right');
+    txt(x,'V26 · MULTINIVEL',1506,997,10,true,'#ffffff','right');
 
     return c.toDataURL('image/png');
   }
@@ -2677,7 +2706,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
   window.abrirInfografiaRegional = function(){
     if(typeof oldAbrirV24 === 'function') oldAbrirV24();
     const t=document.getElementById('orsecInfoTitulo');
-    if(t)t.textContent='Infografía Regional ORSEC · Dinámica V25';
+    if(t)t.textContent='Infografía Regional ORSEC · Dinámica V26';
     preview().catch(err=>{
       console.error(err);
       if(typeof oldAbrirV24 !== 'function') alert('No se pudo abrir la infografía regional.');
@@ -2691,7 +2720,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
       const label=(document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||f.periodo||'PERIODO')
         .replace(/\s+/g,'_').replace(/[^\wÁÉÍÓÚÑáéíóúñ-]/g,'_');
       a.href=uri;
-      a.download=`ORSEC_INFOGRAFIA_REGIONAL_DINAMICA_${label}_V25.png`;
+      a.download=`ORSEC_INFOGRAFIA_REGIONAL_DINAMICA_${label}_V26.png`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -2751,6 +2780,18 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     return original.apply(this,arguments);
   };
 })();
+</script>
+
+
+<script id="orsecV26AutoRefresh">
+document.addEventListener('change', function(e){
+  if(!e.target || !['anio','tipoPeriodo','periodo','provincia','delito'].includes(e.target.id)) return;
+  const modal=document.getElementById('orsecInfoModal');
+  const visible=modal && getComputedStyle(modal).display!=='none';
+  if(visible && typeof window.abrirInfografiaRegional==='function'){
+    setTimeout(()=>window.abrirInfografiaRegional(),120);
+  }
+});
 </script>
 
 </body></html>

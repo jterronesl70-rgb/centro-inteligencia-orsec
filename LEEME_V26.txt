@@ -1,0 +1,22 @@
+ORSEC V26 · INFOGRAFÍA REGIONAL MULTINIVEL DINÁMICA
+
+Base: V25.3 aprobada.
+Se conserva el diseño visual aprobado.
+
+NUEVO:
+- La infografía responde a AÑO.
+- Responde a TIPO DE PERÍODO y PERÍODO.
+- Responde a PROVINCIA.
+- Responde a DELITO.
+- Si se elige un delito específico, los KPI superiores cambian a:
+  delito seleccionado, total del ámbito, participación y variación interanual.
+- La concentración provincial se recalcula para el delito seleccionado.
+- La infografía se regenera al cambiar filtros cuando el modal está abierto.
+- Descarga PNG dinámica V26.
+
+PRUEBA RECOMENDADA:
+2026 · ACUMULADO · ENE-AGOSTO · CHEPEN · HOMICIDIOS.
+
+INSTALACIÓN:
+Subir/reemplazar estos archivos en la raíz del repositorio, conservando el resto
+de los assets que ya existen en la versión desplegada.
