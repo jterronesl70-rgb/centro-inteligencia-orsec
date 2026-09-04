@@ -1,0 +1,6 @@
+ORSEC V27.10.0 — PARCHE AISLADO DE EXPORTACIÓN
+Base: V27.9.9.
+Único cambio: funciones IMAGEN COMPLETA PNG y PDF del bloque Relación detallada.
+No se modifican Panorama Regional, comparativos, mapa, filtros, datos, infografía, diseño ni navegación.
+PNG: producto limpio con resumen analítico, gráficos y relación completa; no captura la pantalla.
+PDF: mismo producto, paginado.
