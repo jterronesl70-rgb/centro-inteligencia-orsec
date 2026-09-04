@@ -1,0 +1,13 @@
+ORSEC V27.10.8 · TOTAL REGIÓN EN COMPARATIVO POR PROVINCIAS
+
+Base: V27.10.7 estable.
+
+Se adiciona exclusivamente:
+- Fila TOTAL REGIÓN al comparativo provincial en pantalla.
+- Total 2025 y 2026.
+- Diferencia.
+- Variación porcentual calculada sobre los totales.
+- Participación 2026 = 100.0%.
+- La fila TOTAL REGIÓN se incorpora también al Excel, PNG y PDF.
+
+No se modifica el comparativo por delito ni ningún otro módulo.
