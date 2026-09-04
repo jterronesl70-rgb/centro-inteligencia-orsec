@@ -2519,16 +2519,22 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     x.drawImage(bg,0,0,c.width,c.height);
 
     // ===== TÍTULO / PERÍODO =====
-    // V27.1: cabecera territorial compacta. Todo queda dentro de la franja de título,
-    // sin invadir las tarjetas KPI que comienzan inmediatamente debajo.
-    fillRect(x,270,153,1015,67,'#ffffff');
-    txt(x,'INDICADORES DE INCIDENCIA DELICTIVA',720,178,28,true,COLORS.text,'center');
+    // V27.2: título, período y ámbito territorial en líneas independientes.
+    // La banda territorial queda fuera de las tarjetas KPI.
+    fillRect(x,270,153,1015,66,'#ffffff');
+    txt(x,'INDICADORES DE INCIDENCIA DELICTIVA',768,183,28,true,COLORS.text,'center');
+    fit(x,`PERÍODO: ${up(pLabel)}`,690,211,610,17,true,COLORS.text,'center');
+    rounded(x,890,188,132,29,5,COLORS.navy,null);
+    txt(x,`${year} – ${prev}`,956,209,16,true,COLORS.gold,'center');
+
     const territorio=scopeProv==='TOTAL REGION'?'REGIÓN LA LIBERTAD':`PROVINCIA DE ${scopeProv}`;
     const delitoActivo=scopeDel==='TODOS'?'TODOS LOS DELITOS':scopeDel;
-    fit(x,`ÁMBITO TERRITORIAL: ${territorio} · ${delitoActivo}`,720,199,790,13,true,COLORS.navy2,'center');
-    fit(x,`PERÍODO: ${up(pLabel)}`,720,216,610,12,true,COLORS.text,'center');
-    rounded(x,1090,184,132,29,5,COLORS.navy,null);
-    txt(x,`${year} – ${prev}`,1156,205,16,true,COLORS.gold,'center');
+    rounded(x,400,218,736,32,6,'#f3f8fc','#2c7fd0');
+    fit(
+      x,
+      `ÁMBITO TERRITORIAL: ${territorio}  |  DELITO: ${delitoActivo}`,
+      768,240,700,15,true,COLORS.navy2,'center'
+    );
 
     // Corte oficial superior derecho
     fillRect(x,1375,14,146,77,'#062451');
@@ -2554,18 +2560,18 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
       else if(i===2){ a=total(cur)?N(d26[scopeDel])/total(cur)*100:0; b=total(prv)?N(d25[scopeDel])/total(prv)*100:0; v=varPct(a,b); }
       else { a=varPct(N(d26[scopeDel]),N(d25[scopeDel])); b=0; v=a; }
       // Limpiar solo zona de texto, preservando icono y marco del diseño.
-      fillRect(x,kpiX[i]+140,226,kpiW[i]-150,142,'#ffffff');
-      fit(x,delito.replace('ROBO DE VEHICULOS','ROBO DE VEHÍCULOS').replace('VIOLACION SEXUAL','VIOLACIÓN SEXUAL'),kpiX[i]+145,246,kpiW[i]-160,16,true,COLORS.text);
+      fillRect(x,kpiX[i]+140,252,kpiW[i]-150,148,'#ffffff');
+      fit(x,delito.replace('ROBO DE VEHICULOS','ROBO DE VEHÍCULOS').replace('VIOLACION SEXUAL','VIOLACIÓN SEXUAL'),kpiX[i]+145,278,kpiW[i]-160,16,true,COLORS.text);
       const esPct=(scopeDel!=='TODOS' && (i===2 || i===3));
-      txt(x,esPct ? (N(a).toFixed(1)+'%') : fmt(a),kpiX[i]+145,292,esPct?34:42,true,color);
-      txt(x,(scopeDel!=='TODOS'&&i===2)?'DEL TOTAL DEL ÁMBITO':(scopeDel!=='TODOS'&&i===3?'CAMBIO INTERANUAL':`CASOS ${year}`),kpiX[i]+145,316,12,true,COLORS.text);
-      if(!(scopeDel!=='TODOS'&&i===3)) txt(x,(v!=null&&v<0?'▼ ':'▲ ')+pct(v),kpiX[i]+145,343,21,true,v!=null&&v<=0?COLORS.green:COLORS.darkRed);
-      fit(x,scopeDel!=='TODOS'&&i===2?`Referencia ${prev}: ${N(b).toFixed(1)}%`:`vs. ${up(pLabel).replace(String(year),'').trim()} ${prev}${b?` (${esPct?N(b).toFixed(1)+'%':fmt(b)})`:''}`,kpiX[i]+145,365,kpiW[i]-160,12,false,COLORS.text);
+      txt(x,esPct ? (N(a).toFixed(1)+'%') : fmt(a),kpiX[i]+145,326,esPct?34:42,true,color);
+      txt(x,(scopeDel!=='TODOS'&&i===2)?'DEL TOTAL DEL ÁMBITO':(scopeDel!=='TODOS'&&i===3?'CAMBIO INTERANUAL':`CASOS ${year}`),kpiX[i]+145,350,12,true,COLORS.text);
+      if(!(scopeDel!=='TODOS'&&i===3)) txt(x,(v!=null&&v<0?'▼ ':'▲ ')+pct(v),kpiX[i]+145,376,21,true,v!=null&&v<=0?COLORS.green:COLORS.darkRed);
+      fit(x,scopeDel!=='TODOS'&&i===2?`Referencia ${prev}: ${N(b).toFixed(1)}%`:`vs. ${up(pLabel).replace(String(year),'').trim()} ${prev}${b?` (${esPct?N(b).toFixed(1)+'%':fmt(b)})`:''}`,kpiX[i]+145,400,kpiW[i]-160,12,false,COLORS.text);
     });
 
     // Línea comparativa
-    fillRect(x,60,374,1400,27,'#ffffff');
-    txt(x,`Comparativo interanual: ${pLabel.replace(String(year),String(prev))} vs. ${pLabel}. Datos sujetos a actualización.`,66,394,13,true,COLORS.text);
+    fillRect(x,60,409,1400,26,'#ffffff');
+    txt(x,`Comparativo interanual: ${pLabel.replace(String(year),String(prev))} vs. ${pLabel}. Datos sujetos a actualización.`,66,428,12,true,COLORS.text);
 
     // ===== PANEL 1: FOTOGRAFÍA REGIONAL =====
     fillRect(x,124,451,328,236,'#ffffff');
@@ -2685,7 +2691,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     // Footer dinámico
     fillRect(x,1180,975,356,49,COLORS.navy);
     txt(x,`Datos actualizados al ${dt.long}`,1392,997,9,false,'#ffffff','center');
-    txt(x,'V26 · MULTINIVEL',1506,997,10,true,'#ffffff','right');
+    txt(x,'V27.2 · TERRITORIAL',1506,997,10,true,'#ffffff','right');
 
     return c.toDataURL('image/png');
   }
@@ -2724,7 +2730,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
       const label=(document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||f.periodo||'PERIODO')
         .replace(/\s+/g,'_').replace(/[^\wÁÉÍÓÚÑáéíóúñ-]/g,'_');
       a.href=uri;
-      a.download=`ORSEC_INFOGRAFIA_REGIONAL_DINAMICA_${label}_V27.png`;
+      a.download=`ORSEC_INFOGRAFIA_REGIONAL_DINAMICA_${label}_V27_2.png`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -2751,40 +2757,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
 </script>
 
 
-<script id="orsecFixTituloDelictivaV25_3">
-(function(){
-  function fixCanvas(c){
-    if(!c || !c.getContext) return;
-    const ctx=c.getContext('2d');
-    const W=c.width, H=c.height;
-    // La plantilla aprobada ya contiene el título correcto.
-    // Este refuerzo vuelve a pintar una zona blanca limpia y el título completo
-    // para impedir cualquier superposición heredada del generador.
-    const y=Math.round(H*0.153), h=Math.round(H*0.061);
-    ctx.save();
-    ctx.fillStyle='#ffffff';
-    ctx.fillRect(0,y,W,h);
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    ctx.fillStyle='#123d73';
-    ctx.font=`700 ${Math.round(H*0.030)}px Arial, sans-serif`;
-    ctx.fillText('INDICADORES DE INCIDENCIA DELICTIVA', W/2, y+Math.round(h*0.38));
-    ctx.font=`700 ${Math.round(H*0.018)}px Arial, sans-serif`;
-    ctx.fillText('PERÍODO: ENERO – 31 DE AGOSTO 2026', W/2-Math.round(W*0.055), y+Math.round(h*0.78));
-    ctx.restore();
-  }
 
-  // Intercepta toDataURL sólo durante la generación ORSEC y refuerza el título
-  // antes de que el PNG sea entregado/descargado.
-  const original=HTMLCanvasElement.prototype.toDataURL;
-  HTMLCanvasElement.prototype.toDataURL=function(){
-    try{
-      if(this.width>=1200 && this.height>=700) fixCanvas(this);
-    }catch(e){ console.warn('ORSEC V25.3 título:',e); }
-    return original.apply(this,arguments);
-  };
-})();
-</script>
 
 
 <script id="orsecV26AutoRefresh">

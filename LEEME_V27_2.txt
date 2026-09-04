@@ -1,0 +1,17 @@
+ORSEC V27.2 · IDENTIFICACIÓN TERRITORIAL VISIBLE Y ORDENADA
+
+Corrección:
+- Se mantiene la lógica dinámica V26/V27.
+- Se usa la última infografía visual aprobada como plantilla.
+- Se elimina el interceptor V25.3 que borraba la línea territorial al exportar.
+- Se crea una franja propia, separada de las tarjetas KPI:
+  ÁMBITO TERRITORIAL: PROVINCIA DE ...
+  DELITO: ...
+- La banda se adapta automáticamente a Región / Provincia y al delito seleccionado.
+- Las tarjetas KPI fueron desplazadas ligeramente hacia abajo para evitar superposición.
+- El título "INDICADORES DE INCIDENCIA DELICTIVA" permanece completo.
+
+PRUEBAS:
+1. TRUJILLO + DETONACIONES.
+2. CHEPEN + HOMICIDIOS.
+3. TOTAL REGION + TODOS LOS DELITOS.
