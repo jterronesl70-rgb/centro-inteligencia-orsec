@@ -2521,8 +2521,12 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     // ===== TÍTULO / PERÍODO =====
     fillRect(x,270,153,780,61,'#ffffff');
     txt(x,'INDICADORES DE INCIDENCIA DELICTIVA',768,187,31,true,COLORS.text,'center');
-    const contexto=[scopeProv==='TOTAL REGION'?'REGIÓN LA LIBERTAD':scopeProv, scopeDel==='TODOS'?'TODOS LOS DELITOS':scopeDel].join(' · ');
-    fit(x,`PERÍODO: ${up(pLabel)} · ${contexto}`,745,211,760,16,true,COLORS.text,'center');
+    const territorio=scopeProv==='TOTAL REGION'?'REGIÓN LA LIBERTAD':`PROVINCIA DE ${scopeProv}`;
+    const delitoActivo=scopeDel==='TODOS'?'TODOS LOS DELITOS':scopeDel;
+    // V27: identificación territorial dinámica visible también al descargar/imprimir.
+    fit(x,`PERÍODO: ${up(pLabel)}`,610,207,430,15,true,COLORS.text,'center');
+    rounded(x,650,215,520,25,6,'#eaf4ff','#8bb8e8');
+    fit(x,`ÁMBITO TERRITORIAL: ${territorio} · ${delitoActivo}`,910,233,490,14,true,COLORS.navy2,'center');
     rounded(x,892,190,126,27,5,COLORS.navy,null);
     txt(x,`${year} – ${prev}`,955,211,17,true,COLORS.gold,'center');
 
@@ -2720,7 +2724,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
       const label=(document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||f.periodo||'PERIODO')
         .replace(/\s+/g,'_').replace(/[^\wÁÉÍÓÚÑáéíóúñ-]/g,'_');
       a.href=uri;
-      a.download=`ORSEC_INFOGRAFIA_REGIONAL_DINAMICA_${label}_V26.png`;
+      a.download=`ORSEC_INFOGRAFIA_REGIONAL_DINAMICA_${label}_V27.png`;
       document.body.appendChild(a);
       a.click();
       a.remove();

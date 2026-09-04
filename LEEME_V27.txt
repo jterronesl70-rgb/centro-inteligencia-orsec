@@ -1,0 +1,11 @@
+ORSEC V27 — IDENTIFICACIÓN TERRITORIAL DINÁMICA
+
+Base: V26 estable.
+Mejora incorporada: la infografía descargada/imprimible muestra automáticamente el ámbito territorial activo.
+
+Ejemplos:
+- REGIÓN LA LIBERTAD · TODOS LOS DELITOS
+- PROVINCIA DE CHEPÉN · HOMICIDIOS
+- PROVINCIA DE TRUJILLO · EXTORSIÓN
+
+La etiqueta se actualiza con Provincia y Delito, conservando el diseño general de la V26.
