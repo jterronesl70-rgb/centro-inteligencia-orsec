@@ -1,0 +1,3 @@
+ORSEC V27.1 — Ajuste visual de identificación territorial dinámica.
+La etiqueta de ámbito territorial fue reubicada completamente dentro de la cabecera de la infografía para evitar cualquier superposición con las tarjetas de indicadores.
+No se modifica la lógica dinámica de V27 ni el diseño general aprobado.
