@@ -1,0 +1,19 @@
+ORSEC V27.10.1 · PARCHE AISLADO DE EXPORTACIÓN DE RELACIÓN
+
+BASE:
+V27.9.7 estable.
+
+SE MODIFICA ÚNICAMENTE:
+- botón IMAGEN COMPLETA PNG de la relación;
+- botón PDF de la relación.
+
+PNG:
+- no captura la pantalla;
+- incluye resumen, gráficos y relación completa.
+
+PDF:
+- descarga directa multipágina usando el mismo producto limpio.
+
+NO SE MODIFICA:
+Panorama Regional, infografía, mapas, comparativos, filtros, datos,
+navegación ni ninguna otra funcionalidad.
