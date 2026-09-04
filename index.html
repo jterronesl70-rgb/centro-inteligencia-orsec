@@ -916,6 +916,20 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 <link id="orsecLeafletCSS" rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <script id="orsecLeafletJS" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
+
+<style id="orsecAlertasExportCSS">
+.orsec-alert-export{margin-top:16px;background:#f7fbfe;border:1px solid #d8e6f1;border-radius:14px;padding:16px}
+.orsec-alert-export-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.orsec-alert-export-head h3{margin:0;color:#083b69;font-size:18px}
+.orsec-alert-export-head p{margin:5px 0 0;color:#657e91;font-size:12px}
+.orsec-alert-export-badge{background:#eaf4fb;border:1px solid #c9deed;color:#083b69;border-radius:999px;padding:6px 11px;font-size:11px;font-weight:800;white-space:nowrap}
+.orsec-alert-export-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:13px}
+.orsec-alert-export-actions button{border:0;border-radius:9px;background:#0868ad;color:#fff;padding:11px 15px;font-weight:900;cursor:pointer;font-size:12px}
+.orsec-alert-export-actions button.pdf{background:#c43428}
+.orsec-alert-export-actions button.csv{background:#157b4f}
+@media(max-width:760px){.orsec-alert-export-head{display:block}.orsec-alert-export-badge{display:inline-block;margin-top:9px}}
+</style>
+
 </head>
 <body>
 
@@ -1107,7 +1121,22 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
   <div class="orsec-bi-review">Producto automático preliminar. Debe ser revisado por el analista ORSEC antes de su uso institucional.</div>
 </div>
 <div class="nota">Texto generado automáticamente a partir de los datos seleccionados; debe ser revisado antes de su uso institucional.</div></div>
-<div id="alertas" class="seccion"><div class="seccion-head"><h2>Alertas Inteligentes</h2><span class="badge">Comparativo interanual 2025 ↔ 2026</span></div><div id="alertasBox" class="loading">Calculando variaciones…</div><div class="chart-shell"><h3>Semáforo de variaciones</h3><div class="alert-grid" id="alertasComparativas"></div></div></div>
+<div id="alertas" class="seccion"><div class="seccion-head"><h2>Alertas Inteligentes</h2><span class="badge">Comparativo interanual 2025 ↔ 2026</span></div><div id="alertasBox" class="loading">Calculando variaciones…</div><div class="chart-shell"><h3>Semáforo de variaciones</h3><div class="alert-grid" id="alertasComparativas"></div></div>
+<div id="orsecAlertasExport" class="orsec-alert-export">
+  <div class="orsec-alert-export-head">
+    <div>
+      <h3>Reporte Ejecutivo de Alertas Inteligentes</h3>
+      <p>Producto descargable adicional. No modifica la visualización ni el cálculo actual del módulo.</p>
+    </div>
+    <div class="orsec-alert-export-badge">2025 ↔ 2026</div>
+  </div>
+  <div class="orsec-alert-export-actions">
+    <button onclick="orsecDescargarAlertasPNG()">⬇ REPORTE EJECUTIVO PNG</button>
+    <button onclick="orsecDescargarAlertasPDF()" class="pdf">⬇ REPORTE EJECUTIVO PDF</button>
+    <button onclick="orsecDescargarAlertasCSV()" class="csv">⬇ CUADRO CSV</button>
+  </div>
+</div>
+</div>
 <div id="territorio" class="seccion">
  <div class="seccion-head"><h2>Inteligencia Territorial</h2><span class="badge">MAPA VIVO · 12 provincias</span></div>
  <div class="mapa-layout">
@@ -4455,4 +4484,221 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
 })();
 </script>
 <script id="orsecV27102Marker">window.ORSEC_PATCH_ALTO_IMPACTO='V27.10.2-DOM-EXPORT';</script>
+
+<script id="orsecAlertasExportJS">
+(function(){
+  function safe(v){
+    return String(v||'REGION').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'_');
+  }
+  function alertDataCompleta(){
+    const f=current();
+    if(f.anio!==2026) return [];
+    const p=f.provincia==='TODAS'?'TOTAL REGION':f.provincia;
+    let rows=registros({anio:2026,tipo:f.tipo,periodo:f.periodo,provincia:p});
+    if(f.delito!=='TODOS') rows=rows.filter(r=>r.Delito===f.delito);
+
+    const out=[];
+    rows.forEach(r=>{
+      const prev=registros({anio:2025,tipo:f.tipo,periodo:f.periodo,provincia:p,delito:r.Delito})[0];
+      if(prev && prev.Casos>0){
+        const v=(r.Casos-prev.Casos)/prev.Casos*100;
+        const n=nivelRiesgo(v);
+        out.push({
+          delito:r.Delito, actual:+r.Casos||0, anterior:+prev.Casos||0,
+          variacion:v, clase:n.clase, nivel:n.etiqueta, lectura:n.texto
+        });
+      }
+    });
+    return out.sort((a,b)=>b.variacion-a.variacion);
+  }
+  function contexto(){
+    const f=current();
+    const periodo=document.getElementById('periodo')?.selectedOptions?.[0]?.textContent || f.periodo;
+    const prov=f.provincia==='TODAS'?'TOTAL REGION':f.provincia;
+    return {f,periodo,prov};
+  }
+  function colorNivel(clase){
+    return {
+      'critica':'#b71c1c','alta-riesgo':'#ef6c00','vigilancia':'#d6a800',
+      'estable':'#1976d2','favorable':'#18864b'
+    }[clase] || '#697b88';
+  }
+  function labelCorto(clase){
+    return {
+      'critica':'CRÍTICA','alta-riesgo':'ALTA','vigilancia':'VIGILANCIA',
+      'estable':'ESTABLE','favorable':'FAVORABLE'
+    }[clase] || 'SIN DATO';
+  }
+  function trunc(ctx,v,maxW){
+    let t=String(v??'');
+    if(ctx.measureText(t).width<=maxW) return t;
+    while(t.length>3 && ctx.measureText(t+'…').width>maxW) t=t.slice(0,-1);
+    return t+'…';
+  }
+  function wrap(ctx,text,maxWidth){
+    const words=String(text||'').split(/\s+/), lines=[]; let line='';
+    words.forEach(w=>{
+      const test=line?line+' '+w:w;
+      if(ctx.measureText(test).width>maxWidth && line){lines.push(line);line=w}else line=test;
+    });
+    if(line)lines.push(line);
+    return lines;
+  }
+  function stats(arr){
+    const s={critica:0,'alta-riesgo':0,vigilancia:0,estable:0,favorable:0};
+    arr.forEach(x=>{ if(s[x.clase]!=null) s[x.clase]++; });
+    return s;
+  }
+
+  window.orsecConstruirReporteAlertasCanvas=function(){
+    const arr=alertDataCompleta();
+    if(!arr.length) return null;
+    const {f,periodo,prov}=contexto();
+    const W=1800, H=1250, ctxCanvas=document.createElement('canvas');
+    ctxCanvas.width=W; ctxCanvas.height=H;
+    const ctx=ctxCanvas.getContext('2d');
+
+    const navy='#073e70',text='#17384f',muted='#6a8192',grid='#dce7ef',pale='#f7fafc';
+    ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+
+    // Cabecera
+    ctx.fillStyle=navy;ctx.fillRect(0,0,W,145);
+    ctx.fillStyle='#fff';ctx.font='bold 40px Arial';ctx.textAlign='left';
+    ctx.fillText('ORSEC · REPORTE EJECUTIVO DE ALERTAS INTELIGENTES',60,58);
+    ctx.font='20px Arial';
+    ctx.fillText(`Comparativo interanual 2025–2026 · ${periodo} · ${prov} · ${f.delito==='TODOS'?'TODOS LOS DELITOS':f.delito}`,60,98);
+
+    // Resumen del semáforo
+    const st=stats(arr), cards=[
+      ['ALERTA CRÍTICA',st.critica,'#b71c1c'],
+      ['ALERTA ALTA',st['alta-riesgo'],'#ef6c00'],
+      ['VIGILANCIA',st.vigilancia,'#d6a800'],
+      ['ESTABLE',st.estable,'#1976d2'],
+      ['FAVORABLE',st.favorable,'#18864b']
+    ];
+    const x0=60,y0=175,gap=14,cw=(W-120-gap*4)/5;
+    cards.forEach((k,i)=>{
+      const x=x0+i*(cw+gap);
+      ctx.fillStyle='#fff';ctx.strokeStyle='#d7e3ec';ctx.lineWidth=1;
+      ctx.fillRect(x,y0,cw,105);ctx.strokeRect(x,y0,cw,105);
+      ctx.fillStyle=k[2];ctx.beginPath();ctx.arc(x+32,y0+34,12,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=muted;ctx.font='bold 14px Arial';ctx.fillText(k[0],x+54,y0+38);
+      ctx.fillStyle=navy;ctx.font='bold 34px Arial';ctx.fillText(String(k[1]),x+24,y0+82);
+    });
+
+    // Prioridades de atención: 3 variaciones más desfavorables
+    ctx.fillStyle=navy;ctx.font='bold 24px Arial';ctx.fillText('PRIORIDADES DE ATENCIÓN',60,335);
+    const prioridades=arr.filter(x=>x.variacion>1).slice(0,3);
+    const ph=118, pw=(W-120-28)/3;
+    if(prioridades.length){
+      prioridades.forEach((x,i)=>{
+        const bx=60+i*(pw+14), by=360;
+        ctx.fillStyle='#fff';ctx.strokeStyle=colorNivel(x.clase);ctx.lineWidth=4;
+        ctx.fillRect(bx,by,pw,ph);ctx.strokeRect(bx,by,pw,ph);
+        ctx.fillStyle=colorNivel(x.clase);ctx.font='bold 16px Arial';
+        ctx.fillText(labelCorto(x.clase),bx+18,by+28);
+        ctx.fillStyle=navy;ctx.font='bold 21px Arial';
+        ctx.fillText(trunc(ctx,x.delito,pw-36),bx+18,by+58);
+        ctx.fillStyle=colorNivel(x.clase);ctx.font='bold 28px Arial';
+        ctx.fillText(`${x.variacion>=0?'+':''}${x.variacion.toFixed(1)}%`,bx+18,by+92);
+      });
+    }else{
+      ctx.fillStyle=muted;ctx.font='18px Arial';ctx.fillText('No se identifican incrementos superiores al umbral de vigilancia.',60,395);
+    }
+
+    // Tabla comparativa completa
+    const tableY=520,rowH=47;
+    ctx.fillStyle=navy;ctx.fillRect(60,tableY,W-120,44);
+    ctx.fillStyle='#fff';ctx.font='bold 18px Arial';
+    ctx.fillText('SEMÁFORO EJECUTIVO DE VARIACIONES',78,tableY+29);
+
+    const headers=['DELITO','2025','2026','VAR. %','NIVEL','LECTURA OPERACIONAL'];
+    const x=[78,630,790,950,1110,1310], widths=[530,150,150,150,190,410];
+    ctx.fillStyle='#eaf3f9';ctx.fillRect(60,tableY+44,W-120,38);
+    ctx.fillStyle=text;ctx.font='bold 15px Arial';
+    headers.forEach((h,i)=>ctx.fillText(h,x[i],tableY+70));
+
+    arr.slice(0,12).forEach((r,i)=>{
+      const y=tableY+82+i*rowH;
+      ctx.fillStyle=i%2?pale:'#fff';ctx.fillRect(60,y,W-120,rowH);
+      ctx.strokeStyle=grid;ctx.beginPath();ctx.moveTo(60,y+rowH);ctx.lineTo(W-60,y+rowH);ctx.stroke();
+
+      ctx.fillStyle=text;ctx.font='bold 15px Arial';
+      ctx.fillText(trunc(ctx,r.delito,widths[0]),x[0],y+29);
+      ctx.font='15px Arial';
+      ctx.fillText(r.anterior.toLocaleString('es-PE'),x[1],y+29);
+      ctx.fillText(r.actual.toLocaleString('es-PE'),x[2],y+29);
+      ctx.fillStyle=colorNivel(r.clase);ctx.font='bold 15px Arial';
+      ctx.fillText(`${r.variacion>=0?'+':''}${r.variacion.toFixed(1)}%`,x[3],y+29);
+      ctx.fillText(labelCorto(r.clase),x[4],y+29);
+      ctx.fillStyle=text;ctx.font='14px Arial';
+      ctx.fillText(trunc(ctx,r.lectura,widths[5]),x[5],y+29);
+    });
+
+    // Lectura ejecutiva
+    const lecturaY=tableY+82+Math.min(12,arr.length)*rowH+38;
+    ctx.fillStyle=navy;ctx.font='bold 23px Arial';ctx.fillText('LECTURA EJECUTIVA ORSEC',60,lecturaY);
+    ctx.fillStyle=text;ctx.font='17px Arial';
+    let lectura='';
+    if(prioridades.length){
+      lectura=`La selección presenta ${prioridades.length} indicador(es) con incremento superior al umbral de vigilancia. Las prioridades son ${prioridades.map(x=>`${x.delito} (${x.variacion>=0?'+':''}${x.variacion.toFixed(1)}%)`).join(', ')}. La lectura debe complementarse con contexto territorial y operativo antes de adoptar decisiones.`;
+    }else{
+      lectura='La selección no presenta incrementos superiores al umbral de vigilancia. Se recomienda mantener seguimiento de los indicadores estables y de la evolución favorable.';
+    }
+    const lines=wrap(ctx,lectura,W-120);
+    lines.slice(0,4).forEach((ln,i)=>ctx.fillText(ln,60,lecturaY+34+i*25));
+
+    // Pie
+    ctx.fillStyle=muted;ctx.font='13px Arial';
+    ctx.fillText('Fuente: Base institucional ORSEC · Comparativo homogéneo 2025–2026 · Producto ejecutivo generado automáticamente.',60,H-28);
+    return ctxCanvas;
+  };
+
+  window.orsecDescargarAlertasPNG=function(){
+    try{
+      const canvas=window.orsecConstruirReporteAlertasCanvas();
+      if(!canvas){alert('No hay alertas comparables para descargar.');return;}
+      const {f,periodo,prov}=contexto();
+      canvas.toBlob(blob=>{
+        if(!blob){alert('No se pudo generar el reporte PNG.');return;}
+        const a=document.createElement('a'),url=URL.createObjectURL(blob);
+        a.href=url;a.download=`ORSEC_Alertas_${safe(periodo)}_${safe(prov)}_${safe(f.delito)}.png`;
+        document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+      },'image/png');
+    }catch(e){console.error(e);alert('No se pudo generar el reporte ejecutivo PNG.');}
+  };
+
+  window.orsecDescargarAlertasCSV=function(){
+    try{
+      const arr=alertDataCompleta();
+      if(!arr.length){alert('No hay alertas comparables para descargar.');return;}
+      const {f,periodo,prov}=contexto();
+      const rows=[['Delito','2025','2026','Variacion %','Nivel','Lectura operacional']];
+      arr.forEach(r=>rows.push([r.delito,r.anterior,r.actual,r.variacion.toFixed(1),r.nivel,r.lectura]));
+      const csv='\uFEFF'+rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';')).join('\r\n');
+      const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+      const a=document.createElement('a'),url=URL.createObjectURL(blob);
+      a.href=url;a.download=`ORSEC_Alertas_${safe(periodo)}_${safe(prov)}_${safe(f.delito)}.csv`;
+      document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    }catch(e){console.error(e);alert('No se pudo generar el CSV de alertas.');}
+  };
+
+  window.orsecDescargarAlertasPDF=async function(){
+    try{
+      const canvas=window.orsecConstruirReporteAlertasCanvas();
+      if(!canvas){alert('No hay alertas comparables para descargar.');return;}
+      if(typeof orsecCargarJsPDF==='function') await orsecCargarJsPDF();
+      if(!(window.jspdf&&window.jspdf.jsPDF)){
+        alert('No se pudo cargar el generador PDF.');return;
+      }
+      const {jsPDF}=window.jspdf;
+      const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+      doc.addImage(canvas.toDataURL('image/jpeg',0.92),'JPEG',8,8,281,195);
+      const {f,periodo,prov}=contexto();
+      doc.save(`ORSEC_Alertas_${safe(periodo)}_${safe(prov)}_${safe(f.delito)}.pdf`);
+    }catch(e){console.error(e);alert('No se pudo generar el reporte ejecutivo PDF.');}
+  };
+})();
+</script>
+<script id="orsecAlertasExportMarker">window.ORSEC_PATCH_ALERTAS='V27.10.3-ALERTAS-EJECUTIVAS-DESCARGABLES';</script>
 </body></html>

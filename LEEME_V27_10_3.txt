@@ -1,0 +1,21 @@
+ORSEC V27.10.3 · ALERTAS EJECUTIVAS DESCARGABLES
+
+BASE:
+V27.10.2 estable.
+
+SE ADICIONA EXCLUSIVAMENTE EN ALERTAS INTELIGENTES:
+- Reporte Ejecutivo PNG.
+- Reporte Ejecutivo PDF.
+- Cuadro CSV.
+
+EL REPORTE INCLUYE:
+- contexto de análisis;
+- conteo por nivel de alerta;
+- 3 prioridades de atención;
+- semáforo ejecutivo completo;
+- lectura ejecutiva ORSEC.
+
+NO SE MODIFICA:
+ninguna función, cálculo, diseño o módulo ya existente.
+Todo lo construido permanece intacto; esta versión solo adiciona una
+salida descargable al módulo Alertas.
