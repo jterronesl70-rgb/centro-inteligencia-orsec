@@ -1,0 +1,13 @@
+ORSEC V27.9.1 · CORRECCIÓN COMPARATIVO POR DELITO
+
+Esta versión parte exactamente de V27.9 y NO modifica ningún otro módulo.
+
+Se restauraron únicamente las funciones faltantes del bloque:
+- GENERAR COMPARATIVO POR DELITO
+- DESCARGAR GRÁFICO PNG
+- DESCARGAR PDF
+
+Causa detectada: en V27.9 se recuperó la interfaz del comparativo por delito,
+pero no se incorporó el script completo que definía esas tres funciones.
+
+Marcador técnico: V27.9.1-COMPARATIVO-DELITO-OK
