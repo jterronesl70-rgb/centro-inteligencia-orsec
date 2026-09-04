@@ -1,0 +1,21 @@
+ORSEC V27.9.9 — RELACIÓN + GRÁFICOS / PDF DIRECTO
+
+CORRECCIONES:
+1. IMAGEN COMPLETA PNG:
+   - ya NO captura la pantalla;
+   - exporta únicamente el producto analítico:
+     KPIs + distribución por hora + franja + concentración territorial +
+     medio/artefacto + lectura ORSEC + relación completa.
+   - excluye cabecera web, filtros, botones y demás módulos.
+
+2. PDF:
+   - ya NO abre una ventana emergente;
+   - genera y descarga directamente un PDF multipágina;
+   - usa la misma composición limpia del PNG.
+
+NO SE MODIFICA:
+- Panorama Regional;
+- comparativos;
+- mapa;
+- datos;
+- resto del análisis detallado.

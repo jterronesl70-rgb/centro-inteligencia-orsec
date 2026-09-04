@@ -1078,7 +1078,7 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
  background:#eef6fb;border:1px solid #b9d2e3;border-radius:10px;">
  <strong style="color:#073e70;margin-right:4px;">DESCARGAR RELACIÓN:</strong>
  <button onclick="orsecDescargarDetalleCSV()" style="padding:9px 12px;border:0;border-radius:8px;background:#0b5f91;color:white;font-weight:800;cursor:pointer;">CSV</button>
- <button onclick="orsecDescargarRelacionImagenCompletaV2798()" style="padding:9px 12px;border:0;border-radius:8px;background:#1479a8;color:white;font-weight:800;cursor:pointer;">IMAGEN COMPLETA PNG</button>
+ <button onclick="orsecDescargarRelacionPNG()" style="padding:9px 12px;border:0;border-radius:8px;background:#1479a8;color:white;font-weight:800;cursor:pointer;">IMAGEN COMPLETA PNG</button>
  <button onclick="orsecDescargarRelacionPDF()" style="padding:9px 12px;border:0;border-radius:8px;background:#b3261e;color:white;font-weight:800;cursor:pointer;">PDF</button>
 </div>
 
@@ -4319,4 +4319,239 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
 })();
 </script>
 <script id="orsecV2798Marker">window.ORSEC_PATCH_RELACION="V27.9.8-IMAGEN-COMPLETA-RELACION";</script>
+
+<script id="orsecV2799RelacionExport">
+(function(){
+  const C={
+    navy:'#073e70', blue:'#1976a8', pale:'#eef6fb', text:'#17384f',
+    grid:'#dce7ef', green:'#14833b', orange:'#f59e0b', red:'#c62828',
+    muted:'#6a8192', white:'#ffffff'
+  };
+
+  function meta(){
+    return orsecRelacionMeta();
+  }
+  function rows(){
+    return ORSEC_DET_FILTRADO || [];
+  }
+  function clean(s){
+    return String(s??'').replace(/\s+/g,' ').trim();
+  }
+  function safe(s){
+    return String(s||'REGION').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/[^a-z0-9]+/gi,'_');
+  }
+  function count(arr,key){
+    const m={};
+    arr.forEach(r=>{
+      const k=(typeof key==='function'?key(r):r[key]) || 'SIN DATO';
+      m[k]=(m[k]||0)+1;
+    });
+    return m;
+  }
+  function entries(m,limit){
+    return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,limit);
+  }
+  function top(m){
+    return entries(m,1)[0] || ['—',0];
+  }
+  function trunc(ctx,val,maxW){
+    let t=clean(val);
+    if(ctx.measureText(t).width<=maxW) return t;
+    while(t.length>4 && ctx.measureText(t+'…').width>maxW) t=t.slice(0,-1);
+    return t+'…';
+  }
+  function rounded(ctx,x,y,w,h,r,fill,stroke){
+    ctx.beginPath();
+    ctx.roundRect(x,y,w,h,r);
+    ctx.fillStyle=fill; ctx.fill();
+    if(stroke){ ctx.strokeStyle=stroke; ctx.stroke(); }
+  }
+  function miniBars(ctx,title,data,x,y,w,h,color=C.blue){
+    rounded(ctx,x,y,w,h,12,C.white,'#c9dceb');
+    ctx.fillStyle=C.navy; ctx.font='bold 22px Arial'; ctx.textAlign='left';
+    ctx.fillText(title,x+22,y+34);
+
+    if(!data.length){
+      ctx.fillStyle=C.muted; ctx.font='17px Arial';
+      ctx.fillText('Sin datos',x+22,y+72); return;
+    }
+    const max=Math.max(1,...data.map(d=>d[1]));
+    const rowH=(h-62)/data.length;
+    data.forEach(([k,v],i)=>{
+      const yy=y+62+i*rowH;
+      ctx.fillStyle=C.text; ctx.font='15px Arial';
+      ctx.fillText(trunc(ctx,k,w*.34),x+22,yy+17);
+      const bx=x+w*.39, bw=w*.48;
+      ctx.fillStyle='#e7eff5'; ctx.fillRect(bx,yy+4,bw,14);
+      ctx.fillStyle=color; ctx.fillRect(bx,yy+4,bw*(v/max),14);
+      ctx.fillStyle=C.text; ctx.font='bold 15px Arial'; ctx.textAlign='right';
+      ctx.fillText(String(v),x+w-18,yy+17);
+      ctx.textAlign='left';
+    });
+  }
+  function hourChart(ctx,arr,x,y,w,h){
+    rounded(ctx,x,y,w,h,12,C.white,'#c9dceb');
+    ctx.fillStyle=C.navy; ctx.font='bold 22px Arial';
+    ctx.fillText('Distribución por hora · 00–23 h',x+22,y+34);
+    const m=count(arr,r=>r.hora?r.hora.slice(0,2):'');
+    const vals=Array.from({length:24},(_,i)=>m[String(i).padStart(2,'0')]||0);
+    const max=Math.max(1,...vals);
+    const left=x+32, top=y+65, cw=w-64, ch=h-110, slot=cw/24;
+    vals.forEach((v,i)=>{
+      const bh=v/max*ch;
+      ctx.fillStyle=C.blue;
+      ctx.fillRect(left+i*slot+4,top+ch-bh,Math.max(3,slot-8),bh);
+      if(v){
+        ctx.fillStyle=C.text; ctx.font='bold 12px Arial'; ctx.textAlign='center';
+        ctx.fillText(v,left+i*slot+slot/2,top+ch-bh-7);
+      }
+    });
+    ctx.fillStyle=C.muted; ctx.font='13px Arial'; ctx.textAlign='center';
+    [0,6,12,18,23].forEach(i=>ctx.fillText(String(i).padStart(2,'0')+'h',left+i*slot+slot/2,y+h-20));
+    ctx.textAlign='left';
+  }
+
+  window.orsecRelacionCanvasV2799=function(){
+    const arr=rows();
+    if(!arr.length) return null;
+    const m=meta(), cols=orsecRelCols(m.delito);
+    const margin=42, W=1800, rowH=40;
+    const summaryH=910;
+    const H=summaryH + rowH*(arr.length+1) + 80;
+    const canvas=document.createElement('canvas');
+    canvas.width=W; canvas.height=H;
+    const ctx=canvas.getContext('2d');
+
+    ctx.fillStyle=C.white; ctx.fillRect(0,0,W,H);
+
+    // CABECERA DEL PRODUCTO (solo producto, no pantalla ni filtros)
+    ctx.fillStyle=C.navy; ctx.fillRect(0,0,W,125);
+    ctx.fillStyle=C.white; ctx.font='bold 38px Arial';
+    ctx.fillText('ORSEC · ANÁLISIS DETALLADO Y RELACIÓN',margin,50);
+    ctx.font='21px Arial';
+    const prov=m.provincia==='TODAS'?'TODAS LAS PROVINCIAS':m.provincia;
+    ctx.fillText(`${m.delito} · ${m.periodo} · ${prov}`,margin,88);
+
+    // KPIs
+    const fran=count(arr,'franja'), provincias=count(arr,'provincia'),
+          horas=count(arr,r=>r.hora?r.hora.slice(0,2):'SIN HORA'),
+          modalidad=m.delito==='HOMICIDIOS'?count(arr,'medio'):count(arr,'artefacto');
+    const ft=top(fran), pt=top(provincias), ht=top(horas);
+    const kpis=[
+      ['CASOS SELECCIONADOS',String(arr.length)],
+      ['FRANJA PRINCIPAL',ft[0]],
+      ['HORA PICO',ht[0]==='SIN HORA'?'SIN DATO':ht[0]+':00'],
+      ['PROVINCIA PRINCIPAL',pt[0]]
+    ];
+    const kw=(W-margin*2-36)/4;
+    kpis.forEach((k,i)=>{
+      const x=margin+i*(kw+12);
+      rounded(ctx,x,145,kw,92,10,'#f7fbfe','#c9dceb');
+      ctx.fillStyle=C.muted;ctx.font='bold 14px Arial';ctx.fillText(k[0],x+18,174);
+      ctx.fillStyle=C.navy;ctx.font='bold 25px Arial';
+      ctx.fillText(trunc(ctx,k[1],kw-36),x+18,210);
+    });
+
+    // GRÁFICOS: exactamente el contenido analítico, sin cabecera web ni filtros.
+    hourChart(ctx,arr,margin,260,830,270);
+    miniBars(ctx,'Distribución por franja horaria',entries(fran,4),margin+850,260,866,270,C.blue);
+    miniBars(ctx,'Concentración territorial',entries(provincias,6),margin,550,830,270,C.blue);
+    miniBars(ctx,m.delito==='HOMICIDIOS'?'Medio empleado':'Tipo de artefacto',entries(modalidad,6),margin+850,550,866,270,C.blue);
+
+    // LECTURA ORSEC
+    const pct=arr.length?Math.round(ft[1]/arr.length*1000)/10:0;
+    rounded(ctx,margin,835,W-margin*2,54,8,'#fff8dc','#f1c453');
+    ctx.fillStyle=C.text;ctx.font='16px Arial';
+    const lectura=`Lectura ORSEC: ${arr.length} ${m.delito.toLowerCase()}. Franja de mayor concentración: ${ft[0]} (${ft[1]} casos; ${pct}%). Hora de mayor frecuencia: ${ht[0]}:00.`;
+    ctx.fillText(trunc(ctx,lectura,W-margin*2-28),margin+14,868);
+
+    // TABLA COMPLETA
+    const tableY=910;
+    const rawWidths=m.delito==='HOMICIDIOS'
+      ? [110,75,125,130,60,55,190,600]
+      : [110,75,120,125,190,220,135,500];
+    const usable=W-margin*2;
+    const sum=rawWidths.reduce((a,b)=>a+b,0);
+    const widths=rawWidths.map(v=>v*usable/sum);
+
+    ctx.fillStyle=C.navy;ctx.fillRect(margin,tableY,usable,rowH);
+    let xx=margin;
+    ctx.fillStyle=C.white;ctx.font='bold 14px Arial';
+    cols.forEach((c,i)=>{ctx.fillText(c[1],xx+6,tableY+26);xx+=widths[i];});
+
+    arr.forEach((r,ri)=>{
+      const y=tableY+rowH*(ri+1);
+      ctx.fillStyle=ri%2?'#f7fafc':C.white;ctx.fillRect(margin,y,usable,rowH);
+      ctx.strokeStyle=C.grid;ctx.beginPath();ctx.moveTo(margin,y+rowH);ctx.lineTo(margin+usable,y+rowH);ctx.stroke();
+      xx=margin;ctx.fillStyle=C.text;ctx.font='12px Arial';
+      cols.forEach((c,i)=>{
+        ctx.fillText(trunc(ctx,r[c[0]],widths[i]-12),xx+6,y+25);
+        xx+=widths[i];
+      });
+    });
+
+    ctx.fillStyle=C.muted;ctx.font='13px Arial';
+    ctx.fillText(`Fuente: ORSEC · Relación completa · ${arr.length} registro(s)`,margin,H-28);
+    return canvas;
+  };
+
+  // PNG: producto limpio (gráficos + relación), NO screenshot de pantalla.
+  window.orsecDescargarRelacionPNG=function(){
+    try{
+      const canvas=window.orsecRelacionCanvasV2799();
+      if(!canvas){alert('No hay registros para descargar.');return;}
+      const m=meta();
+      canvas.toBlob(blob=>{
+        if(!blob){alert('No se pudo generar la imagen.');return;}
+        orsecDownload(`ORSEC_${safe(m.delito)}_${safe(m.provincia)}_ANALISIS_Y_RELACION_V27_9_9.png`,blob);
+      },'image/png');
+    }catch(e){
+      console.error(e);alert('No se pudo generar la imagen completa de la relación.');
+    }
+  };
+
+  async function ensureJsPDF(){
+    if(window.jspdf&&window.jspdf.jsPDF) return true;
+    return await new Promise(resolve=>{
+      const sc=document.createElement('script');
+      sc.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      sc.onload=()=>resolve(true);sc.onerror=()=>resolve(false);
+      document.head.appendChild(sc);
+    });
+  }
+
+  // PDF: descarga directa, sin ventanas emergentes.
+  window.orsecDescargarRelacionPDF=async function(){
+    try{
+      const canvas=window.orsecRelacionCanvasV2799();
+      if(!canvas){alert('No hay registros para descargar.');return;}
+      const ok=await ensureJsPDF();
+      if(!ok){alert('No se pudo cargar el generador PDF.');return;}
+
+      const {jsPDF}=window.jspdf;
+      const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+      const pageW=281, pageH=194, x=8, y=8;
+      const slicePx=Math.floor(canvas.width*(pageH/pageW));
+      let offset=0, page=0;
+
+      while(offset<canvas.height){
+        const h=Math.min(slicePx,canvas.height-offset);
+        const part=document.createElement('canvas');
+        part.width=canvas.width;part.height=h;
+        part.getContext('2d').drawImage(canvas,0,offset,canvas.width,h,0,0,canvas.width,h);
+        const mmH=pageW*(h/canvas.width);
+        if(page>0) doc.addPage('a4','landscape');
+        doc.addImage(part.toDataURL('image/jpeg',0.93),'JPEG',x,y,pageW,mmH);
+        offset+=h;page++;
+      }
+      const m=meta();
+      doc.save(`ORSEC_${safe(m.delito)}_${safe(m.provincia)}_ANALISIS_Y_RELACION_V27_9_9.pdf`);
+    }catch(e){
+      console.error(e);alert('No se pudo generar el PDF de la relación.');
+    }
+  };
+})();
+</script>
+<script id="orsecV2799Marker">window.ORSEC_PATCH_RELACION="V27.9.9-RELACION-GRAFICOS-PDF-OK";</script>
 </body></html>
