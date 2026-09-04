@@ -1,0 +1,21 @@
+ORSEC V27.5 · PLANTILLA COMPATIBLE / SIN DOBLE CAPA
+
+CAUSA CORREGIDA
+La infografía descargada se distorsionaba porque el canvas dinámico estaba
+dibujando información nueva encima de una imagen estática que ya contenía
+otra composición completa.
+
+SOLUCIÓN
+- Se restaura la plantilla V24 original de 4 tarjetas, compatible con las
+  coordenadas del generador dinámico.
+- Se limpian explícitamente las zonas dinámicas antes de redibujar.
+- Logos, mapa, iconos y marco institucional se conservan.
+- Región/provincia, delito, período y comparativos siguen siendo dinámicos.
+- El comparativo inferior y el gráfico mantienen su espacio independiente.
+
+PRUEBAS
+1) Trujillo + Todos los delitos + Ene-Ago 2026 + Descargar PNG.
+2) Trujillo + Detonaciones.
+3) Chepén + Homicidios.
+
+Marcador técnico del despliegue: V27.5-PLANTILLA-COMPATIBLE
