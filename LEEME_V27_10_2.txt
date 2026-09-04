@@ -1,0 +1,16 @@
+ORSEC V27.10.2 — SOLO ANÁLISIS DETALLADO DE ALTO IMPACTO
+
+BASE: V27.9.7 estable.
+
+Se modifican únicamente:
+- IMAGEN COMPLETA PNG
+- PDF
+
+La exportación ya no depende de ORSEC_DET_FILTRADO ni de funciones internas
+del módulo. Lee directamente lo que ya está renderizado en pantalla:
+KPIs, gráficos, lectura ORSEC y tabla completa.
+
+PDF:
+usa primero el cargador jsPDF ya existente en la plataforma.
+
+Todo lo demás permanece sin cambios.

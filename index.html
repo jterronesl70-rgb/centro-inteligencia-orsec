@@ -1078,8 +1078,8 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
  background:#eef6fb;border:1px solid #b9d2e3;border-radius:10px;">
  <strong style="color:#073e70;margin-right:4px;">DESCARGAR RELACIÓN:</strong>
  <button onclick="orsecDescargarDetalleCSV()" style="padding:9px 12px;border:0;border-radius:8px;background:#0b5f91;color:white;font-weight:800;cursor:pointer;">CSV</button>
- <button onclick="orsecDescargarRelacionPNG_V27101()" style="padding:9px 12px;border:0;border-radius:8px;background:#1479a8;color:white;font-weight:800;cursor:pointer;">IMAGEN COMPLETA PNG</button>
- <button onclick="orsecDescargarRelacionPDF_V27101()" style="padding:9px 12px;border:0;border-radius:8px;background:#b3261e;color:white;font-weight:800;cursor:pointer;">PDF</button>
+ <button onclick="orsecDescargarRelacionPNG_V27102()" style="padding:9px 12px;border:0;border-radius:8px;background:#1479a8;color:white;font-weight:800;cursor:pointer;">IMAGEN COMPLETA PNG</button>
+ <button onclick="orsecDescargarRelacionPDF_V27102()" style="padding:9px 12px;border:0;border-radius:8px;background:#b3261e;color:white;font-weight:800;cursor:pointer;">PDF</button>
 </div>
 
 <div class="orsec-detail-tablewrap"><table class="orsec-detail-table"><thead id="orsecDetHead"></thead><tbody id="orsecDetBody"></tbody></table></div>
@@ -4230,19 +4230,11 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
 
 <script id="orsecV2797Marker">window.ORSEC_PATCH="V27.9.7-COMPARATIVO-PROVINCIAL-CUADRO-GRAFICO";</script>
 
-<script id="orsecV27101ExportRelacion">
+<script id="orsecV27102AltoImpactoExport">
 (function(){
-  function cnt(arr,key){
-    const m={};
-    arr.forEach(r=>{
-      const v=(typeof key==='function'?key(r):r[key]) || 'SIN DATO';
-      m[v]=(m[v]||0)+1;
-    });
-    return m;
-  }
-  function topEntries(m,n){
-    return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,n);
-  }
+  const COLORS={navy:'#073e70',blue:'#2f88c0',text:'#17384f',muted:'#6a8192',grid:'#dce7ef',pale:'#f7fafc',white:'#ffffff'};
+
+  function txt(id){ return (document.getElementById(id)?.innerText||'').trim(); }
   function safe(v){
     return String(v||'REGION').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'_');
   }
@@ -4254,188 +4246,213 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
   }
   function box(ctx,x,y,w,h,fill,stroke){
     ctx.fillStyle=fill; ctx.fillRect(x,y,w,h);
-    if(stroke){ ctx.strokeStyle=stroke; ctx.strokeRect(x,y,w,h); }
+    if(stroke){ctx.strokeStyle=stroke;ctx.strokeRect(x,y,w,h);}
   }
-  function bars(ctx,title,data,x,y,w,h,color){
-    box(ctx,x,y,w,h,'#ffffff','#c9dceb');
-    ctx.fillStyle='#073e70'; ctx.font='bold 20px Arial'; ctx.textAlign='left';
-    ctx.fillText(title,x+18,y+30);
-    const max=Math.max(1,...data.map(d=>d[1]));
-    const rh=(h-55)/Math.max(1,data.length);
-    data.forEach(([k,v],i)=>{
-      const yy=y+52+i*rh;
-      ctx.fillStyle='#17384f'; ctx.font='14px Arial'; ctx.textAlign='left';
-      ctx.fillText(trunc(ctx,k,w*0.36),x+18,yy+16);
-      const bx=x+w*0.41, bw=w*0.47;
-      ctx.fillStyle='#e7eff5'; ctx.fillRect(bx,yy+3,bw,13);
-      ctx.fillStyle=color; ctx.fillRect(bx,yy+3,bw*(v/max),13);
-      ctx.fillStyle='#17384f'; ctx.font='bold 14px Arial'; ctx.textAlign='right';
-      ctx.fillText(String(v),x+w-14,yy+16);
+  function parseMini(id){
+    return [...document.querySelectorAll('#'+id+' .orsec-mini-row')].map(r=>{
+      const name=(r.querySelector('span')?.innerText||'').trim();
+      const val=parseFloat((r.querySelector('b')?.innerText||'0').replace(/[^\d.-]/g,''))||0;
+      return [name,val];
     });
   }
-  function hourBars(ctx,arr,x,y,w,h){
-    box(ctx,x,y,w,h,'#ffffff','#c9dceb');
-    ctx.fillStyle='#073e70'; ctx.font='bold 20px Arial'; ctx.textAlign='left';
+  function parseHours(){
+    const out=[];
+    [...document.querySelectorAll('#orsecDetHoras .orsec-hour-col')].forEach((el,i)=>{
+      const tip=el.getAttribute('data-tip')||'';
+      const m=tip.match(/(\d+)\s+caso/);
+      out.push(m?+m[1]:0);
+    });
+    while(out.length<24) out.push(0);
+    return out.slice(0,24);
+  }
+  function drawMini(ctx,title,data,x,y,w,h){
+    box(ctx,x,y,w,h,COLORS.white,'#c9dceb');
+    ctx.fillStyle=COLORS.navy;ctx.font='bold 20px Arial';ctx.textAlign='left';
+    ctx.fillText(title,x+18,y+30);
+    if(!data.length){ctx.fillStyle=COLORS.muted;ctx.font='15px Arial';ctx.fillText('Sin datos',x+18,y+62);return;}
+    const max=Math.max(1,...data.map(d=>d[1]));
+    const rowH=(h-55)/data.length;
+    data.forEach(([name,val],i)=>{
+      const yy=y+52+i*rowH;
+      ctx.fillStyle=COLORS.text;ctx.font='14px Arial';
+      ctx.fillText(trunc(ctx,name,w*.36),x+18,yy+16);
+      const bx=x+w*.41,bw=w*.47;
+      ctx.fillStyle='#e7eff5';ctx.fillRect(bx,yy+3,bw,13);
+      ctx.fillStyle=COLORS.blue;ctx.fillRect(bx,yy+3,bw*(val/max),13);
+      ctx.fillStyle=COLORS.text;ctx.font='bold 14px Arial';ctx.textAlign='right';
+      ctx.fillText(String(val),x+w-14,yy+16);ctx.textAlign='left';
+    });
+  }
+  function drawHours(ctx,vals,x,y,w,h){
+    box(ctx,x,y,w,h,COLORS.white,'#c9dceb');
+    ctx.fillStyle=COLORS.navy;ctx.font='bold 20px Arial';ctx.textAlign='left';
     ctx.fillText('Distribución por hora · 00–23 h',x+18,y+30);
-    const map=cnt(arr,r=>r.hora?r.hora.slice(0,2):'');
-    const vals=Array.from({length:24},(_,i)=>map[String(i).padStart(2,'0')]||0);
-    const max=Math.max(1,...vals), left=x+24, top=y+52, cw=w-48, ch=h-92, slot=cw/24;
+    const max=Math.max(1,...vals),left=x+26,top=y+52,cw=w-52,ch=h-92,slot=cw/24;
     vals.forEach((v,i)=>{
       const bh=v/max*ch;
-      ctx.fillStyle='#2f88c0';
+      ctx.fillStyle=COLORS.blue;
       ctx.fillRect(left+i*slot+2,top+ch-bh,Math.max(2,slot-4),bh);
+      if(v){
+        ctx.fillStyle=COLORS.text;ctx.font='bold 11px Arial';ctx.textAlign='center';
+        ctx.fillText(v,left+i*slot+slot/2,top+ch-bh-5);
+      }
     });
-    ctx.fillStyle='#6a8192'; ctx.font='12px Arial'; ctx.textAlign='center';
+    ctx.fillStyle=COLORS.muted;ctx.font='12px Arial';ctx.textAlign='center';
     [0,6,12,18,23].forEach(i=>ctx.fillText(String(i).padStart(2,'0')+'h',left+i*slot+slot/2,y+h-12));
     ctx.textAlign='left';
   }
 
-  window.orsecConstruirRelacionCanvas_V27101=function(){
-    const arr=(typeof ORSEC_DET_FILTRADO!=='undefined' && Array.isArray(ORSEC_DET_FILTRADO)) ? ORSEC_DET_FILTRADO : [];
-    if(!arr.length) return null;
+  function getTable(){
+    const headers=[...document.querySelectorAll('#orsecDetHead th')].map(th=>th.innerText.trim());
+    const rows=[...document.querySelectorAll('#orsecDetBody tr')].map(tr=>
+      [...tr.querySelectorAll('td')].map(td=>td.innerText.trim())
+    );
+    return {headers,rows};
+  }
 
-    const meta=orsecRelacionMeta();
-    const cols=orsecRelCols(meta.delito);
-    const W=1800, margin=40, rowH=38;
-    const summaryY=145, tableY=790;
-    const H=tableY + rowH*(arr.length+1) + 55;
+  window.orsecConstruirCanvasAltoImpacto_V27102=function(){
+    const {headers,rows}=getTable();
+    if(!rows.length) return null;
 
+    const W=1800, margin=40, rowH=38, tableY=800;
+    const H=tableY + rowH*(rows.length+1) + 55;
     const canvas=document.createElement('canvas');
-    canvas.width=W; canvas.height=H;
+    canvas.width=W;canvas.height=H;
     const ctx=canvas.getContext('2d');
     if(!ctx) return null;
 
-    ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='#073e70'; ctx.fillRect(0,0,W,115);
-    ctx.fillStyle='#ffffff'; ctx.font='bold 34px Arial'; ctx.textAlign='left';
-    ctx.fillText('ORSEC · ANÁLISIS Y RELACIÓN DETALLADA',margin,47);
+    ctx.fillStyle=COLORS.white;ctx.fillRect(0,0,W,H);
+
+    // Cabecera del producto descargado
+    ctx.fillStyle=COLORS.navy;ctx.fillRect(0,0,W,115);
+    ctx.fillStyle=COLORS.white;ctx.font='bold 34px Arial';ctx.textAlign='left';
+    ctx.fillText('ORSEC · ANÁLISIS DETALLADO DE ALTO IMPACTO',margin,47);
     ctx.font='19px Arial';
-    const prov=meta.provincia==='TODAS'?'TODAS LAS PROVINCIAS':meta.provincia;
-    ctx.fillText(meta.delito+' · '+meta.periodo+' · '+prov,margin,82);
+    const delito=document.getElementById('orsecDetDelito')?.selectedOptions?.[0]?.textContent||'';
+    const periodo=document.getElementById('orsecDetPeriodo')?.selectedOptions?.[0]?.textContent||'';
+    const provincia=document.getElementById('orsecDetProvincia')?.selectedOptions?.[0]?.textContent||'';
+    ctx.fillText(`${delito} · ${periodo} · ${provincia}`,margin,82);
 
-    const fran=cnt(arr,'franja');
-    const provs=cnt(arr,'provincia');
-    const modalidad=meta.delito==='HOMICIDIOS'?cnt(arr,'medio'):cnt(arr,'artefacto');
-    const ft=topEntries(fran,1)[0]||['—',0];
-    const pt=topEntries(provs,1)[0]||['—',0];
-    const horas=cnt(arr,r=>r.hora?r.hora.slice(0,2):'SIN HORA');
-    const ht=topEntries(horas,1)[0]||['—',0];
-
+    // KPIs visibles actuales
     const kpis=[
-      ['CASOS',String(arr.length)],
-      ['FRANJA PRINCIPAL',ft[0]],
-      ['HORA PICO',ht[0]==='SIN HORA'?'SIN DATO':ht[0]+':00'],
-      ['PROVINCIA PRINCIPAL',pt[0]]
+      ['CASOS SELECCIONADOS',txt('orsecDetTotal')],
+      ['FRANJA DE MAYOR INCIDENCIA',txt('orsecDetFranja')],
+      ['HORA PICO',txt('orsecDetHora')],
+      ['PROVINCIA PRINCIPAL',txt('orsecDetProvTop')]
     ];
     const kw=(W-margin*2-30)/4;
     kpis.forEach((k,i)=>{
       const x=margin+i*(kw+10);
-      box(ctx,x,summaryY,kw,82,'#f7fbfe','#c9dceb');
-      ctx.fillStyle='#6a8192'; ctx.font='bold 13px Arial';
-      ctx.fillText(k[0],x+15,summaryY+25);
-      ctx.fillStyle='#073e70'; ctx.font='bold 23px Arial';
-      ctx.fillText(trunc(ctx,k[1],kw-30),x+15,summaryY+58);
+      box(ctx,x,140,kw,82,'#f7fbfe','#c9dceb');
+      ctx.fillStyle=COLORS.muted;ctx.font='bold 13px Arial';ctx.fillText(k[0],x+15,165);
+      ctx.fillStyle=COLORS.navy;ctx.font='bold 23px Arial';ctx.fillText(trunc(ctx,k[1],kw-30),x+15,198);
     });
 
-    hourBars(ctx,arr,margin,summaryY+105,840,220);
-    bars(ctx,'Distribución por franja horaria',topEntries(fran,4),margin+860,summaryY+105,860,220,'#2f88c0');
-    bars(ctx,'Concentración territorial',topEntries(provs,7),margin,summaryY+345,840,235,'#2f88c0');
-    bars(ctx,meta.delito==='HOMICIDIOS'?'Medio empleado':'Tipo de artefacto',topEntries(modalidad,7),margin+860,summaryY+345,860,235,'#2f88c0');
+    // Gráficos tomados directamente de lo que YA está renderizado en pantalla
+    drawHours(ctx,parseHours(),margin,245,840,220);
+    drawMini(ctx,'Distribución por franja horaria',parseMini('orsecDetFranjas'),margin+860,245,860,220);
+    drawMini(ctx,'Concentración territorial',parseMini('orsecDetProvincias'),margin,485,840,235);
+    drawMini(ctx,txt('orsecDetModalidadTitulo')||'Modalidad / medio empleado',parseMini('orsecDetModalidades'),margin+860,485,860,235);
 
-    const rawWidths=meta.delito==='HOMICIDIOS'
-      ? [110,75,125,130,60,55,190,600]
-      : [110,75,120,125,190,220,135,500];
+    // Lectura ORSEC
+    box(ctx,margin,735,W-margin*2,45,'#fff8dc','#f1c453');
+    ctx.fillStyle=COLORS.text;ctx.font='15px Arial';
+    ctx.fillText(trunc(ctx,txt('orsecDetLectura'),W-margin*2-24),margin+12,763);
+
+    // Relación completa
     const usable=W-margin*2;
-    const sum=rawWidths.reduce((a,b)=>a+b,0);
-    const widths=rawWidths.map(v=>v*usable/sum);
-
-    ctx.fillStyle='#073e70'; ctx.fillRect(margin,tableY,usable,rowH);
-    let xx=margin;
-    ctx.fillStyle='#ffffff'; ctx.font='bold 13px Arial';
-    cols.forEach((c,i)=>{
-      ctx.fillText(c[1],xx+5,tableY+25);
-      xx+=widths[i];
+    const colCount=headers.length||1;
+    const widths=headers.map((h,i)=>{
+      if(i===colCount-1) return usable*0.40;
+      return usable*0.60/(colCount-1);
     });
 
-    arr.forEach((r,ri)=>{
-      const y=tableY+rowH*(ri+1);
-      ctx.fillStyle=ri%2?'#f7fafc':'#ffffff';
-      ctx.fillRect(margin,y,usable,rowH);
-      ctx.strokeStyle='#dce7ef'; ctx.beginPath();
-      ctx.moveTo(margin,y+rowH); ctx.lineTo(margin+usable,y+rowH); ctx.stroke();
+    ctx.fillStyle=COLORS.navy;ctx.fillRect(margin,tableY,usable,rowH);
+    let xx=margin;
+    ctx.fillStyle=COLORS.white;ctx.font='bold 13px Arial';
+    headers.forEach((h,i)=>{
+      ctx.fillText(trunc(ctx,h,widths[i]-10),xx+5,tableY+25);xx+=widths[i];
+    });
 
-      xx=margin; ctx.fillStyle='#17384f'; ctx.font='11.5px Arial';
-      cols.forEach((c,i)=>{
-        ctx.fillText(trunc(ctx,r[c[0]],widths[i]-10),xx+5,y+24);
-        xx+=widths[i];
+    rows.forEach((row,ri)=>{
+      const y=tableY+rowH*(ri+1);
+      ctx.fillStyle=ri%2?COLORS.pale:COLORS.white;ctx.fillRect(margin,y,usable,rowH);
+      ctx.strokeStyle=COLORS.grid;ctx.beginPath();ctx.moveTo(margin,y+rowH);ctx.lineTo(margin+usable,y+rowH);ctx.stroke();
+      xx=margin;ctx.fillStyle=COLORS.text;ctx.font='11.5px Arial';
+      row.forEach((cell,i)=>{
+        ctx.fillText(trunc(ctx,cell,widths[i]-10),xx+5,y+24);xx+=widths[i];
       });
     });
 
-    ctx.fillStyle='#6a8192'; ctx.font='12px Arial';
-    ctx.fillText('Fuente: ORSEC · Relación completa según filtros activos.',margin,H-18);
+    ctx.fillStyle=COLORS.muted;ctx.font='12px Arial';
+    ctx.fillText(`Fuente: ORSEC · Relación completa · ${rows.length} registro(s)`,margin,H-18);
     return canvas;
   };
 
-  window.orsecDescargarRelacionPNG_V27101=function(){
+  window.orsecDescargarRelacionPNG_V27102=function(){
     try{
-      const canvas=window.orsecConstruirRelacionCanvas_V27101();
-      if(!canvas){ alert('No hay registros para descargar.'); return; }
-      const meta=orsecRelacionMeta();
-      canvas.toBlob(function(blob){
-        if(!blob){ alert('No se pudo generar la imagen de la relación.'); return; }
-        orsecDownload('ORSEC_'+safe(meta.delito)+'_'+safe(meta.provincia)+'_ANALISIS_RELACION_V27_10_1.png',blob);
+      const canvas=window.orsecConstruirCanvasAltoImpacto_V27102();
+      if(!canvas){alert('No hay registros para descargar.');return;}
+      canvas.toBlob(blob=>{
+        if(!blob){alert('No se pudo generar la imagen.');return;}
+        const a=document.createElement('a'),url=URL.createObjectURL(blob);
+        a.href=url;
+        a.download='ORSEC_ANALISIS_ALTO_IMPACTO_RELACION_V27_10_2.png';
+        document.body.appendChild(a);a.click();a.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),1500);
       },'image/png');
     }catch(e){
-      console.error('V27.10.1 PNG',e);
+      console.error('V27.10.2 PNG',e);
       alert('No se pudo generar la imagen de la relación.');
     }
   };
 
-  async function loadJsPDF(){
-    if(window.jspdf && window.jspdf.jsPDF) return true;
-    return await new Promise(resolve=>{
-      const sc=document.createElement('script');
-      sc.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-      sc.onload=()=>resolve(true);
-      sc.onerror=()=>resolve(false);
-      document.head.appendChild(sc);
-    });
-  }
-
-  window.orsecDescargarRelacionPDF_V27101=async function(){
+  window.orsecDescargarRelacionPDF_V27102=async function(){
     try{
-      const canvas=window.orsecConstruirRelacionCanvas_V27101();
-      if(!canvas){ alert('No hay registros para descargar.'); return; }
-      const ok=await loadJsPDF();
-      if(!ok){ alert('No se pudo cargar el generador PDF.'); return; }
+      const canvas=window.orsecConstruirCanvasAltoImpacto_V27102();
+      if(!canvas){alert('No hay registros para descargar.');return;}
 
-      const jsPDF=window.jspdf.jsPDF;
+      // Usar el cargador de jsPDF que YA existe y funciona en la plataforma.
+      if(typeof orsecCargarJsPDF==='function'){
+        await orsecCargarJsPDF();
+      }else if(!(window.jspdf&&window.jspdf.jsPDF)){
+        await new Promise((resolve,reject)=>{
+          const sc=document.createElement('script');
+          sc.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+          sc.onload=resolve;sc.onerror=reject;document.head.appendChild(sc);
+        });
+      }
+
+      if(!(window.jspdf&&window.jspdf.jsPDF)){
+        alert('No se pudo cargar el generador PDF.');
+        return;
+      }
+
+      const {jsPDF}=window.jspdf;
       const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-      const pageW=281, pageH=194, x=8, y=8;
+      const pageW=281,pageH=194,x=8,y=8;
       const slicePx=Math.floor(canvas.width*(pageH/pageW));
+      let offset=0,page=0;
 
-      let offset=0, page=0;
       while(offset<canvas.height){
         const h=Math.min(slicePx,canvas.height-offset);
         const part=document.createElement('canvas');
-        part.width=canvas.width; part.height=h;
+        part.width=canvas.width;part.height=h;
         const pc=part.getContext('2d');
-        pc.fillStyle='#ffffff'; pc.fillRect(0,0,part.width,part.height);
+        pc.fillStyle='#fff';pc.fillRect(0,0,part.width,part.height);
         pc.drawImage(canvas,0,offset,canvas.width,h,0,0,canvas.width,h);
-        if(page>0) doc.addPage('a4','landscape');
+        if(page>0)doc.addPage('a4','landscape');
         const mmH=pageW*(h/canvas.width);
-        doc.addImage(part.toDataURL('image/jpeg',0.9),'JPEG',x,y,pageW,mmH);
-        offset+=h; page++;
+        doc.addImage(part.toDataURL('image/jpeg',0.90),'JPEG',x,y,pageW,mmH);
+        offset+=h;page++;
       }
-
-      const meta=orsecRelacionMeta();
-      doc.save('ORSEC_'+safe(meta.delito)+'_'+safe(meta.provincia)+'_ANALISIS_RELACION_V27_10_1.pdf');
+      doc.save('ORSEC_ANALISIS_ALTO_IMPACTO_RELACION_V27_10_2.pdf');
     }catch(e){
-      console.error('V27.10.1 PDF',e);
+      console.error('V27.10.2 PDF',e);
       alert('No se pudo generar el PDF de la relación.');
     }
   };
 })();
 </script>
-<script id="orsecV27101Marker">window.ORSEC_PATCH_RELACION="V27.10.1-EXPORTACION-AISLADA";</script>
+<script id="orsecV27102Marker">window.ORSEC_PATCH_ALTO_IMPACTO='V27.10.2-DOM-EXPORT';</script>
 </body></html>
