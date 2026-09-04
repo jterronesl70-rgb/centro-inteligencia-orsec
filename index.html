@@ -2342,6 +2342,10 @@ document.addEventListener('change', function(e){
 });
 </script>
 
+
+<script>
+window.ORSEC_BUILD='V27.7-RENDER-LIMPIO';
+</script>
 </body></html>`);
   w.document.close();
 }
@@ -2518,6 +2522,17 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     const bg=await loadImage(TEMPLATE);
     x.drawImage(bg,0,0,c.width,c.height);
 
+    // ===== V27.7: RENDER LIMPIO =====
+    // Conservamos únicamente la cabecera institucional de la plantilla.
+    // Todo el cuerpo dinámico se reconstruye sobre una superficie limpia.
+    // Así no puede quedar texto/gráfico viejo debajo de la nueva selección.
+    fillRect(x,0,153,1536,822,'#ffffff');
+
+    // Fondo general muy suave para separar visualmente los bloques.
+    fillRect(x,10,218,1516,218,'#f7fbfe');
+    fillRect(x,10,438,1516,255,'#f7fbfe');
+    fillRect(x,10,696,1516,269,'#f7fbfe');
+
     // ===== TÍTULO / PERÍODO =====
     // V27.2: título, período y ámbito territorial en líneas independientes.
     // La banda territorial queda fuera de las tarjetas KPI.
@@ -2552,6 +2567,18 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
       ['PARTICIPACIÓN', '#31842b'],
       ['VARIACIÓN', '#0755ba']
     ];
+
+    // Tarjetas reconstruidas desde cero: marco, círculo e identificador.
+    kpisVista.forEach((it,i)=>{
+      const color=it[1];
+      rounded(x,kpiX[i],252,kpiW[i],148,10,'#ffffff','#c9dceb');
+      x.beginPath(); x.arc(kpiX[i]+66,314,42,0,Math.PI*2); x.fillStyle=color; x.fill();
+      const sig = scopeDel==='TODOS'
+        ? ['H','E','D','RV'][i]
+        : [String(scopeDel).slice(0,2),'Σ','%','Δ'][i];
+      txt(x,sig,kpiX[i]+66,325,i===3&&scopeDel==='TODOS'?17:22,true,'#ffffff','center');
+    });
+
     kpisVista.forEach((it,i)=>{
       let [delito,color]=it, a=0,b=0,v=null;
       if(scopeDel==='TODOS'){ a=N(d26[delito]); b=N(d25[delito]); v=varPct(a,b); }
@@ -2559,8 +2586,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
       else if(i===1){ a=total(cur); b=total(prv); v=varPct(a,b); }
       else if(i===2){ a=total(cur)?N(d26[scopeDel])/total(cur)*100:0; b=total(prv)?N(d25[scopeDel])/total(prv)*100:0; v=varPct(a,b); }
       else { a=varPct(N(d26[scopeDel]),N(d25[scopeDel])); b=0; v=a; }
-      // Limpiar solo zona de texto, preservando icono y marco del diseño.
-      fillRect(x,kpiX[i]+140,252,kpiW[i]-150,148,'#ffffff');
+      // La tarjeta completa ya fue reconstruida sobre fondo limpio.
       fit(x,delito.replace('ROBO DE VEHICULOS','ROBO DE VEHÍCULOS').replace('VIOLACION SEXUAL','VIOLACIÓN SEXUAL'),kpiX[i]+145,278,kpiW[i]-160,16,true,COLORS.text);
       const esPct=(scopeDel!=='TODOS' && (i===2 || i===3));
       txt(x,esPct ? (N(a).toFixed(1)+'%') : fmt(a),kpiX[i]+145,326,esPct?34:42,true,color);
@@ -2574,7 +2600,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     txt(x,`Comparativo interanual: ${pLabel.replace(String(year),String(prev))} vs. ${pLabel}. Datos sujetos a actualización.`,66,428,12,true,COLORS.text);
 
     // ===== PANEL 1: FOTOGRAFÍA REGIONAL =====
-    fillRect(x,118,442,340,248,'#ffffff');
+    rounded(x,118,442,340,248,8,'#ffffff','#c9dceb');
     fillRect(x,118,442,340,38,COLORS.navy2);
     txt(x,scopeProv==='TOTAL REGION'?'FOTOGRAFÍA REGIONAL':`FOTOGRAFÍA · ${scopeProv}`,288,467,16,true,'#ffffff','center');
     const curScope=(scopeDel==='TODOS'?cur:cur.filter(r=>r.Delito===scopeDel));
@@ -2599,7 +2625,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     txt(x,'Del total regional',132,698,12,false,COLORS.text);
 
     // ===== PANEL 2: COMPARATIVO INTERANUAL =====
-    fillRect(x,466,442,526,248,'#ffffff');
+    rounded(x,466,442,526,248,8,'#ffffff','#c9dceb');
     fillRect(x,466,442,526,38,'#f4f8fb');
     txt(x,'COMPARATIVO INTERANUAL',729,463,16,true,COLORS.navy2,'center');
     txt(x,`(${up(pLabel).replace(String(year),'').trim()})`,729,478,10,true,COLORS.navy2,'center');
@@ -2619,7 +2645,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     });
 
     // ===== PANEL 3: CONCENTRACIÓN PROVINCIAL =====
-    fillRect(x,1002,442,507,248,'#ffffff');
+    rounded(x,1002,442,507,248,8,'#ffffff','#c9dceb');
     fillRect(x,1002,442,507,38,'#f4f8fb');
     txt(x,scopeDel==='TODOS'?'CONCENTRACIÓN PROVINCIAL':`CONCENTRACIÓN · ${scopeDel}`,1255,466,15,true,COLORS.navy2,'center');
     fit(x,'PROVINCIA',1028,500,190,11,true,COLORS.text);
@@ -2639,7 +2665,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     });
 
     // ===== TABLA COMPARATIVA INFERIOR =====
-    fillRect(x,24,700,680,257,'#ffffff');
+    rounded(x,24,700,680,257,7,'#ffffff','#c9dceb');
     fillRect(x,24,700,680,27,COLORS.navy2);
     txt(x,`COMPARATIVO POR DELITO: ${up(pLabel)} vs. ${up(pLabel).replace(String(year),String(prev))}`,364,720,13,true,'#ffffff','center');
     const cols=[35,205,335,462,575,690];
@@ -2666,7 +2692,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     txt(x,pct(sv),686,956,11,true,COLORS.gold,'right');
 
     // ===== GRÁFICO COMPARATIVO INFERIOR =====
-    fillRect(x,716,700,799,257,'#ffffff');
+    rounded(x,716,700,799,257,7,'#ffffff','#c9dceb');
     txt(x,'GRÁFICO COMPARATIVO POR DELITO',1115,722,16,true,COLORS.navy2,'center');
     txt(x,`■ ${prev}`,1005,745,11,true,COLORS.blue,'center');
     txt(x,`■ ${year}`,1125,745,11,true,COLORS.red,'center');
@@ -2698,7 +2724,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     // Footer dinámico
     fillRect(x,1180,975,356,49,COLORS.navy);
     txt(x,`Datos actualizados al ${dt.long}`,1392,997,9,false,'#ffffff','center');
-    txt(x,'V27.6 · DISEÑO APROBADO RESTAURADO',1506,997,10,true,'#ffffff','right');
+    txt(x,'V27.7 · RENDER LIMPIO',1506,997,10,true,'#ffffff','right');
 
     return c.toDataURL('image/png');
   }
@@ -2723,7 +2749,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
   window.abrirInfografiaRegional = function(){
     if(typeof oldAbrirV24 === 'function') oldAbrirV24();
     const t=document.getElementById('orsecInfoTitulo');
-    if(t)t.textContent='Infografía Regional ORSEC · Dinámica V26';
+    if(t)t.textContent='Infografía Regional ORSEC · Dinámica V27.7';
     preview().catch(err=>{
       console.error(err);
       if(typeof oldAbrirV24 !== 'function') alert('No se pudo abrir la infografía regional.');
@@ -2737,7 +2763,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
       const label=(document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||f.periodo||'PERIODO')
         .replace(/\s+/g,'_').replace(/[^\wÁÉÍÓÚÑáéíóúñ-]/g,'_');
       a.href=uri;
-      a.download=`ORSEC_INFOGRAFIA_REGIONAL_DINAMICA_${label}_V27_6.png`;
+      a.download=`ORSEC_INFOGRAFIA_REGIONAL_DINAMICA_${label}_V27_7.png`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -2778,4 +2804,8 @@ document.addEventListener('change', function(e){
 });
 </script>
 
+
+<script>
+window.ORSEC_BUILD='V27.7-RENDER-LIMPIO';
+</script>
 </body></html>

@@ -1,0 +1,16 @@
+ORSEC V27.7 · RENDER LIMPIO SIN SUPERPOSICIÓN
+
+CAMBIO TÉCNICO PRINCIPAL
+La plantilla ya NO se usa como fondo completo para la zona dinámica.
+Solo se conserva la cabecera institucional (logos/mapa/corte).
+
+Desde Y=153 hasta el pie:
+- se borra completamente cualquier contenido previo;
+- las 4 tarjetas se reconstruyen;
+- el bloque central se reconstruye;
+- tabla y gráfico inferior se reconstruyen;
+- cada selección Provincia/Delito se dibuja una sola vez.
+
+Esto elimina la causa de las superposiciones vistas en V27.3–V27.6.
+
+Marcador: V27.7-RENDER-LIMPIO
