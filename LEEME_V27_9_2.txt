@@ -1,0 +1,16 @@
+ORSEC V27.9.2 · COMPARATIVO POR DELITO REPARADO
+
+Causa encontrada:
+La corrección V27.9.1 se había insertado accidentalmente dentro de una cadena
+HTML usada por otra función de impresión. Por eso el botón seguía sin abrir.
+
+Corrección:
+- Script reinsertado al final REAL del documento.
+- Error de sintaxis 'async async' corregido.
+- Generar Comparativo por Delito operativo.
+- Descargar Gráfico PNG operativo.
+- Descargar PDF operativo.
+- No se modifican Panorama Regional, mapa, análisis detallado ni la infografía V27.8.
+
+Prueba:
+Incidencia Delictiva → elegir período/provincia → GENERAR COMPARATIVO POR DELITO.
