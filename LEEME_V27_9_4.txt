@@ -1,0 +1,10 @@
+ORSEC V27.9.4 · COMPARATIVO POR DELITO - TABLA + GRÁFICO
+
+Cambio único:
+- La descarga PNG ya no contiene solo el gráfico.
+- Ahora incluye primero el cuadro comparativo completo por delito y debajo el gráfico comparativo.
+- El PDF usa la misma composición completa.
+- No se modifican Panorama Regional, mapa, análisis detallado, datos ni otros módulos.
+
+Marcador técnico:
+V27.9.4-COMPARATIVO-TABLA-Y-GRAFICO

@@ -1,0 +1,16 @@
+ORSEC V27.9.5 — DESCARGA COMPLETA DEL COMPARATIVO POR DELITO
+
+CORRECCIÓN:
+El botón ya no llama a la función antigua “DESCARGAR GRÁFICO PNG”.
+Ahora llama a una función nueva y exclusiva V27.9.5.
+
+La imagen descargada debe contener, en una sola lámina:
+1. CUADRO COMPARATIVO POR DELITO:
+   Delito | 2025 | 2026 | Diferencia | Variación % | Tendencia
+2. GRÁFICO COMPARATIVO POR DELITO debajo.
+
+CONTROL:
+La imagen completa se genera a 1800 x 1400 px.
+El nombre descargado contiene “CUADRO_Y_GRAFICO” y “V27_9_5”.
+
+No se modifican datos, Panorama Regional, mapa, infografía ni demás módulos.
