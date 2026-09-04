@@ -2585,37 +2585,37 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     const fourTotal=(scopeDel==='TODOS'?kpis.reduce((s,[d])=>s+N(d26[d]),0):tot);
     const share4=tot?fourTotal/tot*100:0;
 
-    txt(x,scopeDel==='TODOS'?'TOTAL DE DELITOS':'CASOS DEL DELITO SELECCIONADO',132,500,12,true,COLORS.text);
-    txt(x,fmt(tot),132,526,23,true,COLORS.navy2);
-    txt(x,'Casos registrados',132,543,12,false,COLORS.text);
-    line(x,132,553,444,553);
-    txt(x,scopeDel==='TODOS'?'DELITO DE MAYOR VOLUMEN':'DELITO ANALIZADO',132,573,13,true,COLORS.text);
-    fit(x,top.Delito||'—',132,598,286,20,true,COLORS.navy2);
-    txt(x,`${fmt(top.Casos)} casos (${tot?(N(top.Casos)/tot*100).toFixed(1):'0.0'}% del total)`,132,617,12,false,COLORS.text);
-    line(x,132,630,444,630);
-    txt(x,'PARTICIPACIÓN 4 PRINCIPALES',132,650,13,true,COLORS.text);
-    txt(x,'INDICADORES',132,666,13,true,COLORS.text);
-    txt(x,share4.toFixed(1)+'%',132,684,24,true,COLORS.navy2);
-    txt(x,'Del total regional',132,698,12,false,COLORS.text);
+    txt(x,scopeDel==='TODOS'?'TOTAL DE DELITOS':'CASOS DEL DELITO SELECCIONADO',132,496,11,true,COLORS.text);
+    txt(x,fmt(tot),132,518,21,true,COLORS.navy2);
+    txt(x,'Casos registrados',132,533,10,false,COLORS.text);
+    line(x,132,543,444,543);
+    txt(x,scopeDel==='TODOS'?'DELITO DE MAYOR VOLUMEN':'DELITO ANALIZADO',132,559,11,true,COLORS.text);
+    fit(x,top.Delito||'—',132,579,286,18,true,COLORS.navy2);
+    txt(x,`${fmt(top.Casos)} casos (${tot?(N(top.Casos)/tot*100).toFixed(1):'0.0'}% del total)`,132,596,10,false,COLORS.text);
+    line(x,132,606,444,606);
+    txt(x,'PARTICIPACIÓN 4 PRINCIPALES',132,622,11,true,COLORS.text);
+    txt(x,'INDICADORES',132,636,11,true,COLORS.text);
+    txt(x,share4.toFixed(1)+'%',132,657,20,true,COLORS.navy2);
+    txt(x,'Del total regional',132,674,10,false,COLORS.text);
 
     // ===== PANEL 2: COMPARATIVO INTERANUAL =====
     fillRect(x,466,442,526,248,'#ffffff');
     fillRect(x,466,442,526,38,'#f4f8fb');
     txt(x,'COMPARATIVO INTERANUAL',729,463,16,true,COLORS.navy2,'center');
     txt(x,`(${up(pLabel).replace(String(year),'').trim()})`,729,478,10,true,COLORS.navy2,'center');
-    txt(x,String(prev),632,497,11,true,COLORS.navy2);
-    txt(x,String(year),690,497,11,true,COLORS.darkRed);
+    txt(x,String(prev),632,494,10,true,COLORS.navy2);
+    txt(x,String(year),690,494,10,true,COLORS.darkRed);
     const barDel=['HOMICIDIOS','EXTORSION','DETONACIONES','ROBO DE VEHICULOS'];
     const maxBar=Math.max(1,...barDel.flatMap(d=>[N(d25[d]),N(d26[d])]));
     barDel.forEach((d,i)=>{
-      const yy=512+i*41, a=N(d25[d]),b=N(d26[d]),v=varPct(b,a);
+      const yy=506+i*38, a=N(d25[d]),b=N(d26[d]),v=varPct(b,a);
       fit(x,d.replace('ROBO DE VEHICULOS','ROBO DE\nVEHÍCULOS'),486,yy+14,105,12,true,COLORS.text);
-      const bw=270;
-      fillRect(x,600,yy,Math.max(2,bw*a/maxBar),14,COLORS.blue);
-      fillRect(x,600,yy+18,Math.max(2,bw*b/maxBar),14,COLORS.red);
-      txt(x,fmt(a),606+bw*a/maxBar,yy+12,11,true,COLORS.text);
-      txt(x,fmt(b),606+bw*b/maxBar,yy+30,11,true,COLORS.text);
-      txt(x,pct(v),964,yy+23,13,true,v!=null&&v<=0?COLORS.green:COLORS.darkRed,'right');
+      const bw=260;
+      fillRect(x,600,yy,Math.max(2,bw*a/maxBar),12,COLORS.blue);
+      fillRect(x,600,yy+15,Math.max(2,bw*b/maxBar),12,COLORS.red);
+      txt(x,fmt(a),606+bw*a/maxBar,yy+10,10,true,COLORS.text);
+      txt(x,fmt(b),606+bw*b/maxBar,yy+25,10,true,COLORS.text);
+      txt(x,pct(v),964,yy+20,11,true,v!=null&&v<=0?COLORS.green:COLORS.darkRed,'right');
     });
 
     // ===== PANEL 3: CONCENTRACIÓN PROVINCIAL =====
@@ -2630,12 +2630,12 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     const rows=[...top7, ...(others?[['OTROS',others]]:[])];
     const pmax=Math.max(1,...rows.map(q=>q[1]));
     rows.slice(0,8).forEach(([p,cases],i)=>{
-      const yy=522+i*22;
-      fit(x,p,1028,yy,145,12,true,COLORS.text);
-      txt(x,fmt(cases),1228,yy,12,true,COLORS.text,'right');
-      fillRect(x,1248,yy-12,190,13,COLORS.pale);
-      fillRect(x,1248,yy-12,190*cases/pmax,13,i===0?'#e72e3a':(i<3?COLORS.orange:COLORS.gold));
-      txt(x,(provTotal?cases/provTotal*100:0).toFixed(1)+'%',1490,yy,12,true,COLORS.text,'right');
+      const yy=516+i*20;
+      fit(x,p,1028,yy,145,11,true,COLORS.text);
+      txt(x,fmt(cases),1228,yy,11,true,COLORS.text,'right');
+      fillRect(x,1248,yy-10,190,11,COLORS.pale);
+      fillRect(x,1248,yy-10,190*cases/pmax,11,i===0?'#e72e3a':(i<3?COLORS.orange:COLORS.gold));
+      txt(x,(provTotal?cases/provTotal*100:0).toFixed(1)+'%',1490,yy,11,true,COLORS.text,'right');
     });
 
     // ===== TABLA COMPARATIVA INFERIOR =====
@@ -2698,7 +2698,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
     // Footer dinámico
     fillRect(x,1180,975,356,49,COLORS.navy);
     txt(x,`Datos actualizados al ${dt.long}`,1392,997,9,false,'#ffffff','center');
-    txt(x,'V27.3 · DESCARGA CORREGIDA',1506,997,10,true,'#ffffff','right');
+    txt(x,'V27.4 · CENTRO COMPACTO',1506,997,10,true,'#ffffff','right');
 
     return c.toDataURL('image/png');
   }
@@ -2723,7 +2723,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
   window.abrirInfografiaRegional = function(){
     if(typeof oldAbrirV24 === 'function') oldAbrirV24();
     const t=document.getElementById('orsecInfoTitulo');
-    if(t)t.textContent='Infografía Regional ORSEC · Dinámica V26';
+    if(t)t.textContent='Infografía Regional ORSEC · Dinámica V27.4';
     preview().catch(err=>{
       console.error(err);
       if(typeof oldAbrirV24 !== 'function') alert('No se pudo abrir la infografía regional.');
@@ -2737,7 +2737,7 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
       const label=(document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||f.periodo||'PERIODO')
         .replace(/\s+/g,'_').replace(/[^\wÁÉÍÓÚÑáéíóúñ-]/g,'_');
       a.href=uri;
-      a.download=`ORSEC_INFOGRAFIA_REGIONAL_DINAMICA_${label}_V27_2.png`;
+      a.download=`ORSEC_INFOGRAFIA_REGIONAL_DINAMICA_${label}_V27_4.png`;
       document.body.appendChild(a);
       a.click();
       a.remove();

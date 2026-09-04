@@ -1,0 +1,13 @@
+ORSEC V27.4 · CENTRO COMPACTO Y ESTABLE
+
+Ajuste solicitado:
+- Se conserva intacta la parte superior aprobada.
+- El primer bloque central reduce ligeramente números, textos y separaciones.
+- Los tres bloques centrales quedan más compactos y con aire inferior.
+- El comparativo por delito y el gráfico inferior se mantienen en su posición y tamaño.
+- Se conserva la dinámica por año, período, provincia y delito.
+- La plantilla visual corresponde a la última composición aprobada.
+
+PRUEBA RECOMENDADA:
+Trujillo → Todos los delitos → Enero-Agosto 2026 → Descargar PNG.
+Luego Chepén → Homicidios para verificar que la dinámica sigue funcionando.
