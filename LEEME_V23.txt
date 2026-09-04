@@ -1,0 +1,7 @@
+ORSEC V23 — INFOGRAFÍA DINÁMICA PULIDA
+
+Base: V22 dinámica aprobada.
+Cambios: exclusivamente visuales en la infografía dinámica: contraste, tipografía, bordes, jerarquía, mapa y callouts.
+Se conserva la lógica dinámica por delito, período y provincia.
+Se retiró del paquete la imagen V21 para evitar confusión.
+Archivo principal para GitHub/Vercel: index.html
