@@ -1,0 +1,9 @@
+ORSEC V25.2 · INFOGRAFÍA REGIONAL DINÁMICA CORREGIDA
+
+- Mantiene como base funcional la V25.1.
+- Conserva la dinámica mediante datos.json.
+- Se incorpora como referencia visual aprobada la infografía corregida.
+- Corrección principal: título completo y legible:
+  “INDICADORES DE INCIDENCIA DELICTIVA”.
+- No se debe regresar al diseño anterior de dos infografías.
+- Esta versión pasa a ser la base visual para los siguientes ajustes.
