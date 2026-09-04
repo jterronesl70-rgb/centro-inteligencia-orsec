@@ -2716,4 +2716,41 @@ setTimeout(orsecGenerarBI,900);document.addEventListener('change',e=>{if(e.targe
 })();
 
 </script>
+
+
+<script id="orsecFixTituloDelictivaV25_3">
+(function(){
+  function fixCanvas(c){
+    if(!c || !c.getContext) return;
+    const ctx=c.getContext('2d');
+    const W=c.width, H=c.height;
+    // La plantilla aprobada ya contiene el título correcto.
+    // Este refuerzo vuelve a pintar una zona blanca limpia y el título completo
+    // para impedir cualquier superposición heredada del generador.
+    const y=Math.round(H*0.153), h=Math.round(H*0.061);
+    ctx.save();
+    ctx.fillStyle='#ffffff';
+    ctx.fillRect(0,y,W,h);
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillStyle='#123d73';
+    ctx.font=`700 ${Math.round(H*0.030)}px Arial, sans-serif`;
+    ctx.fillText('INDICADORES DE INCIDENCIA DELICTIVA', W/2, y+Math.round(h*0.38));
+    ctx.font=`700 ${Math.round(H*0.018)}px Arial, sans-serif`;
+    ctx.fillText('PERÍODO: ENERO – 31 DE AGOSTO 2026', W/2-Math.round(W*0.055), y+Math.round(h*0.78));
+    ctx.restore();
+  }
+
+  // Intercepta toDataURL sólo durante la generación ORSEC y refuerza el título
+  // antes de que el PNG sea entregado/descargado.
+  const original=HTMLCanvasElement.prototype.toDataURL;
+  HTMLCanvasElement.prototype.toDataURL=function(){
+    try{
+      if(this.width>=1200 && this.height>=700) fixCanvas(this);
+    }catch(e){ console.warn('ORSEC V25.3 título:',e); }
+    return original.apply(this,arguments);
+  };
+})();
+</script>
+
 </body></html>

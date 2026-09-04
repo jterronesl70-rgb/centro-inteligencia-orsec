@@ -1,0 +1,11 @@
+ORSEC V25.3 · INFOGRAFÍA REGIONAL DINÁMICA
+
+VERSIÓN APROBADA:
+- Mantiene la funcionalidad dinámica de V25.1.
+- Usa como plantilla la infografía visual aprobada por el usuario.
+- Título fijado y reforzado en cada PNG:
+  INDICADORES DE INCIDENCIA DELICTIVA
+- Se evita que el generador vuelva a superponer o deformar la palabra DELICTIVA.
+- datos.json permanece incluido para actualización dinámica.
+
+Esta versión reemplaza V25.2 para la infografía regional.
