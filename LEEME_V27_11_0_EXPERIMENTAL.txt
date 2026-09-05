@@ -1,0 +1,17 @@
+ORSEC V27.11.0 · EXPERIMENTAL · INFOGRAFÍA VISUAL B
+
+BASE PROTEGIDA: V27.10.9.
+
+SE ADICIONA ÚNICAMENTE:
+- Botón “PROBAR INFOGRAFÍA VISUAL B” en Panorama Regional.
+- Nueva composición: 5 indicadores en columna lateral izquierda.
+- Bloques comparativo y gráfico ampliados.
+- Lectura directa de DB/META cargados desde datos.json.
+- Sin cifras manuales en el código.
+- Sincronización con Año, Tipo de período, Período, Provincia y Delito.
+- La infografía aprobada anterior NO se sustituye ni elimina.
+
+FUENTE MOSTRADA:
+Unidad de Estadística de la Región Policial de La Libertad.
+
+Esta versión es exclusivamente experimental para evaluación visual.
