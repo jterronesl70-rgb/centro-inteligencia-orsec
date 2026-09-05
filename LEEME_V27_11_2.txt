@@ -1,0 +1,9 @@
+ORSEC V27.11.2 EXPERIMENTAL · VISUAL B DISEÑO REAL DINÁMICO
+
+- Base funcional: V27.11.1 experimental, derivada de V27.10.9 estable.
+- Se conserva modal propio, cierre X/ESC, PNG y PDF de la misma Visual B.
+- Se sustituye únicamente el generador visual B por el diseño de referencia aprobado.
+- Usa exclusivamente DB/META cargada desde datos.json.
+- Mantiene 5 indicadores laterales, mapa/concentración, cuadro comparativo, gráfico y participación.
+- Fuente institucional: Unidad de Estadística de la Región Policial de La Libertad.
+- La V27.10.9 estable y la primera infografía quedan intactas.
