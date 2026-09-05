@@ -1,0 +1,9 @@
+ORSEC V27.11.1 EXPERIMENTAL
+
+Corrección exclusiva de la Visual B:
+- La Visual B usa su propio modal.
+- X y tecla ESC cierran correctamente.
+- Descargar PNG descarga exclusivamente la Visual B actual.
+- Guardar / Imprimir PDF imprime exclusivamente la Visual B actual.
+- No reutiliza los botones de la primera infografía.
+- V27.10.9 y la primera infografía permanecen intactas.

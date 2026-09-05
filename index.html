@@ -5045,4 +5045,75 @@ window.ORSEC_PATCH_COMPARATIVO_TOTAL='V27.10.7-TOTAL-13-DELITOS';
 })();
 window.ORSEC_EXPERIMENTAL_BUILD='V27.11.0-VISUAL-B-DATOS-JSON';
 </script>
+
+<style id="orsecVisualBModalCSS">
+#orsecVisualBModal{display:none;position:fixed;inset:0;z-index:1000001;background:rgba(0,20,38,.82);backdrop-filter:blur(3px);padding:18px;overflow:auto}
+#orsecVisualBModal.abierto{display:block}
+.orsec-vb-dialog{width:min(980px,97vw);margin:10px auto;background:#eef5fa;border-radius:14px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,.45)}
+.orsec-vb-head{background:#102c46;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;font-size:15px;font-weight:800}
+.orsec-vb-close{border:0;background:transparent;color:#fff;font-size:28px;line-height:1;cursor:pointer;padding:0 4px}
+.orsec-vb-preview{padding:14px;background:#dce9f2;text-align:center}
+#orsecVisualBPreview{width:auto;max-width:100%;max-height:72vh;object-fit:contain;background:#fff;box-shadow:0 3px 16px rgba(0,0,0,.18)}
+.orsec-vb-foot{padding:12px 15px 15px;text-align:center;background:#fff}
+.orsec-vb-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.orsec-vb-btn{border:0;border-radius:8px;padding:11px 18px;font-weight:800;cursor:pointer;color:#fff;background:#075ba9}
+.orsec-vb-btn.pdf{background:#2c6f83}
+.orsec-vb-note{font-size:9px;color:#687e90;margin-top:7px}
+</style>
+<div id="orsecVisualBModal" aria-hidden="true">
+  <div class="orsec-vb-dialog" role="dialog" aria-modal="true" aria-labelledby="orsecVisualBTitulo">
+    <div class="orsec-vb-head"><span id="orsecVisualBTitulo">Infografía Regional ORSEC · Visual B Experimental</span><button type="button" class="orsec-vb-close" id="orsecVisualBCerrar" aria-label="Cerrar">×</button></div>
+    <div class="orsec-vb-preview"><img id="orsecVisualBPreview" alt="Infografía Visual B ORSEC"></div>
+    <div class="orsec-vb-foot">
+      <div class="orsec-vb-actions">
+        <button type="button" class="orsec-vb-btn" id="orsecVisualBDescargar">⇩ DESCARGAR INFOGRAFÍA PNG</button>
+        <button type="button" class="orsec-vb-btn pdf" id="orsecVisualBPDF">⇩ GUARDAR / IMPRIMIR PDF</button>
+      </div>
+      <div class="orsec-vb-note">Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC / GRDN / GORELL</div>
+    </div>
+  </div>
+</div>
+<script id="orsecVisualBModalPatchV27111">
+(function(){
+  function modal(){return document.getElementById('orsecVisualBModal')}
+  function preview(){return document.getElementById('orsecVisualBPreview')}
+  async function abrir(){
+    try{
+      const uri = await window.orsecGenerarVisualB();
+      window.__orsecVisualB = uri;
+      const im=preview(),m=modal();
+      if(im) im.src=uri;
+      if(m){m.classList.add('abierto');m.setAttribute('aria-hidden','false')}
+    }catch(e){console.error(e);alert('No se pudo generar la Visual B: '+e.message)}
+  }
+  function cerrar(){const m=modal();if(m){m.classList.remove('abierto');m.setAttribute('aria-hidden','true')}}
+  async function asegurarUri(){return window.__orsecVisualB || await window.orsecGenerarVisualB()}
+  async function descargar(){
+    try{const uri=await asegurarUri();window.__orsecVisualB=uri;const a=document.createElement('a');a.href=uri;a.download='ORSEC_INFOGRAFIA_VISUAL_B_EXPERIMENTAL_V27_11_1.png';document.body.appendChild(a);a.click();a.remove()}catch(e){alert('No se pudo descargar la Visual B: '+e.message)}
+  }
+  async function imprimir(){
+    try{
+      const uri=await asegurarUri();window.__orsecVisualB=uri;
+      let fr=document.getElementById('orsecVisualBPrintFrame');
+      if(fr) fr.remove();
+      fr=document.createElement('iframe');fr.id='orsecVisualBPrintFrame';fr.style.position='fixed';fr.style.right='0';fr.style.bottom='0';fr.style.width='1px';fr.style.height='1px';fr.style.border='0';fr.style.opacity='0';
+      document.body.appendChild(fr);
+      const doc=fr.contentDocument||fr.contentWindow.document;
+      doc.open();doc.write('<!doctype html><html><head><meta charset="utf-8"><title>ORSEC Visual B</title><style>@page{size:landscape;margin:8mm}html,body{margin:0;padding:0;background:#fff}img{display:block;width:100%;height:auto;max-height:95vh;object-fit:contain}</style></head><body><img src="'+uri+'"></body></html>');doc.close();
+      const img=doc.images[0];
+      const go=()=>setTimeout(()=>{fr.contentWindow.focus();fr.contentWindow.print()},120);
+      if(img&&img.complete)go();else if(img)img.onload=go;else go();
+    }catch(e){console.error(e);alert('No se pudo preparar el PDF de la Visual B: '+e.message)}
+  }
+  window.orsecAbrirVisualB=abrir;window.orsecCerrarVisualB=cerrar;window.orsecDescargarVisualB=descargar;window.orsecImprimirVisualB=imprimir;
+  document.addEventListener('DOMContentLoaded',()=>{
+    setTimeout(()=>{const b=document.getElementById('btnVisualB');if(b)b.onclick=abrir},1400);
+    const x=document.getElementById('orsecVisualBCerrar'),d=document.getElementById('orsecVisualBDescargar'),pdf=document.getElementById('orsecVisualBPDF'),m=modal();
+    if(x)x.onclick=cerrar;if(d)d.onclick=descargar;if(pdf)pdf.onclick=imprimir;
+    if(m)m.addEventListener('click',e=>{if(e.target===m)cerrar()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&m?.classList.contains('abierto'))cerrar()});
+  });
+})();
+window.ORSEC_EXPERIMENTAL_BUILD='V27.11.1-VISUAL-B-MODAL-PROPIO';
+</script>
 </body></html>
