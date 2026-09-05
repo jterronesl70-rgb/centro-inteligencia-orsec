@@ -37,27 +37,45 @@
    fit(c,`Provincia: ${prov==='TOTAL REGION'?'Todas':nice(prov)}  |  Delito: ${del==='TODOS'?'Todos':nice(del)}`,1234,151,270,13,true,C.text);
 
    // Lateral: mismo diseño, cifras dinámicas
-   c.fillStyle='#063d72';c.fillRect(17,216,232,43);fit(c,`Total de casos (${label} ${y})`,28,237,204,15,false,C.white);
+   c.fillStyle='#063d72';c.fillRect(17,210,232,55);fit(c,`Total de casos (${label})`,28,237,204,15,false,C.white);
    const KP=[['HOMICIDIOS',C.red],['EXTORSION',C.orange],['DETONACIONES','#2ca83a'],['VIOLACION SEXUAL',C.purple],['ROBO DE VEHICULOS','#1293e8']];
    const yRows=[265,394,523,652,781];
-   KP.forEach(([d,col],i)=>{const yy=yRows[i],a=N(dc[d]),b=N(dp[d]),v=pct(a,b);c.fillStyle='#073d72';c.fillRect(108,yy+5,128,111);fit(c,nice(d),112,yy+18,114,13,true,C.white);tx(c,F(a),112,yy+56,38,true,C.white);tx(c,(v!=null&&v<=0?'↓ ':'↑ ')+P(v),112,yy+90,16,true,v!=null&&v<=0?'#52df72':'#ff5a5f');fit(c,`vs. mismo período ${py} (${F(b)})`,112,yy+111,114,9,false,'#dceafa')});
+   KP.forEach(([d,col],i)=>{const yy=yRows[i],a=N(dc[d]),b=N(dp[d]),v=pct(a,b);c.fillStyle='#073d72';c.fillRect(101,yy,145,123);fit(c,nice(d),112,yy+18,114,13,true,C.white);tx(c,F(a),112,yy+56,38,true,C.white);tx(c,(v!=null&&v<=0?'↓ ':'↑ ')+P(v),112,yy+90,16,true,v!=null&&v<=0?'#52df72':'#ff5a5f');fit(c,`vs. mismo período ${py} (${F(b)})`,112,yy+111,114,9,false,'#dceafa')});
 
    // Bloque 3: encabezado mapa + total
    c.fillStyle=C.white;c.fillRect(270,194,548,39);fit(c,'Incidencia delictiva por provincia',285,207,330,18,true,C.text);fit(c,`(${del==='TODOS'?'Total de casos':nice(del)} – ${label} ${y})`,285,226,330,14,false,C.text);
    rr(c,627,193,186,92,9,'#edf7ff',null);tx(c,prov==='TOTAL REGION'?'Total de casos en la región':'Total de casos selección',720,210,13,false,C.text,'center');tx(c,F(totalCur),720,244,30,true,C.text,'center');tx(c,(totalVar!=null&&totalVar<=0?'↓ ':'↑ ')+P(totalVar),720,272,18,true,totalVar!=null&&totalVar<=0?C.green:C.red,'center');
 
-   // Concentración provincial dinámica sobre el mapa de referencia
+   // MAPA COROPLÉTICO DINÁMICO V27.11.5: sustituye por completo el mapa azul rasterizado.
+   // Se limpia el área para evitar etiquetas superpuestas y se dibujan las 12 provincias con la misma escala de la leyenda.
    const pr=DB.filter(r=>r.Anio==y&&r.TipoPeriodo===tipo&&r.Periodo===per&&r.Provincia!=='TOTAL REGION'&&(del==='TODOS'||r.Delito===del));
    const pm={};pr.forEach(r=>pm[r.Provincia]=(pm[r.Provincia]||0)+N(r.Casos));
-   const coords={'CHEPEN':[370,326],'PACASMAYO':[345,389],'ASCOPE':[359,461],'TRUJILLO':[470,496],'VIRU':[522,583],'GRAN CHIMU':[527,473],'OTUZCO':[507,407],'SANCHEZ CARRION':[600,414],'JULCAN':[644,456],'STGO. DE CHUCO':[600,493],'SANTIAGO DE CHUCO':[600,493],'BOLIVAR':[692,511]};
    function mapaColor(val){return val>2500?'#b00020':val>1000?'#e3262e':val>500?'#ff8a00':val>250?'#ffd21f':'#21a447'}
-   Object.entries(coords).forEach(([name,[xx,yy]])=>{const val=N(pm[name]);const col=mapaColor(val);rr(c,xx-34,yy-14,76,28,7,col,'rgba(255,255,255,.95)');tx(c,F(val),xx+4,yy,14,true,(val>500?'#fff':'#102c46'),'center')});
-
-   // Leyenda territorial de alto contraste: solo presentación, sin alterar datos.
-   c.fillStyle='rgba(255,255,255,.96)';c.fillRect(276,472,122,125);
-   tx(c,'Casos',286,485,12,true,C.text);
+   c.fillStyle='#ffffff';c.fillRect(270,286,548,325);
+   const poly={
+    'CHEPEN':[[380,294],[414,292],[426,316],[409,337],[374,330],[363,309]],
+    'PACASMAYO':[[350,335],[392,334],[405,362],[386,389],[345,378],[333,354]],
+    'ASCOPE':[[386,389],[435,365],[470,391],[458,430],[412,445],[377,418]],
+    'TRUJILLO':[[412,445],[458,430],[493,456],[482,500],[439,515],[401,486]],
+    'VIRU':[[439,515],[482,500],[520,524],[510,574],[474,600],[443,567]],
+    'GRAN CHIMU':[[470,391],[512,372],[544,398],[526,440],[493,456],[458,430]],
+    'OTUZCO':[[435,365],[478,331],[520,344],[512,372],[470,391]],
+    'SANCHEZ CARRION':[[520,344],[572,347],[603,380],[568,413],[544,398],[512,372]],
+    'JULCAN':[[526,440],[568,413],[604,435],[590,474],[548,477]],
+    'STGO. DE CHUCO':[[493,456],[526,440],[548,477],[538,516],[500,521],[482,500]],
+    'SANTIAGO DE CHUCO':[[493,456],[526,440],[548,477],[538,516],[500,521],[482,500]],
+    'BOLIVAR':[[603,380],[647,396],[679,433],[665,475],[620,468],[590,474],[604,435],[568,413]],
+    'PATAZ':[[647,396],[687,374],[716,401],[713,451],[679,433]]
+   };
+   const aliases={'STGO. DE CHUCO':'SANTIAGO DE CHUCO'};
+   function drawPoly(name,pts){const key=aliases[name]||name,val=N(pm[key]??pm[name]);c.beginPath();pts.forEach((q,i)=>i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.closePath();c.fillStyle=mapaColor(val);c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke();const xs=pts.map(q=>q[0]),ys=pts.map(q=>q[1]),xx=(Math.min(...xs)+Math.max(...xs))/2,yy=(Math.min(...ys)+Math.max(...ys))/2;let nm=nice(key).replace('SANCHEZ','SÁNCHEZ').replace('CHEPEN','CHEPÉN').replace('GRAN CHIMU','GRAN CHIMÚ');fit(c,nm,xx,yy-7,70,9,true,val>500?C.white:'#102c46','center');tx(c,F(val),xx,yy+10,12,true,val>500?C.white:'#102c46','center')}
+   Object.entries(poly).forEach(([n,p])=>{if(n==='STGO. DE CHUCO')return;drawPoly(n,p)});
+   tx(c,'N',755,330,13,true,C.text,'center');tx(c,'▲',755,350,24,true,C.text,'center');
+   // Leyenda territorial: coincide exactamente con los colores aplicados al mapa.
+   rr(c,278,474,130,126,8,'rgba(255,255,255,.97)','#d6e4ef');tx(c,'Casos',288,488,12,true,C.text);
    const legend=[['> 2,500','#b00020'],['1,001 – 2,500','#e3262e'],['501 – 1,000','#ff8a00'],['251 – 500','#ffd21f'],['≤ 250','#21a447']];
-   legend.forEach(([lab,col],i)=>{const yy=505+i*20;c.fillStyle=col;c.fillRect(286,yy-8,24,14);tx(c,lab,318,yy,11,true,C.text)});
+   legend.forEach(([lab,col],i)=>{const yy=510+i*20;c.fillStyle=col;c.fillRect(288,yy-8,24,14);tx(c,lab,320,yy,11,true,C.text)});
+   fit(c,'Territorios más seguros',650,585,145,14,true,C.text,'center');
 
    // Cuadro comparativo completo
    c.fillStyle=C.white;c.fillRect(840,198,680,401);tx(c,'Cuadro comparativo de la incidencia delictiva',856,212,18,true,C.text);fit(c,`${prov==='TOTAL REGION'?'Región La Libertad':nice(prov)} – ${label} (${py} vs ${y})`,856,232,600,13,false,C.text);
@@ -87,5 +105,5 @@
    return can.toDataURL('image/png');
  }
  window.orsecGenerarVisualB=generar;
- window.ORSEC_EXPERIMENTAL_BUILD='V27.11.4-VISUAL-B-SIN-BLOQUES-MAPA-CONTRASTE';
+ window.ORSEC_EXPERIMENTAL_BUILD='V27.11.5-VISUAL-B-MAPA-COROPLETH-LIMPIO';
 })();

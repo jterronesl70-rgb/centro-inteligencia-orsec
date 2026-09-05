@@ -1,0 +1,1 @@
+V27.11.5 EXPERIMENTAL – Visual B. Corrección visual exclusiva: se eliminan superposiciones del mapa y lateral; el mapa se redibuja dinámicamente con la misma escala rojo/rojo/naranja/amarillo/verde de la leyenda. No se modifica datos.json ni la lógica estadística validada.
