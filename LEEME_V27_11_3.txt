@@ -1,0 +1,14 @@
+ORSEC V27.11.3 EXPERIMENTAL – VISUAL B – AJUSTES VISUALES
+
+Se mantiene intacta la lógica validada de V27.11.2 y datos.json.
+Cambios exclusivamente visuales en Visual B:
+- Se eliminan referencias Bloque 3 / Bloque 4.
+- Período de análisis más grande.
+- Leyenda de casos del mapa con alto contraste: verde, amarillo, naranja y rojos.
+- Gráfico comparativo con 2025 rojo / 2026 azul y cifras más grandes.
+- Variaciones porcentuales más grandes.
+- Participación calculada exclusivamente con los 13 delitos ORSEC.
+- “Otros” se limita a: Lesiones, Secuestro al paso, Apropiación ilícita, Estafa y Usurpación.
+- Pie final simplificado para evitar texto ilegible.
+
+No se modifica la infografía estable ni la base estadística.
