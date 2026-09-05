@@ -954,6 +954,19 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 #orsecCompBody tr.orsec-total-region td.orsec-comp-var-flat{color:#fff !important;}
 </style>
 
+
+<style id="orsecPanContextoCSS">
+.orsec-pan-contexto{margin:0 0 16px;background:#f7fbfe;border:1px solid #d7e6f1;border-radius:14px;padding:14px 16px;box-shadow:0 4px 14px rgba(7,62,112,.05)}
+.orsec-pan-contexto-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:11px}
+.orsec-pan-contexto-head b{display:block;color:#073e70;font-size:14px;letter-spacing:.3px}
+.orsec-pan-contexto-head span{display:block;color:#6a8192;font-size:11px;margin-top:3px}
+.orsec-pan-contexto-head button{border:0;border-radius:8px;background:#073e70;color:#fff;padding:9px 13px;font-size:11px;font-weight:900;cursor:pointer}
+.orsec-pan-filtros{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:9px}
+.orsec-pan-filtros select{width:100%;border:1px solid #cbdce8;background:#fff;color:#17364c;border-radius:8px;padding:10px 9px;font-weight:700;font-size:12px}
+@media(max-width:900px){.orsec-pan-filtros{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.orsec-pan-contexto-head{display:block}.orsec-pan-contexto-head button{margin-top:9px}.orsec-pan-filtros{grid-template-columns:1fr}}
+</style>
+
 </head>
 <body>
 
@@ -998,6 +1011,19 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 
 <div id="panorama" class="seccion">
  <div class="seccion-head"><h2>Panorama Regional de Seguridad</h2><span class="badge">REGIÓN LA LIBERTAD · VISTA EJECUTIVA</span></div>
+ <div class="orsec-pan-contexto" id="orsecPanContexto">
+   <div class="orsec-pan-contexto-head">
+     <div><b>CONTEXTO GLOBAL DE ANÁLISIS</b><span>Cambie la selección aquí sin regresar a Incidencia Delictiva. Ambos módulos permanecen sincronizados.</span></div>
+     <button type="button" onclick="orsecPanRestablecer()">RESTABLECER</button>
+   </div>
+   <div class="orsec-pan-filtros">
+     <select id="panAnio" aria-label="Año"></select>
+     <select id="panTipoPeriodo" aria-label="Tipo de período"></select>
+     <select id="panPeriodo" aria-label="Período"></select>
+     <select id="panProvincia" aria-label="Provincia"></select>
+     <select id="panDelito" aria-label="Delito"></select>
+   </div>
+ </div>
  <div id="panoramaContenido" class="loading">Construyendo panorama regional…</div>
 </div>
 
@@ -4888,4 +4914,71 @@ window.ORSEC_PATCH_ALERTAS_FILTRO='V27.10.4-ALERTAS-FILTRO-DELITO-OK';
 <script id="orsecV27107Marker">
 window.ORSEC_PATCH_COMPARATIVO_TOTAL='V27.10.7-TOTAL-13-DELITOS';
 </script>
-<script id="orsecV27108Marker">window.ORSEC_PATCH_TOTAL_REGION='V27.10.8-TOTAL-REGION-PROVINCIAS';</script></body></html>
+<script id="orsecV27108Marker">window.ORSEC_PATCH_TOTAL_REGION='V27.10.8-TOTAL-REGION-PROVINCIAS';</script>
+<script id="orsecPanContextoJS">
+(function(){
+ const pares=[
+   ['panAnio','anio'],
+   ['panTipoPeriodo','tipoPeriodo'],
+   ['panPeriodo','periodo'],
+   ['panProvincia','provincia'],
+   ['panDelito','delito']
+ ];
+ let bloqueado=false;
+
+ function copiarOpciones(src,dst){
+   if(!src||!dst)return;
+   const valor=src.value;
+   dst.innerHTML=[...src.options].map(o=>`<option value="${String(o.value).replace(/"/g,'&quot;')}">${o.textContent}</option>`).join('');
+   dst.value=valor;
+ }
+ function sincronizarDesdeGlobal(){
+   if(bloqueado)return;
+   bloqueado=true;
+   pares.forEach(([pid,gid])=>copiarOpciones(document.getElementById(gid),document.getElementById(pid)));
+   bloqueado=false;
+ }
+ function cambiarGlobal(pid,gid){
+   if(bloqueado)return;
+   const pan=document.getElementById(pid),global=document.getElementById(gid);
+   if(!pan||!global)return;
+   bloqueado=true;
+   global.value=pan.value;
+   global.dispatchEvent(new Event('change',{bubbles:true}));
+   bloqueado=false;
+   // Algunos selectores dependientes se reconstruyen al cambiar tipo/período.
+   setTimeout(sincronizarDesdeGlobal,40);
+   setTimeout(sincronizarDesdeGlobal,180);
+ }
+ window.orsecPanRestablecer=function(){
+   if(typeof window.limpiarFiltros==='function') window.limpiarFiltros();
+   else if(typeof limpiarFiltros==='function') limpiarFiltros();
+   setTimeout(sincronizarDesdeGlobal,50);
+   setTimeout(sincronizarDesdeGlobal,220);
+ };
+
+ document.addEventListener('DOMContentLoaded',()=>{
+   setTimeout(sincronizarDesdeGlobal,300);
+   setTimeout(sincronizarDesdeGlobal,900);
+   pares.forEach(([pid,gid])=>{
+     const el=document.getElementById(pid);
+     if(el)el.addEventListener('change',()=>cambiarGlobal(pid,gid));
+   });
+ });
+ document.addEventListener('change',e=>{
+   if(!e.target)return;
+   if(pares.some(x=>x[1]===e.target.id)){
+     setTimeout(sincronizarDesdeGlobal,30);
+     setTimeout(sincronizarDesdeGlobal,150);
+   }
+ });
+ // Cuando se abre Panorama, refleja siempre la selección vigente.
+ document.addEventListener('click',e=>{
+   const card=e.target?.closest?.('[data-mod="panorama"]');
+   if(card){setTimeout(sincronizarDesdeGlobal,80);setTimeout(sincronizarDesdeGlobal,300);}
+ });
+ window.orsecSincronizarPanorama=sincronizarDesdeGlobal;
+})();
+</script>
+<script id="orsecV27109Marker">window.ORSEC_PATCH_PANORAMA='V27.10.9-CONTEXTO-GLOBAL-SINCRONIZADO';</script>
+</body></html>

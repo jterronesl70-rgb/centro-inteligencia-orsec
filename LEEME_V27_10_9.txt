@@ -1,0 +1,15 @@
+ORSEC V27.10.9 · CONTEXTO GLOBAL EN PANORAMA REGIONAL
+
+BASE: V27.10.8 estable.
+
+SE ADICIONA EXCLUSIVAMENTE:
+- Panel CONTEXTO GLOBAL DE ANÁLISIS dentro de Panorama Regional.
+- Año, Tipo de período, Período, Provincia y Delito.
+- Los controles son espejos de los filtros originales de Incidencia Delictiva.
+- Un cambio en Panorama actualiza el filtro global existente.
+- Un cambio en Incidencia Delictiva se refleja en Panorama.
+- La infografía regional continúa usando la misma fuente y lógica ya aprobadas.
+- Botón RESTABLECER sincronizado con el existente.
+
+NO SE DUPLICAN DATOS NI SE CREA UNA SEGUNDA LÓGICA.
+NO SE MODIFICA ningún módulo o funcionalidad aprobada.
