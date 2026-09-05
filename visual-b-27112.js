@@ -26,6 +26,9 @@
    const totalCur=sum(activeCur), totalPrev=sum(activePrev), totalVar=pct(totalCur,totalPrev);
    const can=document.createElement('canvas');can.width=1536;can.height=1024;const c=can.getContext('2d');
    const bg=await load(TEMPLATE_B);c.drawImage(bg,0,0,1536,1024);
+   // V27.11.4: limpiar rótulos heredados BLOQUE 3 / BLOQUE 4 de la plantilla.
+   c.fillStyle=C.navy2;c.fillRect(251,153,1261,39);fit(c,'ANÁLISIS TERRITORIAL Y TENDENCIAS',270,173,650,20,true,C.white);
+   c.fillStyle=C.navy2;c.fillRect(251,618,1261,39);fit(c,'COMPARATIVO DE PRINCIPALES DELITOS',270,638,650,20,true,C.white);
 
    // Contexto global en cabecera
    c.fillStyle=C.navy2;c.fillRect(1218,78,300,28);tx(c,'PERÍODO DE ANÁLISIS',1368,92,16,true,C.white,'center');
@@ -47,7 +50,8 @@
    const pr=DB.filter(r=>r.Anio==y&&r.TipoPeriodo===tipo&&r.Periodo===per&&r.Provincia!=='TOTAL REGION'&&(del==='TODOS'||r.Delito===del));
    const pm={};pr.forEach(r=>pm[r.Provincia]=(pm[r.Provincia]||0)+N(r.Casos));
    const coords={'CHEPEN':[370,326],'PACASMAYO':[345,389],'ASCOPE':[359,461],'TRUJILLO':[470,496],'VIRU':[522,583],'GRAN CHIMU':[527,473],'OTUZCO':[507,407],'SANCHEZ CARRION':[600,414],'JULCAN':[644,456],'STGO. DE CHUCO':[600,493],'SANTIAGO DE CHUCO':[600,493],'BOLIVAR':[692,511]};
-   Object.entries(coords).forEach(([name,[xx,yy]])=>{const val=N(pm[name]);c.fillStyle='rgba(255,255,255,.86)';c.fillRect(xx-29,yy-11,66,21);tx(c,F(val),xx+3,yy,13,true,'#111','center')});
+   function mapaColor(val){return val>2500?'#b00020':val>1000?'#e3262e':val>500?'#ff8a00':val>250?'#ffd21f':'#21a447'}
+   Object.entries(coords).forEach(([name,[xx,yy]])=>{const val=N(pm[name]);const col=mapaColor(val);rr(c,xx-34,yy-14,76,28,7,col,'rgba(255,255,255,.95)');tx(c,F(val),xx+4,yy,14,true,(val>500?'#fff':'#102c46'),'center')});
 
    // Leyenda territorial de alto contraste: solo presentación, sin alterar datos.
    c.fillStyle='rgba(255,255,255,.96)';c.fillRect(276,472,122,125);
@@ -83,5 +87,5 @@
    return can.toDataURL('image/png');
  }
  window.orsecGenerarVisualB=generar;
- window.ORSEC_EXPERIMENTAL_BUILD='V27.11.3-VISUAL-B-AJUSTES-VISUALES';
+ window.ORSEC_EXPERIMENTAL_BUILD='V27.11.4-VISUAL-B-SIN-BLOQUES-MAPA-CONTRASTE';
 })();
