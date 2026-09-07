@@ -1049,6 +1049,53 @@ body{
 }
 </style>
 
+
+<style id="orsec271210VisualOrdenCSS">
+/* V27.12.10 — ORDENAMIENTO EXCLUSIVAMENTE VISUAL DE INCIDENCIA DELICTIVA.
+   No cambia IDs, onclick, datos, cálculos, filtros, exportaciones ni infografías. */
+#incidencia .orsec-comp-launch{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:12px;
+  margin:16px 0 10px;
+  padding:48px 14px 14px;
+  background:#f4f9fc;
+  border:1px solid #c7dce9;
+  border-radius:14px;
+}
+#incidencia .orsec-comp-launch:before{
+  content:'ANÁLISIS COMPARATIVO';
+  position:absolute;left:14px;right:14px;top:12px;
+  padding-bottom:9px;border-bottom:1px solid #d4e3ec;
+  color:#073e70;font-size:14px;font-weight:900;letter-spacing:.025em;
+}
+#incidencia .orsec-comp-head,
+#incidencia .orsec-delito-launcher{
+  margin:0;min-height:118px;padding:15px;
+  border:1px solid #d2e1ea;border-radius:12px;background:#fff;
+  box-shadow:0 3px 10px rgba(7,62,112,.06);
+  display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;gap:12px;
+}
+#incidencia .orsec-comp-head>div:first-child{width:100%}
+#incidencia .orsec-comp-actions{width:100%;gap:6px;align-items:stretch}
+#incidencia .orsec-comp-actions .orsec-comp-btn{flex:1 1 120px;min-height:36px}
+#incidencia .orsec-delito-launcher b{color:#073e70;font-size:15px}
+#incidencia .orsec-delito-launcher span{color:#648198;font-size:10px;line-height:1.35}
+#incidencia .orsec-delito-launcher button{
+  align-self:flex-start;background:#e7f2f8;color:#174d70;border:1px solid #cbdfe9;
+  padding:10px 13px;box-shadow:none;
+}
+#incidencia .orsec-delito-launcher button:hover{background:#dcecf5}
+#incidencia .orsec-comp-box{grid-column:1/-1;margin-top:2px}
+#incidencia .orsec-map-launch{margin-top:14px}
+@media(max-width:900px){
+ #incidencia .orsec-comp-launch{grid-template-columns:1fr}
+ #incidencia .orsec-comp-box{grid-column:1}
+ #incidencia .orsec-comp-head,#incidencia .orsec-delito-launcher{min-height:0}
+}
+</style>
+
 </head>
 <body>
 

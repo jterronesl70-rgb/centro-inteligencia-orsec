@@ -1,0 +1,20 @@
+ORSEC V27.12.10 · ORDENAMIENTO VISUAL DE INCIDENCIA DELICTIVA
+
+BASE PROTEGIDA: V27.12.9.
+
+CAMBIO EXCLUSIVO:
+- Se crea una cabecera visual “ANÁLISIS COMPARATIVO”.
+- Comparativo Territorial y Comparativo por Delito se presentan como dos tarjetas del mismo nivel.
+- Se suaviza el uso del amarillo/naranja en el lanzador por delito.
+- Se conserva la secuencia: Filtros → Comparativos → Mapa Distrital → Análisis de Alto Impacto → Indicadores.
+
+PROTECCIÓN FUNCIONAL:
+- No se cambian IDs ni eventos onclick.
+- No se cambian datos.json ni datos_distritos.json.
+- No se cambian cálculos, filtros ni motor provincial/distrital.
+- Comparativo Territorial conserva Excel, PNG y PDF.
+- Comparativo por Delito conserva PNG y PDF.
+- Infografías permanecen intactas.
+- No se modifican Panorama Regional, Mapa Distrital, Análisis de Alto Impacto, Alertas, Boletines, Sala CORESEC ni portada.
+
+Implementación: CSS visual encapsulado en #incidencia.
