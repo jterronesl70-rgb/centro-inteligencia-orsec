@@ -1,0 +1,9 @@
+ORSEC V27.11.7 — LIMPIEZA VISUAL
+
+Objetivo exclusivo:
+• Mantener el mapa original de La Libertad recuperado.
+• Retirar los recuadros/cifras dinámicas superpuestas sobre el mapa.
+• Mantener intactos datos, comparativos, filtros y descargas.
+• Preparar el mapa original para la aplicación cromática sin redibujarlo.
+
+No se modifica datos.json.

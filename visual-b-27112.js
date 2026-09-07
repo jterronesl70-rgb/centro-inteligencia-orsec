@@ -46,18 +46,10 @@
    c.fillStyle=C.white;c.fillRect(270,194,548,39);fit(c,'Incidencia delictiva por provincia',285,207,330,18,true,C.text);fit(c,`(${del==='TODOS'?'Total de casos':nice(del)} – ${label} ${y})`,285,226,330,14,false,C.text);
    rr(c,627,193,186,92,9,'#edf7ff',null);tx(c,prov==='TOTAL REGION'?'Total de casos en la región':'Total de casos selección',720,210,13,false,C.text,'center');tx(c,F(totalCur),720,244,30,true,C.text,'center');tx(c,(totalVar!=null&&totalVar<=0?'↓ ':'↑ ')+P(totalVar),720,272,18,true,totalVar!=null&&totalVar<=0?C.green:C.red,'center');
 
-   // MAPA ORIGINAL RECUPERADO.
-   // Se conserva la geometría cartográfica original de La Libertad contenida en la plantilla aprobada.
-   // No se redibujan provincias ni se sustituyen por polígonos simplificados.
-   const pr=DB.filter(r=>r.Anio==y&&r.TipoPeriodo===tipo&&r.Periodo===per&&r.Provincia!=='TOTAL REGION'&&(del==='TODOS'||r.Delito===del));
-   const pm={};pr.forEach(r=>pm[r.Provincia]=(pm[r.Provincia]||0)+N(r.Casos));
-   const coords={'CHEPEN':[370,326],'PACASMAYO':[345,389],'ASCOPE':[359,461],'TRUJILLO':[470,496],'VIRU':[522,583],'GRAN CHIMU':[527,473],'OTUZCO':[507,407],'SANCHEZ CARRION':[600,414],'JULCAN':[644,456],'STGO. DE CHUCO':[600,493],'SANTIAGO DE CHUCO':[600,493],'BOLIVAR':[692,511]};
-   Object.entries(coords).forEach(([name,[xx,yy]])=>{
-     const val=N(pm[name]);
-     c.fillStyle='rgba(255,255,255,.90)';
-     c.fillRect(xx-29,yy-11,66,21);
-     tx(c,F(val),xx+3,yy,13,true,'#111','center');
-   });
+   // MAPA ORIGINAL RECUPERADO Y LIMPIO.
+   // La cartografía original permanece intacta. Se eliminan las etiquetas/recuadros
+   // dinámicos superpuestos que duplicaban cifras sobre el mapa.
+   // La próxima capa cromática debe aplicarse sin sustituir la geometría original.
 
    // Cuadro comparativo completo
    c.fillStyle=C.white;c.fillRect(840,198,680,401);tx(c,'Cuadro comparativo de la incidencia delictiva',856,212,18,true,C.text);fit(c,`${prov==='TOTAL REGION'?'Región La Libertad':nice(prov)} – ${label} (${py} vs ${y})`,856,232,600,13,false,C.text);
@@ -87,5 +79,5 @@
    return can.toDataURL('image/png');
  }
  window.orsecGenerarVisualB=generar;
- window.ORSEC_EXPERIMENTAL_BUILD='V27.11.6-VISUAL-B-MAPA-ORIGINAL-RECUPERADO';
+ window.ORSEC_EXPERIMENTAL_BUILD='V27.11.7-VISUAL-B-LIMPIEZA-SUPERPOSICIONES';
 })();
