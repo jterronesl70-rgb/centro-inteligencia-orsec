@@ -1,0 +1,27 @@
+ORSEC V27.12.12 — BOLETÍN FUNCIONAL
+
+BASE: V27.12.10.
+
+CAUSA REAL ENCONTRADA:
+La rutina de Vista Previa del Boletín había absorbido accidentalmente una gran
+sección de código dentro de un template HTML. El navegador cerraba el script
+principal antes de tiempo. Por eso:
+- SITUACIÓN ESTADÍSTICA quedaba en “Actualizando...”
+- LECTURA ORSEC quedaba en “Actualizando...”
+- Actualizar análisis no respondía
+- Descargar Texto no respondía
+- Vista Previa no respondía
+- Descargar PDF no respondía
+
+CORRECCIÓN EXCLUSIVA:
+- Se reconstruye Vista Previa sin scripts embebidos.
+- Al abrir Boletines se genera automáticamente el análisis inteligente.
+- Se conserva Descargar Texto.
+- Se conserva Vista Previa.
+- Se conserva PDF directo; si la librería externa falla, abre Vista Previa como respaldo.
+- Se validó sintaxis JavaScript con Node.js.
+
+NO SE MODIFICA:
+datos.json, datos_distritos.json, detalle_alto_impacto.json, Incidencia Delictiva,
+comparativos, Panorama Regional, infografías, Inteligencia Territorial, mapas,
+Alertas ni Sala CORESEC.
