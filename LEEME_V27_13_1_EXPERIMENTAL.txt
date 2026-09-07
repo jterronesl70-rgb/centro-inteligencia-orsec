@@ -1,0 +1,17 @@
+ORSEC V27.13.1 · EXPERIMENTAL · PRODUCCIÓN POLICIAL DINÁMICA
+
+BASE:
+V27.13.0 Experimental.
+
+MEJORAS:
+- Se mantienen los 6 KPIs ejecutivos fijos.
+- Se agrega tarjeta “INDICADOR SELECCIONADO”.
+- La tarjeta muestra Total 2025, Total 2026, Diferencia y Variación %.
+- El indicador seleccionado controla la Evolución Mensual.
+- El comparativo izquierdo resalta el indicador seleccionado.
+- También se puede hacer clic directamente en un indicador del comparativo para seleccionarlo.
+
+PROTECCIÓN:
+No se modifica la base V27.12.12 estable.
+No se modifica datos.json ni los módulos de Incidencia Delictiva, Panorama,
+Infografías, Inteligencia Territorial, Boletines, Alertas o Sala CORESEC.

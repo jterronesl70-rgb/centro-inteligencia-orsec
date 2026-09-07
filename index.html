@@ -1103,6 +1103,27 @@ body{
 .orsec-prod-filtros label{font-size:11px;font-weight:800;color:#164a70}
 .orsec-prod-filtros select{width:100%;margin-top:5px;padding:10px;border:1px solid #c6d8e7;border-radius:9px;background:#fff;color:#17364c}
 .orsec-prod-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:14px 0}
+.orsec-prod-selected{
+  margin:12px 0 14px;
+  background:linear-gradient(135deg,#073e70,#0d659c);
+  color:white;border-radius:14px;padding:14px 16px;
+  display:grid;grid-template-columns:1.8fr repeat(4,1fr);gap:12px;align-items:center;
+  box-shadow:0 8px 20px rgba(7,62,112,.18)
+}
+.orsec-prod-selected .label{font-size:10px;font-weight:800;letter-spacing:.05em;opacity:.85}
+.orsec-prod-selected .name{font-size:18px;font-weight:900;margin-top:3px}
+.orsec-prod-selected .metric small{display:block;font-size:10px;opacity:.8}
+.orsec-prod-selected .metric b{display:block;font-size:21px;margin-top:3px}
+.orsec-prod-selected .metric.var b.up{color:#ffd0d0}
+.orsec-prod-selected .metric.var b.down{color:#b9ffd1}
+.orsec-prod-selected .metric.var b.neutral{color:#fff}
+.orsec-prod-focus{
+  background:#fff8dc;border:1px solid #e7bf39;border-radius:10px;padding:8px 9px;
+  box-shadow:0 0 0 2px rgba(231,191,57,.12)
+}
+@media(max-width:900px){.orsec-prod-selected{grid-template-columns:1fr 1fr 1fr}.orsec-prod-selected .main{grid-column:1/-1}}
+@media(max-width:560px){.orsec-prod-selected{grid-template-columns:1fr 1fr}.orsec-prod-selected .main{grid-column:1/-1}}
+
 .orsec-prod-kpi{background:#f7fbff;border:1px solid #d9e6f0;border-radius:12px;padding:12px}
 .orsec-prod-kpi small{display:block;color:#61788b;font-weight:700;min-height:30px}
 .orsec-prod-kpi b{display:block;color:#073e70;font-size:23px;margin-top:5px}
@@ -1333,6 +1354,7 @@ body{
    <button type="button" class="btn" onclick="orsecProdDescargarCSV()">DESCARGAR CUADRO CSV</button>
  </div>
 
+ <div id="orsecProdSeleccionado" class="orsec-prod-selected"></div>
  <div class="orsec-prod-kpis" id="orsecProdKpis"></div>
 
  <div class="orsec-prod-grid">
@@ -5028,7 +5050,7 @@ function orsecProdRender(){
   const max=Math.max(1,...arr.map(x=>Math.max(Number(x.total_2025)||0,Number(x.total_2026)||0)));
   const comp=document.getElementById('orsecProdComparativo');
   if(comp)comp.innerHTML=arr.slice().sort((a,b)=>(Number(b.total_2026)||0)-(Number(a.total_2026)||0)).map(x=>`
-    <div style="margin-bottom:10px">
+    <div data-prod-indicador="${x.indicador}" style="margin-bottom:10px;cursor:pointer" onclick="document.getElementById('orsecProdIndicador').value='${x.indicador.replaceAll("'","&#39;")}';orsecProdRenderDetalle()">
       <div class="orsec-prod-bar-row"><div class="orsec-prod-bar-label" title="${x.indicador}">${x.indicador}</div><div class="orsec-prod-track"><div class="orsec-prod-fill" style="width:${Math.max(1,(Number(x.total_2026)||0)/max*100)}%"></div></div><div class="orsec-prod-val">${orsecProdFmt(x.total_2026,x.unidad)}</div></div>
       <div style="font-size:10px;color:#718496;margin-left:0">2025: ${orsecProdFmt(x.total_2025,x.unidad)} · <span class="${orsecProdClass(x.variacion_pct)}">${orsecProdPct(x.variacion_pct)}</span></div>
     </div>`).join('');
@@ -5049,6 +5071,23 @@ function orsecProdRenderDetalle(){
   const ind=document.getElementById('orsecProdIndicador')?.value;
   const x=ORSEC_PROD.registros.find(r=>r.indicador===ind)||orsecProdFiltrados()[0];
   if(!x)return;
+
+  // Tarjeta dinámica del indicador seleccionado
+  const sel=document.getElementById('orsecProdSeleccionado');
+  if(sel){
+    const cls=x.variacion_pct==null?'neutral':(x.variacion_pct>0?'up':x.variacion_pct<0?'down':'neutral');
+    sel.innerHTML=`
+      <div class="main">
+        <div class="label">INDICADOR SELECCIONADO</div>
+        <div class="name">${x.indicador}</div>
+        <div style="font-size:10px;opacity:.8;margin-top:4px">${x.categoria_orsec} · ${x.unidad}</div>
+      </div>
+      <div class="metric"><small>ENE–AGO 2025</small><b>${orsecProdFmt(x.total_2025,x.unidad)}</b></div>
+      <div class="metric"><small>ENE–AGO 2026</small><b>${orsecProdFmt(x.total_2026,x.unidad)}</b></div>
+      <div class="metric"><small>DIFERENCIA</small><b>${orsecProdFmt(x.diferencia,x.unidad)}</b></div>
+      <div class="metric var"><small>VARIACIÓN</small><b class="${cls}">${orsecProdPct(x.variacion_pct)}</b></div>`;
+  }
+
   const t=document.getElementById('orsecProdSerieTitulo');if(t)t.textContent=x.indicador;
   const vals=[...Object.values(x.mensual_2025||{}),...Object.values(x.mensual_2026||{})].map(Number).filter(Number.isFinite);
   const max=Math.max(1,...vals);
@@ -5059,6 +5098,11 @@ function orsecProdRenderDetalle(){
     <div title="2025: ${orsecProdFmt(x.mensual_2025[m],x.unidad)}"><div style="font-size:9px;color:#64748b">2025</div><div class="orsec-prod-mini"><i style="width:${Math.max(1,(Number(x.mensual_2025[m])||0)/max*100)}%"></i></div></div>
     <div title="2026: ${orsecProdFmt(x.mensual_2026[m],x.unidad)}"><div style="font-size:9px;color:#64748b">2026</div><div class="orsec-prod-mini y26"><i style="width:${Math.max(1,(Number(x.mensual_2026[m])||0)/max*100)}%"></i></div></div>
    </div>`).join('');
+
+  // Resaltar el indicador seleccionado dentro del comparativo
+  document.querySelectorAll('#orsecProdComparativo [data-prod-indicador]').forEach(el=>{
+    el.classList.toggle('orsec-prod-focus',el.dataset.prodIndicador===x.indicador);
+  });
 }
 
 function orsecProdDescargarCSV(){
@@ -5075,5 +5119,9 @@ function orsecProdDescargarCSV(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>setTimeout(orsecProdInit,900));
+</script>
+
+<script id="orsecV27131ProduccionMarker">
+window.ORSEC_PRODUCCION_BUILD='V27.13.1-INDICADOR-DINAMICO';
 </script>
 </body></html>
