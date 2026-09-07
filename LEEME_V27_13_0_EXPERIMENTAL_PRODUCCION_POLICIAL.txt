@@ -1,0 +1,32 @@
+ORSEC V27.13.0 · EXPERIMENTAL · PRODUCCIÓN POLICIAL
+
+BASE PROTEGIDA:
+V27.12.12 — versión estable.
+
+NUEVA BASE PARALELA:
+produccion_policial.json
+
+FUENTE:
+Archivo “LOGROS ENE-AGO - 2025 - 2026 PARA EL GBIERNO REGIONAL.xlsx”.
+Texto de fuente del archivo:
+NOTAS INFORMATIVAS DIARIOS DE LAS SSUU Y SINTESIS DE CEOPOL.
+
+SE AÑADE ÚNICAMENTE:
+- Nueva tarjeta “Producción Policial”.
+- Indicadores ejecutivos 2026 con variación frente a 2025.
+- Comparativo 2025 vs 2026.
+- Evolución mensual enero–agosto.
+- Matriz completa de indicadores.
+- Filtro por categoría ORSEC e indicador.
+- Descarga CSV de la matriz filtrada.
+
+ARQUITECTURA:
+La nueva base NO se mezcla con datos.json de Incidencia Delictiva.
+No modifica filtros maestros, cálculos delictivos ni bases distritales.
+
+PROTECCIÓN:
+No se modifican Panorama Regional, Incidencia Delictiva, comparativos,
+infografías, Inteligencia Territorial, mapas, Boletines, Alertas ni Sala CORESEC.
+
+ESTADO:
+Experimental. Validar visualmente antes de incorporarla a la versión institucional.

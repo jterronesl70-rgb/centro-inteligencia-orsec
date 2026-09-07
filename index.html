@@ -1096,6 +1096,37 @@ body{
 }
 </style>
 
+
+<style id="orsecProdPolicialCSS">
+#produccion{overflow:hidden}
+.orsec-prod-filtros{display:grid;grid-template-columns:1fr 1.3fr auto;gap:10px;align-items:end;margin:18px 0}
+.orsec-prod-filtros label{font-size:11px;font-weight:800;color:#164a70}
+.orsec-prod-filtros select{width:100%;margin-top:5px;padding:10px;border:1px solid #c6d8e7;border-radius:9px;background:#fff;color:#17364c}
+.orsec-prod-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:14px 0}
+.orsec-prod-kpi{background:#f7fbff;border:1px solid #d9e6f0;border-radius:12px;padding:12px}
+.orsec-prod-kpi small{display:block;color:#61788b;font-weight:700;min-height:30px}
+.orsec-prod-kpi b{display:block;color:#073e70;font-size:23px;margin-top:5px}
+.orsec-prod-kpi em{display:block;font-style:normal;font-size:11px;font-weight:800;margin-top:4px}
+.orsec-prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.orsec-prod-card{background:#fff;border:1px solid #dbe6ef;border-radius:14px;padding:15px;box-shadow:0 3px 12px rgba(0,35,65,.05)}
+.orsec-prod-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.orsec-prod-head h3{color:#0b3d6d;margin:0}.orsec-prod-head span{font-size:11px;color:#718496}
+.orsec-prod-bar-row{display:grid;grid-template-columns:minmax(120px,180px) 1fr 86px;gap:8px;align-items:center;margin:8px 0;font-size:11px}
+.orsec-prod-bar-label{font-weight:800;color:#234760;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.orsec-prod-track{height:14px;background:#e8eff5;border-radius:999px;overflow:hidden}
+.orsec-prod-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#0b3d6d,#1788c8)}
+.orsec-prod-val{text-align:right;font-weight:900;color:#0b3d6d}
+.orsec-prod-month{display:grid;grid-template-columns:46px 1fr 1fr;gap:7px;align-items:center;margin:7px 0;font-size:11px}
+.orsec-prod-month b{color:#234760}.orsec-prod-mini{height:10px;background:#e8eff5;border-radius:999px;overflow:hidden;position:relative}
+.orsec-prod-mini i{display:block;height:100%;background:#0b3d6d;border-radius:999px}
+.orsec-prod-mini.y26 i{background:#d8aa32}
+.orsec-prod-tablewrap{overflow:auto;max-height:470px}
+.orsec-prod-table{font-size:12px}.orsec-prod-table th{position:sticky;top:0;background:#eef5fa;z-index:1}.orsec-prod-table td:nth-child(n+3){text-align:right;font-weight:700}
+.orsec-prod-up{color:#b3261e}.orsec-prod-down{color:#198754}.orsec-prod-neutral{color:#64748b}
+@media(max-width:1000px){.orsec-prod-kpis{grid-template-columns:repeat(3,1fr)}.orsec-prod-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.orsec-prod-filtros{grid-template-columns:1fr}.orsec-prod-kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+
 </head>
 <body>
 
@@ -1132,6 +1163,7 @@ body{
 <section class="grid">
  <div class="tarjeta" data-mod="panorama" onclick="abrir('panorama',this)"><div class="icono">◉</div><h3>Panorama Regional</h3><div class="numero">360°</div><p>Fotografía ejecutiva de La Libertad.</p></div>
  <div class="tarjeta" data-mod="incidencia" onclick="abrir('incidencia',this)"><div class="icono">📊</div><h3>Incidencia Delictiva</h3><div class="numero" id="kpiRegistros">--</div><p>Consulta dinámica del Excel.</p></div>
+ <div class="tarjeta" data-mod="produccion" onclick="abrir('produccion',this);setTimeout(()=>{if(typeof orsecProdRender==='function')orsecProdRender()},60)"><div class="icono">🚔</div><h3>Producción Policial</h3><div class="numero">25↔26</div><p>Resultados operativos comparados.</p></div>
  <div class="tarjeta" data-mod="boletines" onclick="abrir('boletines',this)"><div class="icono">📑</div><h3>Boletines</h3><div class="numero" id="kpiBoletin">AUTO</div><p>Resumen ejecutivo automático.</p></div>
  <div class="tarjeta" data-mod="alertas" onclick="abrir('alertas',this)"><div class="icono">🚨</div><h3>Alertas</h3><div class="numero" id="kpiAlertas">--</div><p>Variaciones 2025–2026.</p></div>
  <div class="tarjeta" data-mod="territorio" onclick="abrir('territorio',this)"><div class="icono">🗺️</div><h3>Inteligencia Territorial</h3><div class="numero" id="kpiProvincias">12</div><p>Mapa y ranking provincial.</p></div>
@@ -1282,6 +1314,49 @@ body{
  <div class="kpis"><div class="kpi"><small>Total seleccionado</small><b id="kTotal">--</b></div><div class="kpi"><small>Delito principal</small><b id="kDelito" style="font-size:17px">--</b></div><div class="kpi"><small>Provincia líder</small><b id="kProvincia" style="font-size:17px">--</b></div><div class="kpi"><small>Variación comparable</small><b id="kVariacion">--</b></div></div>
  <div id="tablaWrap" class="loading">Cargando información…</div>
  <div class="chart-shell"><div class="chart-head"><h3>Gráfico dinámico · principales delitos</h3><span class="badge">DATOS EXCEL</span></div><div class="orsec-bars" id="barrasDelitos"></div></div>
+</div>
+
+
+<div id="produccion" class="seccion">
+ <div class="seccion-head">
+  <div><h2>Producción Policial</h2><p style="margin-top:5px;color:#64748b">Resultados operativos · Región Policial La Libertad · Enero–Agosto 2025/2026</p></div>
+  <span class="badge">BASE PARALELA · NO ALTERA INCIDENCIA DELICTIVA</span>
+ </div>
+
+ <div class="orsec-prod-filtros">
+   <label>Categoría
+    <select id="orsecProdCategoria" onchange="orsecProdRender()"></select>
+   </label>
+   <label>Indicador
+    <select id="orsecProdIndicador" onchange="orsecProdRenderDetalle()"></select>
+   </label>
+   <button type="button" class="btn" onclick="orsecProdDescargarCSV()">DESCARGAR CUADRO CSV</button>
+ </div>
+
+ <div class="orsec-prod-kpis" id="orsecProdKpis"></div>
+
+ <div class="orsec-prod-grid">
+   <div class="orsec-prod-card">
+    <div class="orsec-prod-head"><h3>Comparativo 2025 vs 2026</h3><span>Totales enero–agosto</span></div>
+    <div id="orsecProdComparativo"></div>
+   </div>
+   <div class="orsec-prod-card">
+    <div class="orsec-prod-head"><h3>Evolución mensual</h3><span id="orsecProdSerieTitulo">Indicador seleccionado</span></div>
+    <div id="orsecProdTendencia"></div>
+   </div>
+ </div>
+
+ <div class="orsec-prod-card" style="margin-top:14px">
+   <div class="orsec-prod-head"><h3>Matriz completa de producción policial</h3><span>Fuente oficial recibida por ORSEC</span></div>
+   <div class="orsec-prod-tablewrap"><table class="orsec-prod-table">
+    <thead><tr><th>Indicador</th><th>Categoría ORSEC</th><th>2025</th><th>2026</th><th>Diferencia</th><th>Variación %</th></tr></thead>
+    <tbody id="orsecProdTabla"></tbody>
+   </table></div>
+ </div>
+
+ <div class="nota" style="margin-top:12px">
+  Fuente: Notas Informativas Diarios de las SSUU y Síntesis de CEOPOL. La clasificación por categorías es una organización visual ORSEC y no modifica los indicadores originales.
+ </div>
 </div>
 
 <div id="boletines" class="seccion"><div class="seccion-head"><h2>Boletín Automático</h2><span class="badge">Generado por ORSEC</span></div><div class="boletin-actions"><button class="btn" onclick="renderBoletin();setTimeout(orsecGenerarBI,40)">Actualizar análisis</button><button class="btn secundario" onclick="copiarBoletin()">Copiar texto</button></div><div class="boletin" id="boletinContenido">Cargando…</div><div class="chart-shell"><h3>Top delictivo del período</h3><div class="orsec-bars" id="barrasBoletin"></div></div>
@@ -4894,5 +4969,111 @@ window.ORSEC_EXPERIMENTAL_BUILD='V27.12.1-VISUAL-B-FINAL-EMBEBIDA';
 
 <script id="orsecV271212BoletinMarker">
 window.ORSEC_PATCH_BOLETIN='V27.12.12-BOLETIN-FUNCIONAL';
+</script>
+
+<script id="orsecProduccionPolicialJS">
+let ORSEC_PROD=null;
+
+function orsecProdFmt(v,unidad){
+  if(v==null||v==='')return '—';
+  const n=Number(v);
+  if(!isFinite(n))return String(v);
+  if(unidad==='S/')return 'S/ '+n.toLocaleString('es-PE',{maximumFractionDigits:2});
+  if(unidad==='kg')return n.toLocaleString('es-PE',{maximumFractionDigits:3})+' kg';
+  return n.toLocaleString('es-PE',{maximumFractionDigits:2});
+}
+function orsecProdPct(v){
+  if(v==null||!isFinite(v))return 'N/D';
+  return (v>=0?'+':'')+Number(v).toFixed(1)+'%';
+}
+function orsecProdClass(v){return v==null?'orsec-prod-neutral':(v>0?'orsec-prod-up':v<0?'orsec-prod-down':'orsec-prod-neutral')}
+
+async function orsecProdInit(){
+  try{
+    const r=await fetch('produccion_policial.json',{cache:'no-store'});
+    if(!r.ok)throw new Error('No se pudo cargar produccion_policial.json');
+    ORSEC_PROD=await r.json();
+    const cats=['TODAS',...new Set(ORSEC_PROD.registros.map(x=>x.categoria_orsec))];
+    const sc=document.getElementById('orsecProdCategoria');
+    if(sc)sc.innerHTML=cats.map(x=>`<option value="${x}">${x}</option>`).join('');
+    orsecProdRender();
+  }catch(e){
+    console.error('ORSEC Producción Policial:',e);
+    const sec=document.getElementById('produccion');
+    if(sec)sec.insertAdjacentHTML('beforeend','<div class="error">No se pudo cargar la base de Producción Policial. Los demás módulos ORSEC continúan operativos.</div>');
+  }
+}
+
+function orsecProdFiltrados(){
+  if(!ORSEC_PROD)return [];
+  const c=document.getElementById('orsecProdCategoria')?.value||'TODAS';
+  return ORSEC_PROD.registros.filter(x=>c==='TODAS'||x.categoria_orsec===c);
+}
+
+function orsecProdRender(){
+  if(!ORSEC_PROD)return;
+  const arr=orsecProdFiltrados();
+  const si=document.getElementById('orsecProdIndicador');
+  if(si){
+    const previo=si.value;
+    si.innerHTML=arr.map(x=>`<option value="${x.indicador}">${x.indicador}</option>`).join('');
+    if(arr.some(x=>x.indicador===previo))si.value=previo;
+  }
+
+  const claves=['OPERATIVOS','TOTAL DETENIDOS','ARMAS DE FUEGO','BANDAS DESART.','EXPLOSIVOS','FULMINANTES'];
+  const kpis=claves.map(k=>ORSEC_PROD.registros.find(x=>x.indicador===k)).filter(Boolean);
+  const kb=document.getElementById('orsecProdKpis');
+  if(kb)kb.innerHTML=kpis.map(x=>`<div class="orsec-prod-kpi"><small>${x.indicador}</small><b>${orsecProdFmt(x.total_2026,x.unidad)}</b><em class="${orsecProdClass(x.variacion_pct)}">${orsecProdPct(x.variacion_pct)} vs 2025</em></div>`).join('');
+
+  const max=Math.max(1,...arr.map(x=>Math.max(Number(x.total_2025)||0,Number(x.total_2026)||0)));
+  const comp=document.getElementById('orsecProdComparativo');
+  if(comp)comp.innerHTML=arr.slice().sort((a,b)=>(Number(b.total_2026)||0)-(Number(a.total_2026)||0)).map(x=>`
+    <div style="margin-bottom:10px">
+      <div class="orsec-prod-bar-row"><div class="orsec-prod-bar-label" title="${x.indicador}">${x.indicador}</div><div class="orsec-prod-track"><div class="orsec-prod-fill" style="width:${Math.max(1,(Number(x.total_2026)||0)/max*100)}%"></div></div><div class="orsec-prod-val">${orsecProdFmt(x.total_2026,x.unidad)}</div></div>
+      <div style="font-size:10px;color:#718496;margin-left:0">2025: ${orsecProdFmt(x.total_2025,x.unidad)} · <span class="${orsecProdClass(x.variacion_pct)}">${orsecProdPct(x.variacion_pct)}</span></div>
+    </div>`).join('');
+
+  const tb=document.getElementById('orsecProdTabla');
+  if(tb)tb.innerHTML=arr.map(x=>`<tr>
+   <td>${x.indicador}</td><td>${x.categoria_orsec}</td>
+   <td>${orsecProdFmt(x.total_2025,x.unidad)}</td><td>${orsecProdFmt(x.total_2026,x.unidad)}</td>
+   <td class="${orsecProdClass(x.diferencia)}">${orsecProdFmt(x.diferencia,x.unidad)}</td>
+   <td class="${orsecProdClass(x.variacion_pct)}">${orsecProdPct(x.variacion_pct)}</td>
+  </tr>`).join('');
+
+  orsecProdRenderDetalle();
+}
+
+function orsecProdRenderDetalle(){
+  if(!ORSEC_PROD)return;
+  const ind=document.getElementById('orsecProdIndicador')?.value;
+  const x=ORSEC_PROD.registros.find(r=>r.indicador===ind)||orsecProdFiltrados()[0];
+  if(!x)return;
+  const t=document.getElementById('orsecProdSerieTitulo');if(t)t.textContent=x.indicador;
+  const vals=[...Object.values(x.mensual_2025||{}),...Object.values(x.mensual_2026||{})].map(Number).filter(Number.isFinite);
+  const max=Math.max(1,...vals);
+  const b=document.getElementById('orsecProdTendencia');
+  if(b)b.innerHTML=ORSEC_PROD.meses.map(m=>`
+   <div class="orsec-prod-month">
+    <b>${m}</b>
+    <div title="2025: ${orsecProdFmt(x.mensual_2025[m],x.unidad)}"><div style="font-size:9px;color:#64748b">2025</div><div class="orsec-prod-mini"><i style="width:${Math.max(1,(Number(x.mensual_2025[m])||0)/max*100)}%"></i></div></div>
+    <div title="2026: ${orsecProdFmt(x.mensual_2026[m],x.unidad)}"><div style="font-size:9px;color:#64748b">2026</div><div class="orsec-prod-mini y26"><i style="width:${Math.max(1,(Number(x.mensual_2026[m])||0)/max*100)}%"></i></div></div>
+   </div>`).join('');
+}
+
+function orsecProdDescargarCSV(){
+  if(!ORSEC_PROD)return;
+  const arr=orsecProdFiltrados();
+  const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';
+  const rows=[['Indicador','Categoria ORSEC','Unidad','Total 2025','Total 2026','Diferencia','Variacion %'],
+    ...arr.map(x=>[x.indicador,x.categoria_orsec,x.unidad,x.total_2025,x.total_2026,x.diferencia,x.variacion_pct])];
+  const csv='\ufeff'+rows.map(r=>r.map(q).join(';')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='ORSEC_Produccion_Policial_Ene_Ago_2025_2026.csv';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+document.addEventListener('DOMContentLoaded',()=>setTimeout(orsecProdInit,900));
 </script>
 </body></html>
