@@ -4313,7 +4313,7 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
     canvas.width=1800; canvas.height=1680;
     const c=canvas.getContext('2d');
     const navy='#073e70', text='#17364c', muted='#687f91', blue='#1d65ad', red='#ef4135', grid='#d7e1e8', pale='#f5f9fc', green='#11823b';
-    c.fillStyle='#fff'; c.fillRect(0,0,1800,1400);
+    c.fillStyle='#fff'; c.fillRect(0,0,canvas.width,canvas.height);
 
     // Cabecera
     c.fillStyle=navy; c.fillRect(0,0,1800,150);
@@ -4407,7 +4407,7 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
 
     // Pie
     c.fillStyle=muted; c.font='15px Arial'; c.textAlign='left';
-    c.fillText('Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC',70,1595);
+    c.fillText('Fuente: Unidad de Estadística de la Región Policial La Libertad · Elaborado: ORSEC',70,1635);
     return canvas;
   }
 

@@ -1,0 +1,1 @@
+ORSEC V27.12.6 — parche exclusivo de exportación. El canvas era 1800x1680 pero el fondo blanco solo cubría 1800x1400; ahora cubre el 100% del canvas. No se modifican datos, cálculos, filtros ni otros módulos.
