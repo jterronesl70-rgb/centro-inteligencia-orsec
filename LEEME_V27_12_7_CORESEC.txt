@@ -1,0 +1,14 @@
+ORSEC V27.12.7 — COMPARATIVO PROVINCIAL PDF SIN FRANJA NEGRA
+
+Base: V27.12.6.
+
+Cambio exclusivo:
+- Comparativo por provincia (PNG/PDF).
+- El canvas provincial se ajusta al contenido real.
+- El fondo blanco cubre el 100% del canvas.
+- El PDF escala proporcionalmente la imagen completa.
+
+No se modifica:
+datos.json, filtros, cálculos, Panorama Regional, infografías, mapas,
+portada, Alertas, Boletines, Sala CORESEC, Comparativo por Delito
+ni ninguna otra funcionalidad.

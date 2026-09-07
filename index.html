@@ -3349,10 +3349,10 @@ async function orsecDescargarExcelComparativo(){orsecGenerarComparativo();try{aw
 function orsecCanvasComparativo(){
  orsecGenerarComparativo();
  const canvas=document.createElement('canvas');
- canvas.width=1800; canvas.height=1620;
+ canvas.width=1800; canvas.height=1450;
  const c=canvas.getContext('2d');
  const navy='#073e70',text='#17364c',muted='#687f91',blue='#1d65ad',red='#ef4135',green='#11823b',grid='#d7e1e8',pale='#f5f9fc';
- c.fillStyle='#fff';c.fillRect(0,0,1800,1400);
+ c.fillStyle='#fff';c.fillRect(0,0,canvas.width,canvas.height);
 
  const f=current();
 
@@ -3461,7 +3461,7 @@ function orsecCanvasComparativo(){
  return canvas
 }
 function orsecDescargarGraficoComparativo(){const canvas=orsecCanvasComparativo(),f=current(),a=document.createElement('a');a.href=canvas.toDataURL('image/png');a.download=`ORSEC_Comparativo_Provincial_CUADRO_Y_GRAFICO_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}_V27_9_7.png`;a.click()}
-async function orsecDescargarPDFComparativo(){const canvas=orsecCanvasComparativo();try{await orsecLoadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',()=>!!(window.jspdf&&window.jspdf.jsPDF));const{jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});doc.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',8,8,281,184);const f=current();doc.save(`ORSEC_Comparativo_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}.pdf`)}catch(e){console.error(e);alert('No se pudo generar el PDF. Puede descargar el gráfico PNG.')}}
+async function orsecDescargarPDFComparativo(){const canvas=orsecCanvasComparativo();try{await orsecLoadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',()=>!!(window.jspdf&&window.jspdf.jsPDF));const{jsPDF}=window.jspdf,doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});const pageW=doc.internal.pageSize.getWidth(),pageH=doc.internal.pageSize.getHeight(),margin=6,maxW=pageW-margin*2,maxH=pageH-margin*2,ratio=canvas.width/canvas.height;let imgW=maxW,imgH=imgW/ratio;if(imgH>maxH){imgH=maxH;imgW=imgH*ratio}const x=(pageW-imgW)/2,y=(pageH-imgH)/2;doc.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',x,y,imgW,imgH);const f=current();doc.save(`ORSEC_Comparativo_${orsecCompSafe(f.tipo)}_${orsecCompSafe(f.periodo)}_${orsecCompSafe(f.delito)}.pdf`)}catch(e){console.error(e);alert('No se pudo generar el PDF. Puede descargar el gráfico PNG.')}}
 document.addEventListener('change',e=>{if(e.target&&['anio','tipoPeriodo','periodo','provincia','delito'].includes(e.target.id))document.getElementById('orsecComparativoBox')?.classList.remove('activo')});
 </script>
 <script id="orsecDetalleImpactoJS">
