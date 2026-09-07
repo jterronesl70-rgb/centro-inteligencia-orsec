@@ -967,6 +967,60 @@ background:#123f59;border:1px solid #2d789c;color:#eefaff;text-decoration:none;f
 @media(max-width:560px){.orsec-pan-contexto-head{display:block}.orsec-pan-contexto-head button{margin-top:9px}.orsec-pan-filtros{grid-template-columns:1fr}}
 </style>
 
+
+<style id="orsecCoresecPortadaV27123">
+/* V27.12.3 — Cambio exclusivamente visual de la pantalla principal */
+body{
+  background:
+    linear-gradient(rgba(3,28,55,.34),rgba(3,28,55,.42)),
+    url("ORSEC_PORTADA_CORESEC_REFERENCIA_APROBADA.png") center top / cover fixed no-repeat !important;
+}
+.hero{
+  background:linear-gradient(180deg,rgba(5,49,91,.74),rgba(8,61,104,.68)) !important;
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  padding:34px 24px 30px !important;
+  text-shadow:0 2px 7px rgba(0,0,0,.35);
+}
+.grid{
+  max-width:1200px !important;
+  margin:0 auto !important;
+  padding:24px 26px 34px !important;
+  gap:16px !important;
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+}
+.tarjeta{
+  background:rgba(225,241,253,.90) !important;
+  border:1px solid rgba(255,255,255,.82) !important;
+  box-shadow:0 10px 26px rgba(0,24,50,.28) !important;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  color:#082f58 !important;
+  min-height:155px;
+}
+.tarjeta:hover{
+  background:rgba(239,248,255,.96) !important;
+  border-color:#fff !important;
+  box-shadow:0 13px 30px rgba(0,24,50,.34) !important;
+}
+.tarjeta h3{color:#082f58 !important;}
+.tarjeta p{color:#294e70 !important;}
+.tarjeta .numero{color:#064b86 !important;}
+.tarjeta[data-mod="incidencia"] .numero{color:#c98b00 !important;}
+.tarjeta[data-mod="boletines"] .numero{color:#7a2ea8 !important;}
+.tarjeta[data-mod="alertas"] .numero{color:#c92f3e !important;}
+.tarjeta[data-mod="territorio"] .numero{color:#087a48 !important;}
+.tarjeta[data-mod="sala"] .numero{color:#087cc1 !important;}
+/* Mantiene todos los módulos internos con sus fondos originales */
+.seccion{position:relative;z-index:2}
+@media(max-width:1050px){.grid{grid-template-columns:repeat(3,1fr)!important}}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)!important}}
+@media(max-width:560px){
+  body{background-position:center top!important;background-attachment:scroll!important}
+  .grid{grid-template-columns:1fr!important}
+}
+</style>
+
 </head>
 <body>
 

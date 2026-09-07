@@ -1,0 +1,20 @@
+ORSEC V27.12.3 — PORTADA NOCTURNA CORESEC
+
+BASE PROTEGIDA:
+V27.12.2A — Centro de Análisis de Datos.
+
+CAMBIO REALIZADO:
+- Nueva ambientación nocturna de La Libertad en la pantalla principal.
+- Tarjetas más claras/semitransparentes para mejorar lectura y diferenciación.
+- Se conserva la identidad azul institucional.
+- La imagen aprobada queda incluida como activo local del proyecto.
+
+PROTECCIÓN:
+- NO se modifica datos.json.
+- NO se modifica JavaScript funcional.
+- NO se modifica Panorama Regional.
+- NO se modifican las infografías.
+- NO se modifican mapas, comparativos, filtros, alertas ni descargas.
+- El cambio está encapsulado en una capa CSS independiente dentro de index.html.
+
+Si se desea revertir este punto, basta volver a V27.12.2A.
