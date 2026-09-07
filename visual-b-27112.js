@@ -93,10 +93,16 @@
    seg.forEach(([name,val,col],i)=>{const yy=730+i*19;c.fillStyle=col;c.fillRect(1285,yy-6,10,10);fit(c,`${name} ${(val/dtotal*100).toFixed(1)}%`,1302,yy,205,9.5,true,C.text)});
    fit(c,'Otros = Lesiones, Secuestro al paso, Apropiación ilícita, Estafa y Usurpación',1285,914,220,9,true,C.text);
 
-   // Pie institucional
-   c.fillStyle=C.white;c.fillRect(15,954,1000,49);tx(c,'Fuente: Unidad de Estadística de la Región Policial de La Libertad.',23,968,11,true,C.text);tx(c,'Elaboración: Observatorio Regional de Seguridad Ciudadana (ORSEC) – La Libertad.',23,986,10,false,C.text);tx(c,'“Cada dato tiene un territorio. Cada territorio tiene personas. Cada persona merece vivir segura.”',770,982,10,false,C.text,'center');tx(c,'ORSEC · VISUAL B EXPERIMENTAL',1510,1002,10,true,'#6d8192','right');
+   // Pie institucional limpio: se cubre por completo la zona izquierda heredada
+   // antes de escribir Fuente y Elaboración una sola vez.
+   c.fillStyle=C.white;
+   c.fillRect(0,944,760,80);
+   tx(c,'Fuente: Unidad de Estadística de la Región Policial de La Libertad.',23,968,11,true,C.text);
+   tx(c,'Elaboración: Observatorio Regional de Seguridad Ciudadana (ORSEC) – La Libertad.',23,988,10,false,C.text);
+   tx(c,'“Cada dato tiene un territorio. Cada territorio tiene personas. Cada persona merece vivir segura.”',930,982,10,false,C.text,'center');
+   tx(c,'ORSEC · VISUAL B EXPERIMENTAL',1510,1002,10,true,'#6d8192','right');
    return can.toDataURL('image/png');
  }
  window.orsecGenerarVisualB=generar;
- window.ORSEC_EXPERIMENTAL_BUILD='V27.11.8-VISUAL-B-LIMPIEZA-DESDE-ORIGEN';
+ window.ORSEC_EXPERIMENTAL_BUILD='V27.11.9-VISUAL-B-PIE-INSTITUCIONAL-LIMPIO';
 })();

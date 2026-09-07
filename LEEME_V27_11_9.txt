@@ -1,0 +1,8 @@
+ORSEC V27.11.9 — PIE INSTITUCIONAL LIMPIO
+
+Corrección exclusiva:
+- Se limpia completamente la zona inferior izquierda heredada de la plantilla.
+- Se escribe una sola vez:
+  Fuente: Unidad de Estadística de la Región Policial de La Libertad.
+  Elaboración: Observatorio Regional de Seguridad Ciudadana (ORSEC) – La Libertad.
+- No se modifican mapa, datos, gráficos, filtros ni descargas.
