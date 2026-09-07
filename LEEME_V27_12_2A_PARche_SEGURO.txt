@@ -1,0 +1,12 @@
+ORSEC V27.12.2A — PARCHE CORESEC SEGURO
+
+Origen: V27.12.1 VISUAL B FINAL EMBEBIDA (base estable protegida).
+
+ÚNICO CAMBIO:
+- "Centro de Inteligencia" -> "Centro de Análisis de Datos"
+- "CENTRO DE INTELIGENCIA" -> "CENTRO DE ANÁLISIS DE DATOS"
+
+Protección:
+- No se modifica ningún archivo adicional.
+- No se modifica la Visual B embebida salvo la denominación textual visible.
+- No se toca datos.json, mapas, imágenes, filtros, cálculos, gráficos, descargas ni funciones.

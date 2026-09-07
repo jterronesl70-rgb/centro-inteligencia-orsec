@@ -3642,8 +3642,6 @@ function orsecDescargarRelacionPDF(){
     '
 
 
-
-<!-- ORSEC V27.12.2 CORESEC · Centro de Análisis de Datos -->
 </body></html>'
   ].join('');
 
@@ -3661,8 +3659,6 @@ window.ORSEC_BUILD='V27.9-RECUPERACION-INCIDENCIA';
 
 
 
-
-<!-- ORSEC V27.12.2 CORESEC · Centro de Análisis de Datos -->
 </body></html>`);
   w.document.close();
 }
@@ -5103,9 +5099,7 @@ window.ORSEC_EXPERIMENTAL_BUILD='V27.11.0-VISUAL-B-DATOS-JSON';
       fr=document.createElement('iframe');fr.id='orsecVisualBPrintFrame';fr.style.position='fixed';fr.style.right='0';fr.style.bottom='0';fr.style.width='1px';fr.style.height='1px';fr.style.border='0';fr.style.opacity='0';
       document.body.appendChild(fr);
       const doc=fr.contentDocument||fr.contentWindow.document;
-      doc.open();doc.write('<!doctype html><html><head><meta charset="utf-8"><title>ORSEC Visual B</title><style>@page{size:landscape;margin:8mm}html,body{margin:0;padding:0;background:#fff}img{display:block;width:100%;height:auto;max-height:95vh;object-fit:contain}</style></head><body><img src="'+uri+'">
-<!-- ORSEC V27.12.2 CORESEC · Centro de Análisis de Datos -->
-</body></html>');doc.close();
+      doc.open();doc.write('<!doctype html><html><head><meta charset="utf-8"><title>ORSEC Visual B</title><style>@page{size:landscape;margin:8mm}html,body{margin:0;padding:0;background:#fff}img{display:block;width:100%;height:auto;max-height:95vh;object-fit:contain}</style></head><body><img src="'+uri+'"></body></html>');doc.close();
       const img=doc.images[0];
       const go=()=>setTimeout(()=>{fr.contentWindow.focus();fr.contentWindow.print()},120);
       if(img&&img.complete)go();else if(img)img.onload=go;else go();
@@ -5253,6 +5247,4 @@ window.ORSEC_EXPERIMENTAL_BUILD='V27.12.1-VISUAL-B-FINAL-EMBEBIDA';
 })();
 
 </script>
-
-<!-- ORSEC V27.12.2 CORESEC · Centro de Análisis de Datos -->
 </body></html>
