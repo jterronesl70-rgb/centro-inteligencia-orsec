@@ -14,6 +14,26 @@
  function dict(rs){const o={};rs.forEach(r=>o[r.Delito]=N(r.Casos));return o}
  function sum(rs){return rs.reduce((a,r)=>a+N(r.Casos),0)}
  function periodLabel(f,rs){return document.getElementById('periodo')?.selectedOptions?.[0]?.textContent||rs[0]?.EtiquetaPeriodo||f.periodo||''}
+ function recolorMapaOriginal(c){
+   // Recolorea únicamente los azules de la cartografía original, preservando geometría, bordes y rótulos.
+   const x0=285,y0=235,w=535,h=375, im=c.getImageData(x0,y0,w,h), d=im.data;
+   for(let i=0;i<d.length;i+=4){
+     const r=d[i],g=d[i+1],b=d[i+2];
+     // Solo tonos azules/cian del mapa; evita texto negro, blancos y otros elementos.
+     if(b>105 && b>r*1.18 && b>g*1.03 && (b-r)>35){
+       const lum=(r+g+b)/3;
+       let q;
+       if(lum<95) q=[198,0,35];          // rojo > 2,500
+       else if(lum<135) q=[237,33,36];   // rojo 1,001–2,500
+       else if(lum<175) q=[255,133,0];   // naranja 501–1,000
+       else if(lum<205) q=[255,205,32];  // amarillo 251–500
+       else q=[32,166,70];               // verde <= 250
+       // mezcla moderada para conservar antialiasing y límites provinciales
+       d[i]=Math.round(q[0]*.88+r*.12); d[i+1]=Math.round(q[1]*.88+g*.12); d[i+2]=Math.round(q[2]*.88+b*.12);
+     }
+   }
+   c.putImageData(im,x0,y0);
+ }
  async function generar(){
    if(typeof DB==='undefined'||!Array.isArray(DB)||!DB.length) throw new Error('datos.json aún no está cargado');
    const f=current(), y=N(f.anio)||2026, py=y-1, tipo=f.tipo||'ACUMULADO', per=f.periodo;
@@ -26,6 +46,7 @@
    const totalCur=sum(activeCur), totalPrev=sum(activePrev), totalVar=pct(totalCur,totalPrev);
    const can=document.createElement('canvas');can.width=1536;can.height=1024;const c=can.getContext('2d');
    const bg=await load(TEMPLATE_B);c.drawImage(bg,0,0,1536,1024);
+   recolorMapaOriginal(c);
    // V27.11.4: limpiar rótulos heredados BLOQUE 3 / BLOQUE 4 de la plantilla.
    c.fillStyle=C.navy2;c.fillRect(251,153,1261,39);fit(c,'ANÁLISIS TERRITORIAL Y TENDENCIAS',270,173,650,20,true,C.white);
    c.fillStyle=C.navy2;c.fillRect(251,618,1261,39);fit(c,'COMPARATIVO DE PRINCIPALES DELITOS',270,638,650,20,true,C.white);
@@ -93,16 +114,15 @@
    seg.forEach(([name,val,col],i)=>{const yy=730+i*19;c.fillStyle=col;c.fillRect(1285,yy-6,10,10);fit(c,`${name} ${(val/dtotal*100).toFixed(1)}%`,1302,yy,205,9.5,true,C.text)});
    fit(c,'Otros = Lesiones, Secuestro al paso, Apropiación ilícita, Estafa y Usurpación',1285,914,220,9,true,C.text);
 
-   // Pie institucional limpio: se cubre por completo la zona izquierda heredada
-   // antes de escribir Fuente y Elaboración una sola vez.
+   // Pie institucional final: franja más baja, sin cubrir el lema lateral y sin texto heredado.
    c.fillStyle=C.white;
-   c.fillRect(0,944,760,80);
-   tx(c,'Fuente: Unidad de Estadística de la Región Policial de La Libertad.',23,968,11,true,C.text);
-   tx(c,'Elaboración: Observatorio Regional de Seguridad Ciudadana (ORSEC) – La Libertad.',23,988,10,false,C.text);
-   tx(c,'“Cada dato tiene un territorio. Cada territorio tiene personas. Cada persona merece vivir segura.”',930,982,10,false,C.text,'center');
-   tx(c,'ORSEC · VISUAL B EXPERIMENTAL',1510,1002,10,true,'#6d8192','right');
+   c.fillRect(0,965,1536,59);
+   tx(c,'Fuente: Unidad de Estadística de la Región Policial de La Libertad.',23,983,11,true,C.text);
+   tx(c,'Elaboración: Observatorio Regional de Seguridad Ciudadana (ORSEC) – La Libertad.',23,1003,10,false,C.text);
+   tx(c,'“Cada dato tiene un territorio. Cada territorio tiene personas. Cada persona merece un La Libertad Segura.”',1510,994,9.5,false,C.text,'right');
+   tx(c,'ORSEC · VISUAL B FINAL',1510,1015,9,true,'#6d8192','right');
    return can.toDataURL('image/png');
  }
  window.orsecGenerarVisualB=generar;
- window.ORSEC_EXPERIMENTAL_BUILD='V27.11.9-VISUAL-B-PIE-INSTITUCIONAL-LIMPIO';
+ window.ORSEC_EXPERIMENTAL_BUILD='V27.12.0-VISUAL-B-FINAL-CERRADA';
 })();

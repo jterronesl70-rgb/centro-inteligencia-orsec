@@ -1,0 +1,7 @@
+ORSEC V27.12.0 — VISUAL B FINAL CERRADA
+
+- Mapa original preservado y recoloreado en rojo, naranja, amarillo y verde.
+- Pie institucional desplazado hacia abajo.
+- Se conserva visible el lema lateral “La Libertad más segura”.
+- Frase institucional final alineada y limpiada para evitar superposición.
+- Sin cambios en datos.json, filtros, cálculos, comparativos ni descargas.
