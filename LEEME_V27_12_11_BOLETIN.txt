@@ -1,0 +1,26 @@
+ORSEC V27.12.11 — BOLETÍN AUTOMÁTICO REPARADO
+
+BASE:
+V27.12.10 — Orden Visual de Incidencia Delictiva.
+
+PROBLEMA:
+El módulo Boletines mostraba permanentemente “Actualizando…” y sus botones
+no respondían correctamente.
+
+CAUSA:
+La rutina de Vista Previa contenía un cierre </script> literal dentro de un
+template HTML. El navegador podía cerrar prematuramente el script principal,
+impidiendo registrar las funciones del boletín inteligente.
+
+CORRECCIÓN EXCLUSIVA:
+- Se corrige el cierre del script embebido de Vista Previa.
+- Al abrir Boletines se ejecutan el boletín, gráfico y análisis inteligente.
+- Descargar Texto queda operativo.
+- Vista Previa queda operativa.
+- Descargar PDF mantiene generación directa cuando jsPDF carga y usa
+  Vista Previa como fallback si la librería externa no está disponible.
+
+PROTECCIÓN:
+NO se modifica datos.json, datos_distritos.json, detalle_alto_impacto.json,
+Incidencia Delictiva, comparativos, exportaciones, Panorama Regional,
+infografías, Inteligencia Territorial, mapas, Alertas ni Sala CORESEC.

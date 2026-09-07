@@ -1404,7 +1404,7 @@ const MESES=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','
 let DB=[];let META={};
 const $=id=>document.getElementById(id);const fmt=n=>Number(n||0).toLocaleString('es-PE');
 function reloj(){const a=new Date();$('reloj').textContent=a.toLocaleDateString('es-PE')+' · '+a.toLocaleTimeString('es-PE')}setInterval(reloj,1000);reloj();
-function abrir(id,card){document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.tarjeta').forEach(t=>t.classList.remove('activa'));if(card)card.classList.add('activa');if(id==='panorama'&&typeof renderPanorama==='function')renderPanorama();if(id==='boletines')renderBoletin();if(id==='alertas')renderAlertas();if(id==='territorio')renderTerritorio();if(id==='sala')renderSalaCORESEC();setTimeout(()=>$(id).scrollIntoView({behavior:'smooth',block:'start'}),40)}
+function abrir(id,card){document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('activa'));$(id).classList.add('activa');document.querySelectorAll('.tarjeta').forEach(t=>t.classList.remove('activa'));if(card)card.classList.add('activa');if(id==='panorama'&&typeof renderPanorama==='function')renderPanorama();if(id==='boletines'){renderBoletin();setTimeout(()=>{if(typeof orsecGenerarBI==='function')orsecGenerarBI();if(typeof renderBoletinExtra==='function')renderBoletinExtra();},60);}if(id==='alertas')renderAlertas();if(id==='territorio')renderTerritorio();if(id==='sala')renderSalaCORESEC();setTimeout(()=>$(id).scrollIntoView({behavior:'smooth',block:'start'}),40)}
 function option(sel,vals,label){sel.innerHTML='';vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=(label&&label[v])||v;sel.appendChild(o)})}
 function registros(f={}){return DB.filter(r=>(!f.anio||r.Anio==f.anio)&&(!f.tipo||r.TipoPeriodo===f.tipo)&&(!f.periodo||r.Periodo===f.periodo)&&(!f.provincia||r.Provincia===f.provincia)&&(!f.delito||r.Delito===f.delito))}
 function current(){return {anio:+$('anio').value,tipo:$('tipoPeriodo').value,periodo:$('periodo').value,provincia:$('provincia').value,delito:$('delito').value}}
@@ -3278,7 +3278,7 @@ document.addEventListener('change', function(e){
     setTimeout(()=>window.abrirInfografiaRegional(),120);
   }
 });
-</script>
+<`+`/script>
 
 
 <script>
@@ -3886,6 +3886,11 @@ function orsecDescargarRelacionPDF(){
 
 
 <script id="orsecV27125Marker">window.ORSEC_PATCH_EXPORT_COMPARATIVO_DELITO="V27.12.5-CUADRO-GRAFICO-COMPLETO";</script>
+
+<script id="orsecV271211BoletinMarker">
+window.ORSEC_PATCH_BOLETIN='V27.12.11-BOLETIN-FUNCIONAL';
+</script>
+
 </body></html>'
   ].join('');
 
@@ -3962,7 +3967,12 @@ async function orsecDescargarPDFBI(){
     doc.save(orsecNombreArchivoBI('pdf'));
   }catch(e){
     console.error(e);
-    alert('No se pudo generar el PDF directo. Usa VISTA PREVIA y luego Imprimir → Guardar como PDF.');
+    if(typeof orsecVistaBI==='function'){
+      orsecVistaBI();
+      alert('El navegador no pudo cargar el generador PDF directo. Se abrió la vista previa: usa Imprimir → Guardar como PDF.');
+    }else{
+      alert('No se pudo generar el PDF.');
+    }
   }
 }
 
