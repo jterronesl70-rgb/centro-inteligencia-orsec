@@ -1142,7 +1142,7 @@ body{
 .orsec-prod-mini i{display:block;height:100%;background:#0b3d6d;border-radius:999px}
 .orsec-prod-mini.y26 i{background:#d8aa32}
 .orsec-prod-tablewrap{overflow:auto;max-height:470px}
-.orsec-prod-table{font-size:12px}.orsec-prod-table th{position:sticky;top:0;background:#eef5fa;z-index:1}.orsec-prod-table td:nth-child(n+3){text-align:right;font-weight:700}
+.orsec-prod-table{font-size:11px;width:100%;border-collapse:collapse;table-layout:fixed}.orsec-prod-table th{position:sticky;top:0;background:#eef5fa;z-index:1;vertical-align:middle;padding:8px 5px}.orsec-prod-table td{padding:7px 5px;vertical-align:middle}.orsec-prod-table th:nth-child(1),.orsec-prod-table td:nth-child(1){text-align:left;width:19%}.orsec-prod-table th:nth-child(2),.orsec-prod-table td:nth-child(2){text-align:left;width:16%}.orsec-prod-table th:nth-child(n+3),.orsec-prod-table td:nth-child(n+3){text-align:center;font-variant-numeric:tabular-nums}.orsec-prod-table td:nth-last-child(-n+4){font-weight:800}.orsec-prod-actions{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0 4px}.orsec-prod-actions .btn{font-size:11px}
 .orsec-prod-up{color:#b3261e}.orsec-prod-down{color:#198754}.orsec-prod-neutral{color:#64748b}
 @media(max-width:1000px){.orsec-prod-kpis{grid-template-columns:repeat(3,1fr)}.orsec-prod-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.orsec-prod-filtros{grid-template-columns:1fr}.orsec-prod-kpis{grid-template-columns:repeat(2,1fr)}}
@@ -1351,7 +1351,12 @@ body{
    <label>Indicador
     <select id="orsecProdIndicador" onchange="orsecProdRenderDetalle()"></select>
    </label>
-   <button type="button" class="btn" onclick="orsecProdDescargarCSV()">DESCARGAR CUADRO CSV</button>
+   <button type="button" class="btn" onclick="orsecProdDescargarCSV()">DESCARGAR MATRIZ CSV</button>
+ </div>
+ <div class="orsec-prod-actions">
+  <button type="button" class="btn" onclick="orsecProdInfografia('png')">DESCARGAR INFOGRAFÍA PNG</button>
+  <button type="button" class="btn" onclick="orsecProdInfografia('pdf')">DESCARGAR INFOGRAFÍA PDF</button>
+  <button type="button" class="btn secundario" onclick="orsecProdComparativoPDF()">DESCARGAR RELACIÓN COMPARATIVA PDF</button>
  </div>
 
  <div id="orsecProdSeleccionado" class="orsec-prod-selected"></div>
@@ -1371,7 +1376,7 @@ body{
  <div class="orsec-prod-card" style="margin-top:14px">
    <div class="orsec-prod-head"><h3>Matriz completa de producción policial</h3><span>Fuente oficial recibida por ORSEC</span></div>
    <div class="orsec-prod-tablewrap"><table class="orsec-prod-table">
-    <thead><tr><th>Indicador</th><th>Categoría ORSEC</th><th>2025</th><th>2026</th><th>Diferencia</th><th>Variación %</th></tr></thead>
+    <thead><tr><th>Indicador</th><th>Categoría ORSEC</th><th>ENE 25</th><th>FEB 25</th><th>MAR 25</th><th>ABR 25</th><th>MAY 25</th><th>JUN 25</th><th>JUL 25</th><th>AGO 25</th><th>ENE 26</th><th>FEB 26</th><th>MAR 26</th><th>ABR 26</th><th>MAY 26</th><th>JUN 26</th><th>JUL 26</th><th>AGO 26</th><th>Total 2025</th><th>Total 2026</th><th>Diferencia</th><th>Variación %</th></tr></thead>
     <tbody id="orsecProdTabla"></tbody>
    </table></div>
  </div>
@@ -5058,6 +5063,8 @@ function orsecProdRender(){
   const tb=document.getElementById('orsecProdTabla');
   if(tb)tb.innerHTML=arr.map(x=>`<tr>
    <td>${x.indicador}</td><td>${x.categoria_orsec}</td>
+   ${ORSEC_PROD.meses.map(m=>`<td>${orsecProdFmt(x.mensual_2025?.[m]??0,x.unidad)}</td>`).join('')}
+   ${ORSEC_PROD.meses.map(m=>`<td>${orsecProdFmt(x.mensual_2026?.[m]??0,x.unidad)}</td>`).join('')}
    <td>${orsecProdFmt(x.total_2025,x.unidad)}</td><td>${orsecProdFmt(x.total_2026,x.unidad)}</td>
    <td class="${orsecProdClass(x.diferencia)}">${orsecProdFmt(x.diferencia,x.unidad)}</td>
    <td class="${orsecProdClass(x.variacion_pct)}">${orsecProdPct(x.variacion_pct)}</td>
@@ -5109,8 +5116,8 @@ function orsecProdDescargarCSV(){
   if(!ORSEC_PROD)return;
   const arr=orsecProdFiltrados();
   const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';
-  const rows=[['Indicador','Categoria ORSEC','Unidad','Total 2025','Total 2026','Diferencia','Variacion %'],
-    ...arr.map(x=>[x.indicador,x.categoria_orsec,x.unidad,x.total_2025,x.total_2026,x.diferencia,x.variacion_pct])];
+  const rows=[['Indicador','Categoria ORSEC','Unidad',...ORSEC_PROD.meses.map(m=>m+' 2025'),...ORSEC_PROD.meses.map(m=>m+' 2026'),'Total 2025','Total 2026','Diferencia','Variacion %'],
+    ...arr.map(x=>[x.indicador,x.categoria_orsec,x.unidad,...ORSEC_PROD.meses.map(m=>x.mensual_2025?.[m]??0),...ORSEC_PROD.meses.map(m=>x.mensual_2026?.[m]??0),x.total_2025,x.total_2026,x.diferencia,x.variacion_pct])];
   const csv='\ufeff'+rows.map(r=>r.map(q).join(';')).join('\r\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
@@ -5118,10 +5125,29 @@ function orsecProdDescargarCSV(){
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
+
+function orsecProdCanvas(){
+ const W=1600,H=1000,c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+ const ind=document.getElementById('orsecProdIndicador')?.value,x=ORSEC_PROD.registros.find(r=>r.indicador===ind)||ORSEC_PROD.registros[0];
+ const keys=['OPERATIVOS','TOTAL DETENIDOS','ARMAS DE FUEGO','BANDAS DESART.','EXPLOSIVOS','FULMINANTES'];const ks=keys.map(k=>ORSEC_PROD.registros.find(r=>r.indicador===k)).filter(Boolean);
+ g.fillStyle='#f7fbff';g.fillRect(0,0,W,H);g.fillStyle='#073e70';g.fillRect(0,0,W,125);g.fillStyle='white';g.font='bold 58px Arial';g.fillText('ORSEC · PRODUCCIÓN POLICIAL',55,70);g.font='25px Arial';g.fillText('Centro de Análisis de Datos · Región La Libertad',58,108);
+ g.fillStyle='#0b3159';g.font='bold 44px Arial';g.fillText('RESULTADOS OPERATIVOS',55,185);g.font='24px Arial';g.fillText('Enero – Agosto 2025 / 2026',55,220);
+ const y=255,bw=245,bh=145,gap=13;ks.forEach((k,i)=>{const X=45+i*(bw+gap);g.fillStyle='white';g.strokeStyle='#cbddea';g.lineWidth=2;g.beginPath();g.roundRect(X,y,bw,bh,18);g.fill();g.stroke();g.fillStyle='#31536d';g.font='bold 16px Arial';g.fillText(k.indicador.slice(0,21),X+15,y+28);g.fillStyle='#073e70';g.font='bold 30px Arial';g.fillText(orsecProdFmt(k.total_2026,k.unidad),X+15,y+70);g.font='15px Arial';g.fillText('2025: '+orsecProdFmt(k.total_2025,k.unidad),X+15,y+98);g.fillStyle=k.variacion_pct>0?'#b3261e':'#198754';g.font='bold 19px Arial';g.fillText(orsecProdPct(k.variacion_pct),X+15,y+126)});
+ g.fillStyle='white';g.strokeStyle='#cbddea';g.beginPath();g.roundRect(45,430,1510,390,18);g.fill();g.stroke();g.fillStyle='#073e70';g.font='bold 28px Arial';g.fillText('INDICADOR SELECCIONADO · '+x.indicador,70,475);g.font='21px Arial';g.fillText('2025: '+orsecProdFmt(x.total_2025,x.unidad)+'   |   2026: '+orsecProdFmt(x.total_2026,x.unidad)+'   |   Diferencia: '+orsecProdFmt(x.diferencia,x.unidad)+'   |   Variación: '+orsecProdPct(x.variacion_pct),70,515);
+ const vals=[...ORSEC_PROD.meses.map(m=>Number(x.mensual_2025?.[m])||0),...ORSEC_PROD.meses.map(m=>Number(x.mensual_2026?.[m])||0)],mx=Math.max(1,...vals);const x0=110,y0=745,cw=1360,ch=170;
+ g.strokeStyle='#dbe6ef';for(let j=0;j<5;j++){let yy=y0-j*ch/4;g.beginPath();g.moveTo(x0,yy);g.lineTo(x0+cw,yy);g.stroke()}
+ function line(year,color,off){g.strokeStyle=color;g.fillStyle=color;g.lineWidth=5;g.beginPath();ORSEC_PROD.meses.forEach((m,i)=>{let xx=x0+i*cw/7,yy=y0-(Number(x[year]?.[m])||0)/mx*ch;i?g.lineTo(xx,yy):g.moveTo(xx,yy)});g.stroke();ORSEC_PROD.meses.forEach((m,i)=>{let xx=x0+i*cw/7,yy=y0-(Number(x[year]?.[m])||0)/mx*ch;g.beginPath();g.arc(xx,yy,6,0,Math.PI*2);g.fill();g.font='15px Arial';g.fillText(String(x[year]?.[m]??0),xx-5,yy-12)})}
+ line('mensual_2025','#0b3d6d');line('mensual_2026','#1598d4');g.fillStyle='#31536d';g.font='bold 17px Arial';ORSEC_PROD.meses.forEach((m,i)=>g.fillText(m,x0+i*cw/7-15,780));g.fillStyle='#64748b';g.font='16px Arial';g.fillText('Fuente: Notas Informativas Diarios de las SSUU y Síntesis de CEOPOL.',55,955);g.fillText('La clasificación por categorías es una organización visual ORSEC y no modifica los indicadores originales.',55,982);return c;
+}
+function orsecProdDownloadCanvas(c,name){c.toBlob(b=>{const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)},'image/png')}
+async function orsecProdEnsurePDF(){if(window.jspdf&&window.jspdf.jsPDF)return;await new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
+async function orsecProdInfografia(tipo){const c=orsecProdCanvas();if(tipo==='png')return orsecProdDownloadCanvas(c,'ORSEC_Infografia_Produccion_Policial.png');await orsecProdEnsurePDF();const {jsPDF}=window.jspdf,d=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});d.addImage(c.toDataURL('image/png'),'PNG',0,0,297,185.6);d.save('ORSEC_Infografia_Produccion_Policial.pdf')}
+async function orsecProdComparativoPDF(){await orsecProdEnsurePDF();const {jsPDF}=window.jspdf,d=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'}),arr=orsecProdFiltrados();d.setFontSize(18);d.text('ORSEC · RELACIÓN COMPARATIVA DE PRODUCCIÓN POLICIAL',12,14);d.setFontSize(10);d.text('Enero–Agosto 2025 vs 2026 · Región Policial La Libertad',12,21);let y=31;d.setFontSize(8);d.setFont(undefined,'bold');d.text('INDICADOR',12,y);d.text('2025',150,y,{align:'right'});d.text('2026',180,y,{align:'right'});d.text('DIF.',210,y,{align:'right'});d.text('VAR. %',242,y,{align:'right'});d.setFont(undefined,'normal');for(const x of arr){y+=7;if(y>190){d.addPage();y=18}d.text(String(x.indicador).slice(0,45),12,y);d.text(orsecProdFmt(x.total_2025,x.unidad),150,y,{align:'right'});d.text(orsecProdFmt(x.total_2026,x.unidad),180,y,{align:'right'});d.text(orsecProdFmt(x.diferencia,x.unidad),210,y,{align:'right'});d.text(orsecProdPct(x.variacion_pct),242,y,{align:'right'})}d.setFontSize(7);d.text('Fuente: Notas Informativas Diarios de las SSUU y Síntesis de CEOPOL.',12,202);d.save('ORSEC_Relacion_Comparativa_Produccion_Policial.pdf')}
+
 document.addEventListener('DOMContentLoaded',()=>setTimeout(orsecProdInit,900));
 </script>
 
 <script id="orsecV27131ProduccionMarker">
-window.ORSEC_PRODUCCION_BUILD='V27.13.1-INDICADOR-DINAMICO';
+window.ORSEC_PRODUCCION_BUILD='V27.13.2-MATRIZ-MENSUAL-INFOGRAFIA';
 </script>
 </body></html>

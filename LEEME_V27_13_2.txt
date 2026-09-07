@@ -1,0 +1,9 @@
+ORSEC V27.13.2 · PRODUCCIÓN POLICIAL
+
+- Matriz alineada por encabezados y valores.
+- Matriz incorpora ENE–AGO 2025 y ENE–AGO 2026, más totales, diferencia y variación.
+- CSV incorpora detalle mensual.
+- Infografía limpia y dinámica PNG/PDF según indicador seleccionado.
+- Relación comparativa PDF descargable.
+- Se mantienen KPIs ejecutivos fijos.
+- No se altera Incidencia Delictiva ni los módulos consolidados.
