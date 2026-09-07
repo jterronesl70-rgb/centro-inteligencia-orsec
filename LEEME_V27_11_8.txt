@@ -1,0 +1,11 @@
+ORSEC V27.11.8 — LIMPIEZA DESDE EL ORIGEN
+
+Corrección exclusiva de superposiciones:
+- La columna lateral se enmascara completamente antes de escribir los datos dinámicos.
+- El título/subtítulo del mapa se limpia en una zona mayor.
+- La tarjeta de total regional se limpia completa para eliminar textos heredados.
+- El mapa original de La Libertad permanece intacto.
+- No se modifica datos.json, filtros, comparativos ni descargas.
+
+Siguiente fase, solo después de validar esta limpieza:
+aplicar la escala cromática al mapa original sin alterar su geometría.

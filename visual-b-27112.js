@@ -36,15 +36,34 @@
    fit(c,`Año: ${y}  |  ${tipo==='MENSUAL'?'Mensual':'Acumulado'}: ${label}`,1234,126,270,14,true,C.text);
    fit(c,`Provincia: ${prov==='TOTAL REGION'?'Todas':nice(prov)}  |  Delito: ${del==='TODOS'?'Todos':nice(del)}`,1234,151,270,13,true,C.text);
 
-   // Lateral: mismo diseño, cifras dinámicas
-   c.fillStyle='#063d72';c.fillRect(17,216,232,43);fit(c,`Total de casos (${label} ${y})`,28,237,204,15,false,C.white);
+   // Lateral limpio: primero se borra por completo la tipografía fija de la plantilla
+   // y después se dibuja una sola capa dinámica.
+   c.fillStyle='#063d72';c.fillRect(16,208,234,55);
+   fit(c,`Total de casos (${label} ${y})`,28,237,204,14,false,C.white);
    const KP=[['HOMICIDIOS',C.red],['EXTORSION',C.orange],['DETONACIONES','#2ca83a'],['VIOLACION SEXUAL',C.purple],['ROBO DE VEHICULOS','#1293e8']];
    const yRows=[265,394,523,652,781];
-   KP.forEach(([d,col],i)=>{const yy=yRows[i],a=N(dc[d]),b=N(dp[d]),v=pct(a,b);c.fillStyle='#073d72';c.fillRect(108,yy+5,128,111);fit(c,nice(d),112,yy+18,114,13,true,C.white);tx(c,F(a),112,yy+56,38,true,C.white);tx(c,(v!=null&&v<=0?'↓ ':'↑ ')+P(v),112,yy+90,16,true,v!=null&&v<=0?'#52df72':'#ff5a5f');fit(c,`vs. mismo período ${py} (${F(b)})`,112,yy+111,114,9,false,'#dceafa')});
+   KP.forEach(([d,col],i)=>{
+      const yy=yRows[i],a=N(dc[d]),b=N(dp[d]),v=pct(a,b);
+      c.fillStyle='#073d72';
+      c.fillRect(100,yy-2,147,128);
+      fit(c,nice(d),108,yy+18,130,13,true,C.white);
+      tx(c,F(a),108,yy+58,38,true,C.white);
+      tx(c,(v!=null&&v<=0?'↓ ':'↑ ')+P(v),108,yy+92,16,true,v!=null&&v<=0?'#52df72':'#ff5a5f');
+      fit(c,`vs. mismo período ${py} (${F(b)})`,108,yy+116,130,9,false,'#dceafa');
+   });
 
-   // Bloque 3: encabezado mapa + total
-   c.fillStyle=C.white;c.fillRect(270,194,548,39);fit(c,'Incidencia delictiva por provincia',285,207,330,18,true,C.text);fit(c,`(${del==='TODOS'?'Total de casos':nice(del)} – ${label} ${y})`,285,226,330,14,false,C.text);
-   rr(c,627,193,186,92,9,'#edf7ff',null);tx(c,prov==='TOTAL REGION'?'Total de casos en la región':'Total de casos selección',720,210,13,false,C.text,'center');tx(c,F(totalCur),720,244,30,true,C.text,'center');tx(c,(totalVar!=null&&totalVar<=0?'↓ ':'↑ ')+P(totalVar),720,272,18,true,totalVar!=null&&totalVar<=0?C.green:C.red,'center');
+   // Encabezado del mapa limpio: cubre totalmente los textos fijos heredados.
+   c.fillStyle=C.white;c.fillRect(270,190,548,62);
+   fit(c,'Incidencia delictiva por provincia',285,207,330,18,true,C.text);
+   fit(c,`(${del==='TODOS'?'Total de casos':nice(del)} – ${label} ${y})`,285,230,330,14,false,C.text);
+
+   // Tarjeta total: se limpia completa para evitar la segunda línea heredada.
+   c.fillStyle='#edf7ff';c.fillRect(620,188,202,122);
+   rr(c,627,193,186,105,9,'#edf7ff',null);
+   tx(c,prov==='TOTAL REGION'?'Total de casos en la región':'Total de casos selección',720,210,13,false,C.text,'center');
+   tx(c,F(totalCur),720,247,30,true,C.text,'center');
+   tx(c,(totalVar!=null&&totalVar<=0?'↓ ':'↑ ')+P(totalVar),720,279,18,true,totalVar!=null&&totalVar<=0?C.green:C.red,'center');
+   fit(c,`vs. mismo período ${py}`,720,299,170,11,false,C.text,'center');
 
    // MAPA ORIGINAL RECUPERADO Y LIMPIO.
    // La cartografía original permanece intacta. Se eliminan las etiquetas/recuadros
@@ -79,5 +98,5 @@
    return can.toDataURL('image/png');
  }
  window.orsecGenerarVisualB=generar;
- window.ORSEC_EXPERIMENTAL_BUILD='V27.11.7-VISUAL-B-LIMPIEZA-SUPERPOSICIONES';
+ window.ORSEC_EXPERIMENTAL_BUILD='V27.11.8-VISUAL-B-LIMPIEZA-DESDE-ORIGEN';
 })();
