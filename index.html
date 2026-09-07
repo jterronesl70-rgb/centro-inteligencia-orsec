@@ -1305,6 +1305,36 @@ body{
    <h4>Ranking provincial</h4>
    <div class="ranking-mini" id="territorioBox"></div>
    <div class="map-note">El mapa está conectado al mismo motor de datos del ORSEC. Un clic en una provincia actualiza los indicadores y permite saltar al módulo de Incidencia Delictiva.</div>
+
+   <div id="orsecDistritoPanel" style="margin-top:14px;border:1px solid #c8d9e8;border-radius:12px;padding:12px;background:#f7fbff">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+      <div>
+        <b style="color:#07558c">ANÁLISIS DISTRITAL · EXPERIMENTAL</b>
+        <div style="font-size:11px;color:#587086;margin-top:3px">Capa paralela. No modifica los indicadores provinciales oficiales.</div>
+      </div>
+      <span id="orsecDistEstado" class="badge">Cargando capa distrital…</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+      <label style="font-size:11px;font-weight:700;color:#164a70">Provincia
+        <select id="orsecDistProvincia" style="width:100%;margin-top:4px;padding:7px;border:1px solid #b8cddd;border-radius:7px"></select>
+      </label>
+      <label style="font-size:11px;font-weight:700;color:#164a70">Distrito
+        <select id="orsecDistDistrito" style="width:100%;margin-top:4px;padding:7px;border:1px solid #b8cddd;border-radius:7px"></select>
+      </label>
+      <label style="font-size:11px;font-weight:700;color:#164a70">Delito
+        <select id="orsecDistDelito" style="width:100%;margin-top:4px;padding:7px;border:1px solid #b8cddd;border-radius:7px">
+          <option value="TODOS">HOMICIDIOS + DETONACIONES</option>
+          <option value="HOMICIDIOS">HOMICIDIOS</option>
+          <option value="DETONACIONES">DETONACIONES</option>
+        </select>
+      </label>
+      <label style="font-size:11px;font-weight:700;color:#164a70">Período
+        <select id="orsecDistPeriodo" style="width:100%;margin-top:4px;padding:7px;border:1px solid #b8cddd;border-radius:7px"></select>
+      </label>
+    </div>
+    <div id="orsecDistResultado" style="margin-top:10px"></div>
+    <div style="font-size:10px;color:#60798d;margin-top:8px;line-height:1.35">Cobertura distrital disponible actualmente: Homicidios y Detonaciones, enero–agosto 2026. Los demás delitos ORSEC permanecen sin desagregación distrital hasta contar con fuente oficial.</div>
+   </div>
   </aside>
  </div>
 </div>
@@ -1378,10 +1408,91 @@ function seleccionarProvincia(p,saltar=true){
  $('provincia').value=p;
  renderAll();
  actualizarMapaProvincia(p);
+ if(typeof orsecDistSetProvince==='function')orsecDistSetProvince(p);
  if(saltar)abrir('incidencia',document.querySelector('[data-mod="incidencia"]'));
 }
 function renderAll(){renderIncidencia();renderBoletin();renderAlertas();renderTerritorio()}
 async function init(){try{const r=await fetch('datos.json',{cache:'no-store'});if(!r.ok)throw new Error('datos.json no encontrado');META=await r.json();DB=META.registros||[];$('fuente').textContent=`Fuente activa: ${META.fuente} · Corte ${META.actualizado}`;$('kpiRegistros').textContent=fmt(DB.length);option($('anio'),[2026,2025]);option($('tipoPeriodo'),['ACUMULADO','MENSUAL']);option($('provincia'),['TOTAL REGION','TODAS',...META.provincias]);option($('delito'),['TODOS',...META.delitos]);$('anio').value='2026';$('tipoPeriodo').value='ACUMULADO';updatePeriods();$('provincia').value='TOTAL REGION';$('delito').value='TODOS';['anio','tipoPeriodo','periodo','provincia','delito'].forEach(id=>$(id).addEventListener('change',()=>{if(id==='anio'||id==='tipoPeriodo')updatePeriods();else renderAll()}));document.querySelectorAll('.map-marker').forEach(el=>el.addEventListener('click',()=>seleccionarProvincia(el.dataset.prov,false)));renderAll()}catch(e){$('fuente').textContent='ERROR DE CONEXIÓN CON datos.json';$('tablaWrap').innerHTML=`<div class="error"><b>No se pudo cargar la base de datos.</b><br>Asegúrate de subir <code>index.html</code> y <code>datos.json</code> juntos en la raíz de GitHub.</div>`;console.error(e)}}
+
+/* ORSEC V27.12.8 · CAPA DISTRITAL EXPERIMENTAL
+   Motor aislado: NO escribe DB, META, filtros provinciales ni cálculos existentes. */
+let ORSEC_DIST_DB=[], ORSEC_DIST_META=null;
+
+function orsecDistFmt(n){return Number(n||0).toLocaleString('es-PE')}
+function orsecDistNorm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim()}
+function orsecDistPeriodLabel(r){return r?.EtiquetaPeriodo||r?.Periodo||'--'}
+
+function orsecDistRows(){
+ const p=document.getElementById('orsecDistProvincia')?.value;
+ const d=document.getElementById('orsecDistDistrito')?.value;
+ const del=document.getElementById('orsecDistDelito')?.value||'TODOS';
+ const per=document.getElementById('orsecDistPeriodo')?.value;
+ return ORSEC_DIST_DB.filter(r=>r.Anio==2026&&r.TipoPeriodo==='ACUMULADO'&&
+   (!p||r.Provincia===p)&&(!d||r.Distrito===d)&&(!per||r.Periodo===per)&&
+   (del==='TODOS'||r.Delito===del));
+}
+function orsecDistRender(){
+ const box=document.getElementById('orsecDistResultado'); if(!box)return;
+ const rows=orsecDistRows(), total=rows.reduce((a,r)=>a+Number(r.Casos||0),0);
+ const hom=rows.filter(r=>r.Delito==='HOMICIDIOS').reduce((a,r)=>a+Number(r.Casos||0),0);
+ const det=rows.filter(r=>r.Delito==='DETONACIONES').reduce((a,r)=>a+Number(r.Casos||0),0);
+ const p=document.getElementById('orsecDistProvincia')?.value||'--';
+ const d=document.getElementById('orsecDistDistrito')?.value||'--';
+ const label=orsecDistPeriodLabel(rows[0]);
+ box.innerHTML=`<div style="border-radius:10px;background:white;border:1px solid #d7e4ee;padding:10px">
+   <div style="font-size:12px;font-weight:800;color:#0b4e7d">${d} · ${p}</div>
+   <div style="font-size:10px;color:#6a8193;margin:2px 0 8px">${label}</div>
+   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+    <div style="background:#eef6fb;border-radius:8px;padding:8px"><small>Total disponible</small><b style="display:block;font-size:20px;color:#064f83">${orsecDistFmt(total)}</b></div>
+    <div style="background:#fff2f2;border-radius:8px;padding:8px"><small>Homicidios</small><b style="display:block;font-size:20px;color:#c91d2e">${orsecDistFmt(hom)}</b></div>
+    <div style="background:#f1faef;border-radius:8px;padding:8px"><small>Detonaciones</small><b style="display:block;font-size:20px;color:#2f8a2d">${orsecDistFmt(det)}</b></div>
+   </div>
+  </div>`;
+}
+function orsecDistSetProvince(prov){
+ if(!ORSEC_DIST_DB.length)return;
+ const ps=[...new Set(ORSEC_DIST_DB.map(r=>r.Provincia))].sort();
+ const sel=document.getElementById('orsecDistProvincia'); if(!sel)return;
+ const match=ps.find(x=>orsecDistNorm(x)===orsecDistNorm(prov));
+ if(match)sel.value=match;
+ orsecDistRefreshDistricts();
+}
+function orsecDistRefreshDistricts(){
+ const p=document.getElementById('orsecDistProvincia')?.value;
+ const ds=[...new Set(ORSEC_DIST_DB.filter(r=>r.Provincia===p).map(r=>r.Distrito))].sort();
+ const sd=document.getElementById('orsecDistDistrito');
+ if(sd)sd.innerHTML=ds.map(d=>`<option value="${d}">${d}</option>`).join('');
+ orsecDistRender();
+}
+async function orsecInitDistrito(){
+ const estado=document.getElementById('orsecDistEstado'); if(!estado)return;
+ try{
+  const rr=await fetch('datos_distritos.json',{cache:'no-store'});
+  if(!rr.ok)throw new Error('datos_distritos.json no encontrado');
+  ORSEC_DIST_META=await rr.json(); ORSEC_DIST_DB=ORSEC_DIST_META.registros||[];
+  const ps=[...new Set(ORSEC_DIST_DB.map(r=>r.Provincia))].sort();
+  const sp=document.getElementById('orsecDistProvincia');
+  sp.innerHTML=ps.map(p=>`<option value="${p}">${p}</option>`).join('');
+  const periods=[...new Map(ORSEC_DIST_DB.filter(r=>r.TipoPeriodo==='ACUMULADO').map(r=>[r.Periodo,r.EtiquetaPeriodo])).entries()];
+  const sper=document.getElementById('orsecDistPeriodo');
+  sper.innerHTML=periods.map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  if(periods.some(x=>x[0]==='ENE-AGOSTO'))sper.value='ENE-AGOSTO';
+  sp.addEventListener('change',orsecDistRefreshDistricts);
+  document.getElementById('orsecDistDistrito').addEventListener('change',orsecDistRender);
+  document.getElementById('orsecDistDelito').addEventListener('change',orsecDistRender);
+  sper.addEventListener('change',orsecDistRender);
+  estado.textContent='CAPA DISTRITAL ACTIVA · 2026';
+  orsecDistRefreshDistricts();
+  const f=current();
+  if(f.provincia && f.provincia!=='TODAS' && f.provincia!=='TOTAL REGION')orsecDistSetProvince(f.provincia);
+ }catch(e){
+  estado.textContent='CAPA DISTRITAL NO DISPONIBLE';
+  document.getElementById('orsecDistResultado').innerHTML='<div class="error">No se pudo cargar datos_distritos.json. La plataforma provincial continúa operativa sin cambios.</div>';
+  console.error(e);
+ }
+}
+orsecInitDistrito();
+
 init();
 
 function topActual(){

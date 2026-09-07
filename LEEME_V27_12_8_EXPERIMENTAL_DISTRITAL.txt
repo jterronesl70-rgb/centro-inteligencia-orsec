@@ -1,0 +1,29 @@
+ORSEC V27.12.8 · EXPERIMENTAL · CAPA DISTRITAL
+
+BASE PROTEGIDA: V27.12.7 CORESEC.
+
+SE AÑADE:
+- datos_distritos.json como fuente paralela.
+- Panel "ANÁLISIS DISTRITAL · EXPERIMENTAL" dentro de Inteligencia Territorial.
+- Selección Provincia → Distrito → Delito → Período.
+- Cobertura real: Homicidios y Detonaciones, enero–agosto 2026.
+- Sin estimaciones ni reparto artificial de cifras provinciales.
+- Al hacer clic en una provincia del mapa provincial, el panel distrital se sincroniza.
+
+NO SE MODIFICA:
+- datos.json
+- motor DB provincial
+- cálculos y filtros existentes
+- Panorama Regional
+- Incidencia Delictiva
+- Comparativos y exportaciones PNG/PDF
+- Infografías
+- Alertas
+- Boletines
+- Sala CORESEC
+- mapa provincial existente
+- portada y diseño operativo ya validado
+
+SEGURIDAD:
+Si datos_distritos.json no carga, la capa distrital muestra un aviso y la plataforma
+provincial continúa funcionando.
