@@ -1,0 +1,8 @@
+ORSEC V27.11.6 · MAPA ORIGINAL RECUPERADO
+
+Corrección exclusiva del mapa de la Visual B:
+- Recupera la geometría original del mapa de La Libertad.
+- Elimina el redibujado simplificado que deformó el mapa.
+- Mantiene los valores dinámicos como etiquetas discretas.
+- Conserva los demás ajustes y la funcionalidad de la Visual B.
+- No modifica datos.json ni la infografía original aprobada.
