@@ -1,0 +1,10 @@
+ORSEC V27.12.2 — BASE V27.12.1 PROTEGIDA
+
+Cambio exclusivo: Centro de Inteligencia → Centro de Análisis de Datos.
+No se alteran datos, filtros, mapas, infografías, descargas ni lógica funcional.
+No se reemplaza de forma indiscriminada la palabra inteligencia.
+
+Archivos modificados:
+- index.html: 15 reemplazo(s)
+
+Verificación denominación anterior: NINGUNA ocurrencia restante.
