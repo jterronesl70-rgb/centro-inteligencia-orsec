@@ -1,0 +1,15 @@
+ORSEC V27.12.1 — VISUAL B FINAL EMBEBIDA
+
+Corrección principal:
+- El render final de la Visual B queda EMBEBIDO dentro de index.html.
+- Evita que la plataforma vuelva al generador interno anterior (mapa azul)
+  cuando Vercel no carga el archivo JS externo.
+- Mantiene el mapa original y la rutina cromática aprobada.
+- Mantiene pie institucional limpio y frase final.
+- No modifica datos.json, filtros, comparativos ni descargas.
+
+Prueba recomendada:
+1. Reemplazar los archivos del repositorio con este paquete.
+2. Esperar el nuevo despliegue de Vercel.
+3. Hacer Ctrl+F5.
+4. Abrir "Probar Infografía Visual B".

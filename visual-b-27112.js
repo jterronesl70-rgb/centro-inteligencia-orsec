@@ -124,5 +124,5 @@
    return can.toDataURL('image/png');
  }
  window.orsecGenerarVisualB=generar;
- window.ORSEC_EXPERIMENTAL_BUILD='V27.12.0-VISUAL-B-FINAL-CERRADA';
+ window.ORSEC_EXPERIMENTAL_BUILD='V27.12.1-VISUAL-B-FINAL-EMBEBIDA';
 })();
