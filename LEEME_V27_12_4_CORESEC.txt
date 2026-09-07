@@ -1,0 +1,11 @@
+ORSEC V27.12.4 — FONDO NOCTURNO LIMPIO
+
+BASE: V27.12.3.
+CAMBIO: exclusivamente visual.
+
+- Se elimina del fondo cualquier apariencia de tarjetas/cuadros repetidos.
+- El fondo queda como ambientación nocturna limpia.
+- Las únicas tarjetas visibles son las tarjetas HTML operativas reales.
+- Se conservan intactos módulos, datos, JS, Panorama Regional, infografías,
+  mapas, filtros, comparativos, alertas, boletines, Sala CORESEC y descargas.
+- V27.12.2A y V27.12.3 permanecen como respaldos.
