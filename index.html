@@ -3724,6 +3724,7 @@ function orsecDescargarRelacionPDF(){
     '
 
 
+<script id="orsecV27125Marker">window.ORSEC_PATCH_EXPORT_COMPARATIVO_DELITO="V27.12.5-CUADRO-GRAFICO-COMPLETO";</script>
 </body></html>'
   ].join('');
 
@@ -4309,7 +4310,7 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
     if(!window.ORSEC_DELITO_DATA.length) window.orsecGenerarComparativoDelitos();
     const arr=window.ORSEC_DELITO_DATA, f=current(), prov=_provinciaActual();
     const canvas=document.createElement('canvas');
-    canvas.width=1800; canvas.height=1400;
+    canvas.width=1800; canvas.height=1680;
     const c=canvas.getContext('2d');
     const navy='#073e70', text='#17364c', muted='#687f91', blue='#1d65ad', red='#ef4135', grid='#d7e1e8', pale='#f5f9fc', green='#11823b';
     c.fillStyle='#fff'; c.fillRect(0,0,1800,1400);
@@ -4435,7 +4436,16 @@ window.ORSEC_BUILD='V27.8-DISENO-APROBADO-RENDER-LIMPIO';
       }
       const {jsPDF}=window.jspdf;
       const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-      doc.addImage(canvas.toDataURL('image/jpeg',.94),'JPEG',8,8,281,171);
+      const pageW=doc.internal.pageSize.getWidth();
+      const pageH=doc.internal.pageSize.getHeight();
+      const margin=6;
+      const maxW=pageW-(margin*2);
+      const maxH=pageH-(margin*2);
+      const ratio=canvas.width/canvas.height;
+      let imgW=maxW, imgH=imgW/ratio;
+      if(imgH>maxH){ imgH=maxH; imgW=imgH*ratio; }
+      const x=(pageW-imgW)/2, y=(pageH-imgH)/2;
+      doc.addImage(canvas.toDataURL('image/jpeg',.94),'JPEG',x,y,imgW,imgH);
       doc.save(`ORSEC_Comparativo_Delito_${_seguro(current().tipo)}_${_seguro(current().periodo)}.pdf`);
     }catch(e){ console.error(e); alert('No se pudo generar el PDF.'); }
   };

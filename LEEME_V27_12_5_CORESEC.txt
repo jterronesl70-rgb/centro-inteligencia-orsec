@@ -1,0 +1,19 @@
+ORSEC V27.12.5 — PARCHE EXPORTACIÓN COMPARATIVO POR DELITO
+
+BASE:
+V27.12.4 CORESEC — Fondo Nocturno Limpio.
+
+CAMBIO EXCLUSIVO:
+- Corrige la descarga PNG del Comparativo por Delito para incluir el gráfico de barras completo.
+- Corrige la descarga PDF del mismo módulo para escalar la captura completa sin recortarla.
+
+CAUSA CORREGIDA:
+- El canvas tenía 1400 px de alto, pero el contenido del gráfico llegaba aproximadamente a 1595 px.
+
+PROTECCIÓN:
+- NO se modifica datos.json.
+- NO se modifican datos, cálculos ni filtros.
+- NO se modifica el gráfico mostrado en pantalla.
+- NO se modifica Panorama Regional.
+- NO se modifican infografías, mapas, alertas, boletines ni Sala CORESEC.
+- NO se modifica la nueva portada visual.
