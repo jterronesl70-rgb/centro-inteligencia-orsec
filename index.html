@@ -1416,7 +1416,7 @@ async function init(){try{const r=await fetch('datos.json',{cache:'no-store'});i
 
 /* ORSEC V27.12.8 · CAPA DISTRITAL EXPERIMENTAL
    Motor aislado: NO escribe DB, META, filtros provinciales ni cálculos existentes. */
-let ORSEC_DIST_DB=[], ORSEC_DIST_META=null;
+let ORSEC_DIST_DB=[], ORSEC_DIST_META=null, ORSEC_DIST_CATALOGO={};
 
 function orsecDistFmt(n){return Number(n||0).toLocaleString('es-PE')}
 function orsecDistNorm(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim()}
@@ -1436,12 +1436,14 @@ function orsecDistRender(){
  const rows=orsecDistRows(), total=rows.reduce((a,r)=>a+Number(r.Casos||0),0);
  const hom=rows.filter(r=>r.Delito==='HOMICIDIOS').reduce((a,r)=>a+Number(r.Casos||0),0);
  const det=rows.filter(r=>r.Delito==='DETONACIONES').reduce((a,r)=>a+Number(r.Casos||0),0);
+ const sinHechos=(rows.length===0);
  const p=document.getElementById('orsecDistProvincia')?.value||'--';
  const d=document.getElementById('orsecDistDistrito')?.value||'--';
  const label=orsecDistPeriodLabel(rows[0]);
  box.innerHTML=`<div style="border-radius:10px;background:white;border:1px solid #d7e4ee;padding:10px">
    <div style="font-size:12px;font-weight:800;color:#0b4e7d">${d} · ${p}</div>
    <div style="font-size:10px;color:#6a8193;margin:2px 0 8px">${label}</div>
+   ${sinHechos?'<div style="font-size:10px;color:#49687f;background:#f4f8fb;border-radius:7px;padding:6px;margin-bottom:7px">Sin hechos registrados de Homicidios o Detonaciones para la selección y período consultados.</div>':''}
    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
     <div style="background:#eef6fb;border-radius:8px;padding:8px"><small>Total disponible</small><b style="display:block;font-size:20px;color:#064f83">${orsecDistFmt(total)}</b></div>
     <div style="background:#fff2f2;border-radius:8px;padding:8px"><small>Homicidios</small><b style="display:block;font-size:20px;color:#c91d2e">${orsecDistFmt(hom)}</b></div>
@@ -1459,7 +1461,7 @@ function orsecDistSetProvince(prov){
 }
 function orsecDistRefreshDistricts(){
  const p=document.getElementById('orsecDistProvincia')?.value;
- const ds=[...new Set(ORSEC_DIST_DB.filter(r=>r.Provincia===p).map(r=>r.Distrito))].sort();
+ const ds=(ORSEC_DIST_CATALOGO[p]||[]).slice().sort();
  const sd=document.getElementById('orsecDistDistrito');
  if(sd)sd.innerHTML=ds.map(d=>`<option value="${d}">${d}</option>`).join('');
  orsecDistRender();
@@ -1470,7 +1472,8 @@ async function orsecInitDistrito(){
   const rr=await fetch('datos_distritos.json',{cache:'no-store'});
   if(!rr.ok)throw new Error('datos_distritos.json no encontrado');
   ORSEC_DIST_META=await rr.json(); ORSEC_DIST_DB=ORSEC_DIST_META.registros||[];
-  const ps=[...new Set(ORSEC_DIST_DB.map(r=>r.Provincia))].sort();
+  ORSEC_DIST_CATALOGO=ORSEC_DIST_META.catalogo_territorial?.provincias||{};
+  const ps=Object.keys(ORSEC_DIST_CATALOGO).sort();
   const sp=document.getElementById('orsecDistProvincia');
   sp.innerHTML=ps.map(p=>`<option value="${p}">${p}</option>`).join('');
   const periods=[...new Map(ORSEC_DIST_DB.filter(r=>r.TipoPeriodo==='ACUMULADO').map(r=>[r.Periodo,r.EtiquetaPeriodo])).entries()];

@@ -1,0 +1,14 @@
+ORSEC V27.12.9 · EXPERIMENTAL · CATÁLOGO TERRITORIAL COMPLETO
+
+Corrección puntual sobre V27.12.8:
+- El selector distrital ya NO se construye solamente con distritos que tienen eventos.
+- Se incorpora catálogo territorial completo de La Libertad: 12 provincias y 83 distritos.
+- Sánchez Carrión aparece siempre con sus 8 distritos:
+  Huamachuco, Chugay, Cochorco, Curgos, Marcabal, Sanagorán, Sarín y Sartimbamba.
+- Para Homicidios/Detonaciones, una selección sin eventos muestra 0 y el mensaje
+  “Sin hechos registrados...” para el período consultado.
+- Los otros 11 delitos continúan sin desagregación distrital; no se estiman datos.
+
+PROTECCIÓN:
+No se modifica datos.json ni el motor provincial, comparativos, descargas, infografías,
+alertas, boletines, Sala CORESEC, portada ni mapa provincial.
