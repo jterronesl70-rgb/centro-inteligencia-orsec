@@ -1,0 +1,47 @@
+ORSEC V27.13.2R — RECOVERY INCIDENCIA DELICTIVA
+
+DIAGNÓSTICO CONFIRMADO
+El HTML actual conservaba los botones y sus onclick, pero había perdido bloques JavaScript
+que definían funciones esenciales de Incidencia Delictiva.
+
+FUNCIONES RESTAURADAS DESDE LA BASE ESTABLE
+- orsecGenerarComparativo()
+- orsecDescargarExcelComparativo()
+- orsecDescargarGraficoComparativo()
+- orsecDescargarPDFComparativo()
+- orsecToggleMapa()
+- orsecToggleDetalle()
+- orsecDescargarDetalleCSV()
+- orsecDescargarInfografia()
+- rutinas auxiliares del comparativo territorial, mapa distrital y análisis detallado.
+
+SE CONSERVA
+- Comparativo por Delito V27.9.6+.
+- Producción Policial V27.13.2.
+- Boletín funcional V27.12.12.
+- Panorama Regional e infografías.
+- Alertas, Inteligencia Territorial y Sala CORESEC.
+- Portada CORESEC.
+- datos.json, datos_distritos.json, detalle_alto_impacto.json y produccion_policial.json.
+
+VALIDACIÓN TÉCNICA
+- Todos los bloques JavaScript del index reparado pasan validación sintáctica con Node.js.
+- Se verificó la presencia de todas las funciones objetivo en el HTML reparado.
+
+INSTALACIÓN
+1. Mantener una copia del repositorio actual.
+2. Reemplazar index.html por el index.html de este paquete.
+3. Mantener/subir los JSON incluidos con estos nombres exactos.
+4. Esperar el despliegue de Vercel.
+5. Hacer Ctrl+F5.
+6. Probar en este orden:
+   a) GENERAR COMPARATIVO
+   b) DESCARGAR EXCEL
+   c) DESCARGAR CUADRO + GRÁFICO PNG
+   d) DESCARGAR PDF
+   e) GENERAR COMPARATIVO POR DELITO
+   f) ABRIR MAPA DEL DELITO
+   g) ABRIR ANÁLISIS
+
+MARCADOR
+V27.13.2R-INCIDENCIA-RESTORED
